@@ -1,8 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cfg = config.environments.plasma;
 in {
   options.environments.plasma = {
@@ -35,7 +37,7 @@ in {
 
     xdg.portal = {
       enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-kde ];
+      extraPortals = [pkgs.xdg-desktop-portal-kde];
     };
 
     qt5 = {

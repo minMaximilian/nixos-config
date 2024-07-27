@@ -1,8 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cfg = config.environments.gnome;
 in {
   options.environments.gnome = {
@@ -18,7 +20,6 @@ in {
       };
       desktopManager.gnome.enable = true;
     };
-
 
     environment.systemPackages = with pkgs; [
       gnome.gnome-tweaks
