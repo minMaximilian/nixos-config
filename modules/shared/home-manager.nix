@@ -8,6 +8,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {};
+    backupFileExtension = "bak";
   };
 
   home-manager.users.max = {pkgs, ...}: {

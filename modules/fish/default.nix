@@ -20,9 +20,23 @@ in {
     programs.fish.enable = true;
 
     home-manager.users.max = {
-      programs.fish = {
-        enable = true;
-        plugins = import ./plugins.nix {inherit pkgs;};
+      home.packages = lib.attrValues {
+        inherit
+          (pkgs)
+          zoxide
+          fzf
+          fd
+          bat
+          ;
+      };
+
+      programs = {
+        fish = {
+          enable = true;
+          plugins = import ./plugins.nix {inherit pkgs;};
+        };
+        man.generateCaches = true;
+        zoxide.enable = true;
       };
     };
   };

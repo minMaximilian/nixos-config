@@ -3,5 +3,15 @@ _: {
     ./shared
     ./git
     ./fish
+    ./ghostty
+    ./firefox
+    ./obsidian
+    ./discord
+    ./waybar
+    ./hyprland
+    ./hypridle
+    ./hyprlock
+    ./greetd
+    ./mako
   ];
 }
