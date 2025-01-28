@@ -49,39 +49,38 @@ in {
               on-click = "activate";
               sort-by-number = true;
             };
-            clock = {
-              format = "{:%H:%M}";
-              format-alt = "{:%Y-%m-%d}";
-              tooltip-format = "{:%Y-%m-%d | %H:%M}";
-            };
             cpu = {
-              format = "CPU {usage}%";
+              format = "󰻠 {usage}%";
               tooltip = false;
-            };
-            memory = {
-              format = "RAM {}%";
             };
             battery = {
               states = {
                 warning = 30;
                 critical = 15;
               };
-              format = "{capacity}% {icon}";
-              format-charging = "{capacity}% ";
-              format-plugged = "{capacity}% ";
-              format-icons = ["" "" "" "" ""];
+              format = "󰁹 {capacity}%";
+              format-charging = "󰂄 {capacity}%";
+              format-plugged = "󰂄 {capacity}%";
             };
             network = {
-              format-wifi = "WiFi ({signalStrength}%)";
-              format-ethernet = "Ethernet";
-              format-disconnected = "Disconnected";
+              format-wifi = "󰤨 {signalStrength}%";
+              format-ethernet = "󰈀 ";
+              format-disconnected = "󰖪";
             };
             pulseaudio = {
-              format = "{volume}% {icon}";
-              format-muted = "Muted";
+              format = "{icon} {volume}%";
+              format-muted = "󰝟";
               format-icons = {
-                default = ["" "" ""];
+                default = ["󰕿" "󰖀" "󰕾"];
               };
+            };
+            memory = {
+              format = "󰍛 {}%";
+            };
+            clock = {
+              format = "󰅐 {:%H:%M}";
+              format-alt = " {:%Y-%m-%d}";
+              tooltip-format = "{:%Y-%m-%d | %H:%M}";
             };
           };
         };
@@ -89,7 +88,7 @@ in {
           * {
             border: none;
             border-radius: 0;
-            font-family: monospace;
+            font-family: "FiraCode Nerd Font", "Material Symbols", "Material Design Icons", "Font Awesome 6 Free", monospace;
             font-size: 14px;
             min-height: 0;
           }
@@ -111,6 +110,23 @@ in {
 
           #workspaces button.active {
             background: rgba(137, 180, 250, 0.4);
+          }
+
+          #battery,
+          #cpu,
+          #memory,
+          #network,
+          #pulseaudio,
+          #tray {
+            padding: 0 10px;
+          }
+
+          #battery.warning {
+            color: #ff9e64;
+          }
+
+          #battery.critical {
+            color: #f7768e;
           }
         '';
       };

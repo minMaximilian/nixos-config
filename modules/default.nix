@@ -13,5 +13,7 @@ _: {
     ./hyprlock
     ./greetd
     ./mako
+    ./fonts
+    ./fuzzel
   ];
 }
