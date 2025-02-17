@@ -30,8 +30,24 @@ in {
         })
       ];
 
+      # Add Discord-specific environment variables
+      home.sessionVariables = {
+        DISCORD_SKIP_FRAME_BUFFER_RESIZE = "1";
+        DISCORD_WAYLAND_SCALING = "1";
+      };
+
       xdg = {
         enable = true;
+        # Add desktop entry with Wayland flags
+        desktopEntries.discord = {
+          name = "Discord";
+          exec = "discord --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland";
+          icon = "discord";
+          terminal = false;
+          type = "Application";
+          categories = ["Network" "InstantMessaging"];
+          mimeType = ["x-scheme-handler/discord"];
+        };
         mimeApps = {
           enable = true;
           defaultApplications = {

@@ -25,23 +25,37 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+          command = ''
+            ${pkgs.greetd.tuigreet}/bin/tuigreet \
+              --time \
+              --remember \
+              --remember-session \
+              --sessions ${pkgs.hyprland}/share/wayland-sessions \
+              --cmd "dbus-run-session ${pkgs.hyprland}/bin/Hyprland"
+          '';
           user = "greeter";
         };
       };
     };
 
-    programs.uwsm = {
-      enable = true;
-      waylandCompositors.hyprland = {
-        binPath = "/run/current-system/sw/bin/Hyprland";
-        prettyName = "Hyprland";
-        comment = "Hyprland managed by UWSM";
+    environment = {
+      systemPackages = with pkgs; [
+        greetd.tuigreet
+        dbus
+      ];
+
+      sessionVariables = {
+        XDG_SESSION_TYPE = "wayland";
+        XDG_CURRENT_DESKTOP = "Hyprland";
+        XDG_SESSION_DESKTOP = "Hyprland";
       };
     };
 
-    environment.systemPackages = with pkgs; [
-      greetd.tuigreet
-    ];
+    security.pam.services.greetd = {
+      enableGnomeKeyring = true;
+    };
+
+    services.dbus.enable = true;
   };
 }
+

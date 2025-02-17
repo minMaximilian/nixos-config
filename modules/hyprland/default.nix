@@ -28,6 +28,24 @@ in {
       package = inputs.hyprland.packages.${pkgs.system}.default;
       portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
     };
+
+    # Environment variables for Wayland and scaling
+    environment.sessionVariables = {
+      # For Wayland
+      NIXOS_OZONE_WL = "1";
+      MOZ_ENABLE_WAYLAND = "1";
+      QT_QPA_PLATFORM = "wayland";
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      GDK_BACKEND = "wayland";
+      WLR_NO_HARDWARE_CURSORS = "1";
+      XCURSOR_SIZE = "24";
+      
+      # For scaling
+      GDK_SCALE = "1";
+      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+      NIXOS_SCALE = "1.0";
+    };
+
     home-manager.users.${config.myOptions.vars.username} = {
       wayland.windowManager.hyprland = {
         enable = true;
@@ -36,10 +54,17 @@ in {
         settings = {
           "$mod" = "SUPER";
 
+          # Initialize Wayland session properly
           exec-once = [
-            "uwsm finalize"
-            "uwsm app -- waybar"
-            "uwsm app -- ${pkgs.mako}"
+            "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+            "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+            "${pkgs.waybar}/bin/waybar"
+            "${pkgs.mako}/bin/mako"
+          ];
+
+          env = [
+            "XCURSOR_SIZE,24"
+            "QT_QPA_PLATFORMTHEME,qt5ct"
           ];
 
           animations = {
@@ -132,8 +157,8 @@ in {
 
           bind = [
             # Terminal and application launchers
-            "$mod, Q, exec, uwsm app -- ${pkgs.ghostty}"
-            "$mod, D, exec, uwsm app -- ${pkgs.fuzzel}"
+            "$mod, Q, exec, ${pkgs.ghostty}/bin/ghostty"
+            "$mod, D, exec, ${pkgs.fuzzel}/bin/fuzzel"
             "$mod, C, killactive"
             "$mod, M, exit"
             "$mod, F, fullscreen, 0"
