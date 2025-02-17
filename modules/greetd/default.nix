@@ -58,4 +58,3 @@ in {
     services.dbus.enable = true;
   };
 }
-

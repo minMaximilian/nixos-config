@@ -3,6 +3,7 @@
   pkgs,
   lib,
   inputs,
+  self,
   ...
 }: let
   inherit
@@ -39,7 +40,7 @@ in {
       GDK_BACKEND = "wayland";
       WLR_NO_HARDWARE_CURSORS = "1";
       XCURSOR_SIZE = "24";
-      
+
       # For scaling
       GDK_SCALE = "1";
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
@@ -54,12 +55,13 @@ in {
         settings = {
           "$mod" = "SUPER";
 
-          # Initialize Wayland session properly
+          # Ensure UWSM is initialized properly
           exec-once = [
             "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-            "${pkgs.waybar}/bin/waybar"
-            "${pkgs.mako}/bin/mako"
+            "uwsm finalize"
+            "uwsm app -- waybar"
+            "uwsm app -- ${pkgs.mako}"
           ];
 
           env = [
@@ -208,6 +210,15 @@ in {
           ];
         };
       };
+
+      services.hyprpaper = {
+        enable = true;
+        settings = {
+          preload = ["${self}/assets/wallpaper.png"];
+          wallpaper = [", ${self}/assets/wallpaper.png"];
+        };
+      };
+      systemd.user.services.hyprpaper.Unit.After = lib.mkForce "graphical-session.target";
     };
   };
 }
