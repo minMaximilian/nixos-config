@@ -5,15 +5,20 @@
   inputs,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.hyprland;
 in {
   options.myOptions.hyprland = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Hyprland Window Manager";
-    };
+    enable =
+      mkEnableOption "Hyprland Window Manager"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
@@ -23,7 +28,7 @@ in {
       package = inputs.hyprland.packages.${pkgs.system}.default;
       portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
     };
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       wayland.windowManager.hyprland = {
         enable = true;
         systemd.enable = true;
@@ -60,7 +65,6 @@ in {
           };
 
           decoration = {
-            # See https://wiki.hyprland.org/Configuring/Variables/ for more
             rounding = 0;
 
             dim_inactive = false;
@@ -70,8 +74,6 @@ in {
               enabled = true;
               size = 2;
               passes = 2;
-              # contrast = 0.8916;
-              # brightness = 0.8172;
               vibrancy = 0.4;
               new_optimizations = true;
               ignore_opacity = true;
@@ -108,7 +110,7 @@ in {
           };
 
           misc = {
-            disable_splash_rendering = true; # Text below the wallpaper
+            disable_splash_rendering = true;
             force_default_wallpaper = false;
             vfr = true;
             vrr = 0;

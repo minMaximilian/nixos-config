@@ -5,7 +5,14 @@
   inputs,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkOption
+    mkIf
+    types
+    ;
+
   cfg = config.myOptions.firefox;
 
   betterfox = pkgs.fetchFromGitHub {
@@ -16,22 +23,22 @@
   };
 in {
   options.myOptions.firefox = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Firefox browser with custom configuration";
-    };
+    enable =
+      mkEnableOption "Firefox browser with custom configuration"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.max = {osConfig, ...}: {
+    home-manager.users.${config.myOptions.vars.username} = {osConfig, ...}: {
       programs.firefox = {
         enable = true;
         package = pkgs.firefox;
 
-        profiles.max = {
+        profiles.${config.myOptions.vars.username} = {
           id = 0;
-          name = "Max";
+          name = config.myOptions.vars.username;
           isDefault = true;
 
           extensions = with inputs.firefox-addons.packages.${pkgs.system}; [

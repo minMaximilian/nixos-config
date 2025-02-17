@@ -4,19 +4,24 @@
   lib,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.mako;
 in {
   options.myOptions.mako = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Mako notification daemon";
-    };
+    enable =
+      mkEnableOption "Mako notification daemon"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       services.mako = {
         enable = true;
         defaultTimeout = 5000;

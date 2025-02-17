@@ -15,5 +15,6 @@ _: {
     ./mako
     ./fonts
     ./fuzzel
+    ./vars
   ];
 }

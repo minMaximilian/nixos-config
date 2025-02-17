@@ -4,19 +4,24 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.discord;
 in {
   options.myOptions.discord = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Discord with Wayland compatibility";
-    };
+    enable =
+      mkEnableOption "Discord with Wayland compatibility"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       home.packages = [
         (pkgs.discord.override {
           withOpenASAR = true;

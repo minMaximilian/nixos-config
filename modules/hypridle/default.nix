@@ -1,29 +1,49 @@
 {
-  config,
-  pkgs,
   lib,
+  pkgs,
+  config,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.hypridle;
 in {
   options.myOptions.hypridle = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Hypridle for idle management";
-    };
+    enable =
+      mkEnableOption "hypridle service"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
-    services.hypridle = {
-      enable = true;
-    };
-
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       services.hypridle = {
         enable = true;
+        settings = {
+          general = {
+            before_sleep_cmd = "${pkgs.systemd}/bin/loginctl lock-session";
+            lock_cmd = "hyprlock";
+          };
+
+          listener = [
+            {
+              timeout = 300;
+              on-timeout = "hyprlock";
+            }
+            {
+              timeout = 350;
+              on-timeout = "hyprctl dispatch dpms off";
+              on-resume = "hyprctl dispatch dpms on";
+            }
+          ];
+        };
       };
+      systemd.user.services.hypridle.Unit.After = lib.mkForce "graphical-session.target";
     };
   };
 }

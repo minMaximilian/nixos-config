@@ -4,15 +4,20 @@
   lib,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.hyprlock;
 in {
   options.myOptions.hyprlock = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Hyprlock screen locker";
-    };
+    enable =
+      mkEnableOption "Hyprlock screen locker"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
@@ -20,7 +25,7 @@ in {
       enable = true;
     };
 
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       wayland.windowManager.hyprland.enable = true;
       programs.hyprlock = {
         enable = true;

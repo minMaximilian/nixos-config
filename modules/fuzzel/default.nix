@@ -4,19 +4,24 @@
   lib,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.fuzzel;
 in {
   options.myOptions.fuzzel = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Fuzzel Application Launcher";
-    };
+    enable =
+      mkEnableOption "Fuzzel Application Launcher"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       programs.fuzzel = {
         enable = true;
         settings = {

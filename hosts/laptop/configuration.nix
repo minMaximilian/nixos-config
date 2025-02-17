@@ -7,6 +7,8 @@
     ./hardware-configuration.nix
   ];
 
+  myOptions.vars.withGui = true;
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -30,7 +32,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    vscode
+    code-cursor
     firefox
   ];
 

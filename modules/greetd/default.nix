@@ -4,15 +4,20 @@
   lib,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.greetd;
 in {
   options.myOptions.greetd = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Greetd display manager";
-    };
+    enable =
+      mkEnableOption "Greetd display manager"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {

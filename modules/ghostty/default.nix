@@ -4,15 +4,22 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkOption
+    mkIf
+    types
+    ;
+
   cfg = config.myOptions.ghostty;
 in {
   options.myOptions.ghostty = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Ghostty terminal emulator";
-    };
+    enable =
+      mkEnableOption "Ghostty terminal emulator"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
 
     settings = mkOption {
       type = types.attrs;
@@ -22,7 +29,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       home.packages = [
         pkgs.ghostty
       ];

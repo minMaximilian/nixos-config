@@ -4,19 +4,24 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.obsidian;
 in {
   options.myOptions.obsidian = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Obsidian with custom configuration";
-    };
+    enable =
+      mkEnableOption "Obsidian with custom configuration"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       home.packages = [pkgs.obsidian];
 
       xdg = {

@@ -4,19 +4,24 @@
   lib,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit
+    (lib)
+    mkEnableOption
+    mkIf
+    ;
+
   cfg = config.myOptions.waybar;
 in {
   options.myOptions.waybar = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Waybar status bar";
-    };
+    enable =
+      mkEnableOption "Waybar status bar"
+      // {
+        default = config.myOptions.vars.withGui;
+      };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       programs.waybar = {
         enable = true;
         systemd = {
