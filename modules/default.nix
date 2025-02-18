@@ -16,5 +16,7 @@ _: {
     ./fonts
     ./fuzzel
     ./vars
+    ./audio
+    ./theme
   ];
 }

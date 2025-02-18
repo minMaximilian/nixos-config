@@ -6,6 +6,8 @@
 }: let
   inherit (lib) mkOption mkIf types;
   cfg = config.myOptions.fish;
+  username = config.myOptions.vars.username;
+  colors = config.myOptions.theme.colorScheme.palette;
 in {
   options.myOptions.fish = {
     enable = mkOption {
@@ -16,10 +18,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    users.users.max.shell = pkgs.fish;
+    users.users.${username}.shell = pkgs.fish;
     programs.fish.enable = true;
 
-    home-manager.users.max = {
+    home-manager.users.${username} = {
       home.packages = lib.attrValues {
         inherit
           (pkgs)
@@ -34,6 +36,12 @@ in {
         fish = {
           enable = true;
           plugins = import ./plugins.nix {inherit pkgs;};
+          functions = {
+            fish_greeting = "";
+          };
+          shellInit = ''
+            ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "set -U ${name} '${value}'") (import ./colors.nix {inherit colors;}))}
+          '';
         };
         man.generateCaches = true;
         zoxide.enable = true;

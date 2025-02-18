@@ -1,42 +1,71 @@
 {
-  config,
-  pkgs,
   lib,
+  pkgs,
+  config,
   ...
 }: let
   inherit
     (lib)
     mkEnableOption
+    mkOption
     mkIf
+    types
     ;
 
   cfg = config.myOptions.mako;
 in {
   options.myOptions.mako = {
     enable =
-      mkEnableOption "Mako notification daemon"
+      mkEnableOption "mako service"
       // {
         default = config.myOptions.vars.withGui;
       };
+
+    fontSize = mkOption {
+      type = types.int;
+      default = 12;
+    };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.${config.myOptions.vars.username} = {
+    home-manager.users.${config.myOptions.vars.username} = {config, ...}: let
+      inherit (config.colorScheme) palette;
+    in {
+      home.packages = [pkgs.libnotify];
+
       services.mako = {
         enable = true;
-        defaultTimeout = 5000;
-        layer = "overlay";
-        width = 300;
-        height = 100;
-        borderSize = 2;
+
+        font = "monospace ${toString cfg.fontSize}";
+        backgroundColor = "#${palette.base00}";
+        borderColor = "#${palette.base0E}";
+        textColor = "#${palette.base05}";
+        progressColor = "over #${palette.base02}";
+
+        anchor = "top-right";
         borderRadius = 5;
-        backgroundColor = "#1e1e2e";
-        textColor = "#cdd6f4";
-        borderColor = "#89b4fa";
-        progressColor = "over #313244";
-        icons = true;
-        maxIconSize = 64;
-        sort = "-time";
+        borderSize = 2;
+        padding = "20";
+        defaultTimeout = 5000;
+        layer = "top";
+        height = 100;
+        width = 300;
+        format = "<b>%s</b>\\n%b";
+
+        extraConfig = ''
+          [urgency=low]
+          border-color=#${palette.base0B}
+          background-color=#${palette.base01}
+          default-timeout=3000
+
+          [urgency=high]
+          background-color=#${palette.base01}
+          border-color=#${palette.base0B}
+          default-timeout=10000
+
+          [mode=dnd]
+          invisible=1
+        '';
       };
     };
   };

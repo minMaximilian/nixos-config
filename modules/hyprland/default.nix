@@ -32,7 +32,6 @@ in {
 
     # Environment variables for Wayland and scaling
     environment.sessionVariables = {
-      # For Wayland
       NIXOS_OZONE_WL = "1";
       MOZ_ENABLE_WAYLAND = "1";
       QT_QPA_PLATFORM = "wayland";
@@ -41,13 +40,14 @@ in {
       WLR_NO_HARDWARE_CURSORS = "1";
       XCURSOR_SIZE = "24";
 
-      # For scaling
       GDK_SCALE = "1";
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       NIXOS_SCALE = "1.0";
     };
 
-    home-manager.users.${config.myOptions.vars.username} = {
+    home-manager.users.${config.myOptions.vars.username} = {config, ...}: let
+      inherit (config.colorScheme) palette;
+    in {
       wayland.windowManager.hyprland = {
         enable = true;
         systemd.enable = true;
@@ -55,7 +55,13 @@ in {
         settings = {
           "$mod" = "SUPER";
 
-          # Ensure UWSM is initialized properly
+          "$active" = "rgb(${palette.base0D})";
+          "$inactive" = "rgb(${palette.base02})";
+          "$groupActive" = "rgb(${palette.base0E})";
+          "$groupInactive" = "rgb(${palette.base01})";
+          "$text" = "rgb(${palette.base05})";
+          "$warning" = "rgb(${palette.base08})";
+
           exec-once = [
             "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
@@ -71,9 +77,7 @@ in {
 
           animations = {
             enabled = true;
-
             bezier = ["myBezier, 0.05, 0.9, 0.1, 1.05"];
-
             animation = [
               "windows, 1, 7, myBezier"
               "windowsOut, 1, 7, default, popin 80%"
@@ -93,14 +97,15 @@ in {
 
           decoration = {
             rounding = 0;
-
+            active_opacity = 1.0;
+            inactive_opacity = 0.95;
             dim_inactive = false;
             dim_strength = 0.7;
 
             blur = {
               enabled = true;
-              size = 2;
-              passes = 2;
+              size = 5;
+              passes = 3;
               vibrancy = 0.4;
               new_optimizations = true;
               ignore_opacity = true;
@@ -109,9 +114,11 @@ in {
             };
 
             shadow = {
-              enabled = false;
+              enabled = true;
               range = 8;
-              render_power = 3;
+              render_power = 2;
+              offset = "0 0";
+              color = "rgb(${palette.base00})";
             };
           };
 
@@ -119,7 +126,8 @@ in {
             gaps_in = 3;
             gaps_out = 3;
             border_size = 2;
-
+            "col.active_border" = "$active $groupActive 45deg";
+            "col.inactive_border" = "$inactive";
             layout = "dwindle";
           };
 
@@ -158,14 +166,12 @@ in {
           ];
 
           bind = [
-            # Terminal and application launchers
             "$mod, Q, exec, ${pkgs.ghostty}/bin/ghostty"
             "$mod, D, exec, ${pkgs.fuzzel}/bin/fuzzel"
             "$mod, C, killactive"
             "$mod, M, exit"
             "$mod, F, fullscreen, 0"
 
-            # Dwindle Keybind
             "$mod, h, resizeactive, -20 0"
             "$mod, l, resizeactive, 20 0"
             "$mod, k, movefocus, u"
@@ -201,9 +207,16 @@ in {
             "$mod SHIFT, 8, movetoworkspacesilent, 8"
             "$mod SHIFT, 9, movetoworkspacesilent, 9"
             "$mod SHIFT, 0, movetoworkspacesilent, 10"
+
+            ", XF86AudioRaiseVolume, exec, pamixer -i 5"
+            ", XF86AudioLowerVolume, exec, pamixer -d 5"
+            ", XF86AudioMute, exec, pamixer -t"
+
+            "$mod, equal, exec, pamixer -i 5"
+            "$mod, minus, exec, pamixer -d 5"
+            "$mod, m, exec, pamixer -t"
           ];
 
-          # Mouse bindings
           bindm = [
             "$mod, mouse:272, movewindow"
             "$mod, mouse:273, resizewindow"

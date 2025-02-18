@@ -19,6 +19,8 @@
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprlock.url = "github:hyprwm/Hyprlock";
     hyprlock.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-colors.url = "github:misterio77/nix-colors";
   };
   outputs = inputs @ {flake-parts, ...}:
     flake-parts.lib.mkFlake {inherit inputs;} {
