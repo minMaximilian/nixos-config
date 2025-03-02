@@ -57,7 +57,6 @@ in {
             ${builtins.readFile "${betterfox}/Securefox.js"}
             ${builtins.readFile "${betterfox}/Smoothfox.js"}
 
-            /* Custom overrides */
             user_pref("extensions.formautofill.addresses.enabled", false);
             user_pref("extensions.formautofill.creditCards.enabled", false);
             user_pref("dom.security.https_only_mode_pbm", true);

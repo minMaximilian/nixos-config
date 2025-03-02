@@ -1,16 +1,15 @@
 {
-  lib,
-  pkgs,
   config,
+  pkgs,
+  lib,
   inputs,
-  self,
   ...
 }: let
   inherit
     (lib)
     mkEnableOption
-    mkIf
     mkOption
+    mkIf
     types
     ;
 
@@ -19,20 +18,21 @@ in {
   options = {
     myOptions.theme = {
       enable =
-        mkEnableOption ""
+        mkEnableOption "Theme configuration"
         // {
           default = config.myOptions.vars.withGui;
         };
 
       colorScheme = mkOption {
-        type = types.anything;
-        default = inputs.nix-colors.colorSchemes.${config.myOptions.vars.colorScheme};
+        type = types.attrs;
+        default = inputs.nix-colors.colorSchemes.catppuccin-mocha;
+        description = "The color scheme to use";
       };
     };
 
     # NixOS-level colorScheme option
     colorScheme = mkOption {
-      type = types.anything;
+      type = types.attrs;
       internal = true;
       visible = false;
     };

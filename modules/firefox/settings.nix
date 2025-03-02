@@ -1,128 +1,106 @@
-{lib, ...}: {
-  "browser.search.region" = "IE";
-  "browser.search.isUS" = false;
-  "distribution.searchplugins.defaultLocale" = "en-IE";
-  "general.useragent.locale" = "en-IE";
-  "browser.bookmarks.showMobileBookmarks" = true;
-  "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-  "browser.privatebrowsing.vpnpromourl" = "";
-  "browser.tabs.firefox-view" = false;
-  "browser.tabs.firefox-view-next" = false;
+{lib}: let
+  inherit (lib) mkMerge;
+in
+  mkMerge [
+    {
+      "browser.startup.homepage" = "about:home";
+      "browser.search.region" = "US";
+      "browser.search.isUS" = true;
+      "distribution.searchplugins.defaultLocale" = "en-US";
+      "general.useragent.locale" = "en-US";
+      "browser.bookmarks.showMobileBookmarks" = true;
+      "browser.newtabpage.pinned" = [];
+      "browser.startup.page" = 3;
+      "browser.newtabpage.enabled" = true;
 
-  "network.trr.mode" = 2;
-  "network.trr.max-fails" = 5;
-  "network.trr.default_provider_uri" = "https://doh.tiarap.org/dns-query";
-  "network.trr.uri" = "https://doh.tiarap.org/dns-query";
-  "network.trr.custom_uri" = "https://doh.tiarap.org/dns-query";
-  # Disable telemetry
-  "browser.newtabpage.activity-stream.feeds.telemetry" = false;
-  "browser.ping-centre.telemetry" = false;
-  "browser.tabs.crashReporting.sendReport" = false;
-  "devtools.onboarding.telemetry.logged" = false;
-  "toolkit.telemetry.enabled" = false;
-  "toolkit.telemetry.server" = "data:,";
-  "toolkit.telemetry.unified" = false;
-  "toolkit.telemetry.archive.enabled" = false;
-  "toolkit.telemetry.newProfilePing.enabled" = false;
-  "toolkit.telemetry.shutdownPingSender.enabled" = false;
-  "toolkit.telemetry.updatePing.enabled" = false;
-  "toolkit.telemetry.bhrPing.enabled" = false;
-  "toolkit.telemetry.firstShutdownPing.enabled" = false;
+      "datareporting.policy.dataSubmissionEnable" = false;
+      "datareporting.healthreport.uploadEnabled" = false;
+      "toolkit.telemetry.unified" = false;
+      "toolkit.telemetry.enabled" = false;
+      "toolkit.telemetry.server" = "data:,";
+      "toolkit.telemetry.archive.enabled" = false;
+      "toolkit.telemetry.newProfilePing.enabled" = false;
+      "toolkit.telemetry.updatePing.enabled" = false;
+      "toolkit.telemetry.bhrPing.enabled" = false;
+      "toolkit.telemetry.firstShutdownPing.enabled" = false;
+      "toolkit.telemetry.coverage.opt-out" = true;
+      "toolkit.coverage.opt-out" = true;
+      "toolkit.coverage.endpoint.base" = "";
+      "browser.ping-centre.telemetry" = false;
+      "browser.newtabpage.activity-stream.feeds.telemetry" = false;
+      "browser.newtabpage.activity-stream.telemetry" = false;
 
-  # # Disable Pocket
-  "browser.newtabpage.activity-stream.feeds.discoverystreamfeed" = false;
-  "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
-  "browser.newtabpage.activity-stream.section.highlights.includePocket" = false;
-  "browser.newtabpage.activity-stream.showSponsored" = false;
-  "extensions.pocket.enabled" = false;
+      "extensions.pocket.enabled" = false;
+      "extensions.pocket.api" = "";
+      "extensions.pocket.oAuthConsumerKey" = "";
+      "extensions.pocket.showHome" = false;
+      "extensions.pocket.site" = "";
 
-  # Disable prefetching
-  "network.dns.disablePrefetch" = true;
-  "network.prefetch-next" = false;
+      "network.prefetch-next" = false;
+      "network.dns.disablePrefetch" = true;
+      "network.predictor.enabled" = false;
 
-  # Disable JS in PDFs
-  "pdfjs.enableScripting" = false;
+      "pdfjs.enableScripting" = false;
 
-  # Harden SSL
-  "security.ssl.require_safe_negotiation" = true;
+      "security.ssl.require_safe_negotiation" = true;
+      "security.tls.enable_0rtt_data" = false;
 
-  # Tweaks from archwiki
-  "browser.cache.disk.enable" = false;
-  "browser.cache.memory.enable" = true;
-  "browser.cache.memory.capacity" = -1;
-  "browser.aboutConfig.showWarning" = false;
-  "browser.preferences.defaultPerformanceSettings.enabled" = false;
-  "middlemouse.paste" = false;
+      "browser.fixup.alternate.enabled" = false;
+      "browser.urlbar.trimURLs" = false;
+      "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
+      "browser.urlbar.suggest.quicksuggest.sponsored" = false;
 
-  # Smooth Scroll
-  "general.smoothScroll" = true;
-  "general.smoothScroll.lines.durationMaxMS" = 125;
-  "general.smoothScroll.lines.durationMinMS" = 125;
-  "general.smoothScroll.mouseWheel.durationMaxMS" = 200;
-  "general.smoothScroll.mouseWheel.durationMinMS" = 100;
-  "general.smoothScroll.msdPhysics.enabled" = true;
-  "general.smoothScroll.other.durationMaxMS" = 125;
-  "general.smoothScroll.other.durationMinMS" = 125;
-  "general.smoothScroll.pages.durationMaxMS" = 125;
-  "general.smoothScroll.pages.durationMinMS" = 125;
-  "mousewheel.min_line_scroll_amount" = 30;
-  "mousewheel.system_scroll_override_on_root_content.enabled" = true;
-  "mousewheel.system_scroll_override_on_root_content.horizontal.factor" = 175;
-  "mousewheel.system_scroll_override_on_root_content.vertical.factor" = 175;
-  "toolkit.scrollbox.horizontalScrollDistance" = 6;
-  "toolkit.scrollbox.verticalScrollDistance" = 2;
+      "general.smoothScroll" = true;
+      "general.smoothScroll.currentVelocityWeighting" = "0.1";
+      "general.smoothScroll.mouseWheel.durationMaxMS" = 250;
+      "general.smoothScroll.mouseWheel.durationMinMS" = 125;
+      "general.smoothScroll.stopDecelerationWeighting" = "0.7";
+      "mousewheel.min_line_scroll_amount" = 20;
+      "apz.overscroll.enabled" = true;
+      "general.smoothScroll.msdPhysics.enabled" = true;
+      "general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS" = 12;
+      "general.smoothScroll.msdPhysics.motionBeginSpringConstant" = 600;
+      "general.smoothScroll.msdPhysics.regularSpringConstant" = 650;
+      "general.smoothScroll.msdPhysics.slowdownMinDeltaMS" = 25;
+      "general.smoothScroll.msdPhysics.slowdownMinDeltaRatio" = 2.0;
+      "general.smoothScroll.msdPhysics.slowdownSpringConstant" = 250;
+      "mousewheel.system_scroll_override.horizontal.factor" = 200;
+      "mousewheel.system_scroll_override.vertical.factor" = 200;
+      "mousewheel.system_scroll_override_on_root_content.enabled" = true;
+      "mousewheel.system_scroll_override.enabled" = true;
+      "toolkit.scrollbox.horizontalScrollDistance" = 6;
+      "toolkit.scrollbox.verticalScrollDistance" = 2;
 
-  # # Extra
-  "identity.fxaccounts.enabled" = false;
-  "browser.download.useDownloadDir" = false;
-  "browser.search.suggest.enabled" = false;
-  "browser.urlbar.shortcuts.bookmarks" = false;
-  "browser.urlbar.shortcuts.history" = false;
-  "browser.urlbar.shortcuts.tabs" = false;
-  "browser.urlbar.suggest.bookmark" = false;
-  "browser.urlbar.suggest.searches" = false;
-  "browser.urlbar.suggest.engines" = false;
-  "browser.urlbar.suggest.history" = true;
-  "browser.urlbar.suggest.openpage" = false;
-  "browser.urlbar.suggest.topsites" = false;
-  "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false;
-  "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false;
-  "signon.rememberSignons" = false;
-  "signon.autofillForms" = false;
-  "network.dns.disableIPv6" = true;
-  "network.proxy.socks_remote_dns" = true;
-  "dom.security.https_first" = true;
+      "privacy.donottrackheader.enabled" = true;
+      "privacy.trackingprotection.enabled" = true;
+      "privacy.trackingprotection.socialtracking.enabled" = true;
+      "privacy.partition.network_state.ocsp_cache" = true;
+      "privacy.userContext.enabled" = true;
+      "privacy.userContext.ui.enabled" = true;
 
-  # Disable permission
-  # 0=always ask (default), 1=allow, 2=block
-  "permissions.default.geo" = 2;
-  "permissions.default.camera" = 2;
-  "permissions.default.microphone" = 0;
-  "permissions.default.desktop-notification" = 2;
-  "permissions.default.xr" = 2; # Virtual Reality
-  "browser.discovery.enabled" = false;
-  "datareporting.healthreport.uploadEnabled" = false;
-  "datareporting.policy.dataSubmissionEnabled" = false;
-  "app.shield.optoutstudies.enabled" = false;
-  "app.normandy.enabled" = false;
-  "app.normandy.api_url" = "";
+      "browser.download.useDownloadDir" = false;
+      "browser.download.always_ask_before_handling_new_types" = true;
+      "browser.download.manager.addToRecentDocs" = false;
 
-  # Firefox GNOME Theme
-  # Hide the tab bar when only one tab is open.
-  "gnomeTheme.hideSingleTab" = true;
-  # By default the tab close buttons follows the position of the window controls, this preference reverts that behavior.
-  "gnomeTheme.swapTabClose" = true;
-  # Move Bookmarks toolbar under tabs.
-  "gnomeTheme.bookmarksToolbarUnderTabs" = true;
-  # Hide WebRTC indicator since GNOME provides their own privacy icons in the top right.
-  "gnomeTheme.hideWebrtcIndicator" = true;
-  # Use system theme icons instead of Adwaita icons included by theme.
-  "gnomeTheme.systemIcons" = true;
+      "permissions.default.geo" = 2;
+      "permissions.default.camera" = 2;
+      "permissions.default.microphone" = 2;
+      "permissions.default.desktop-notification" = 2;
+      "permissions.default.shortcuts" = 2;
+      "permissions.default.xr" = 2;
 
-  # Add these GNOME integration settings
-  "browser.gnome-search-provider.enabled" = true;
-  "widget.use-xdg-desktop-portal" = true;
-  "widget.use-xdg-desktop-portal.file-picker" = 1;
-  "widget.use-xdg-desktop-portal.mime-handler" = 1;
-  "widget.use-xdg-desktop-portal.settings" = 1;
-}
+      "browser.compactmode.show" = true;
+      "browser.display.focus_ring_on_anything" = true;
+      "browser.display.focus_ring_style" = 0;
+      "browser.display.focus_ring_width" = 0;
+
+      "gnomeTheme.hideSingleTab" = true;
+      "gnomeTheme.bookmarksToolbarUnderTabs" = true;
+      "gnomeTheme.hideWebrtcIndicator" = true;
+      "gnomeTheme.systemIcons" = true;
+
+      "browser.gnome-search-provider.enabled" = true;
+      "browser.tabs.drawInTitlebar" = true;
+      "widget.gtk.rounded-bottom-corners.enabled" = true;
+    }
+  ]
