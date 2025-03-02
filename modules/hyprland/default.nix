@@ -239,6 +239,18 @@ in {
           ];
         };
       };
+
+      services.hyprpaper = {
+        enable = true;
+
+        settings = {
+          preload = ["${self}/assets/wallpaper.png"];
+
+          wallpaper = [", ${self}/assets/wallpaper.png"];
+        };
+      };
+
+      systemd.user.services.hyprpaper.Unit.After = lib.mkForce "graphical-session.target";
     };
   };
 }
