@@ -11,6 +11,7 @@ _: {
     ./hyprland
     ./hypridle
     ./hyprlock
+    ./hyprcursor
     ./greetd
     ./mako
     ./fonts
@@ -18,5 +19,7 @@ _: {
     ./vars
     ./audio
     ./theme
+    ./amdgpu
+    ./btop
   ];
 }

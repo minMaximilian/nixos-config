@@ -8,11 +8,12 @@
   ];
 
   myOptions.vars.withGui = true;
+  myOptions.amdgpu.enable = true; # Enable AMD GPU support for desktop
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos";
+  networking.hostName = "whiteforest";
   networking.networkmanager.enable = true;
 
   services.xserver.xkb = {

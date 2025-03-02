@@ -2,63 +2,78 @@
   inherit (config.colorScheme) palette;
 in ''
   * {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    min-height: 0;
     border: none;
-    font-family: monospace;
-    font-size: 13px;
-    min-height: 20px;
+    border-radius: 0;
   }
 
   window#waybar {
     background-color: #${palette.base00};
     color: #${palette.base05};
-    border-bottom: 2px solid #${palette.base0D};
   }
 
   #workspaces {
-    margin: 0 4px;
+    background-color: #${palette.base01};
+    margin: 5px;
+    margin-left: 10px;
+    border-radius: 5px;
   }
 
   #workspaces button {
-    padding: 0 5px;
+    padding: 0 10px;
     color: #${palette.base05};
-    border: 2px solid #${palette.base01};
-    margin: 4px 2px;
-    border-radius: 2px;
-    background-color: #${palette.base01};
   }
 
   #workspaces button.active {
     color: #${palette.base00};
-    background-color: #${palette.base0D};
-    border-color: #${palette.base0D};
+    background-color: #${palette.base0B};
   }
 
   #workspaces button:hover {
-    background-color: #${palette.base02};
-    color: #${palette.base05};
-    border-color: #${palette.base02};
+    box-shadow: inherit;
+    text-shadow: inherit;
+    background: #${palette.base02};
   }
 
-  #clock,
-  #battery,
-  #cpu,
-  #memory,
-  #network,
-  #pulseaudio,
-  #tray {
-    padding: 0 8px;
-    margin: 4px 2px;
+  #workspaces button.urgent {
+    background-color: #${palette.base08};
+  }
+
+  #window {
+    margin: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    transition: none;
     color: #${palette.base05};
+    background: #${palette.base01};
+  }
+
+  #clock, #battery, #cpu, #memory, #network, #pulseaudio, #tray {
+    margin: 5px;
+    margin-right: 10px;
+    padding: 0 10px;
+    border-radius: 5px;
     background-color: #${palette.base01};
-    border-radius: 2px;
+    color: #${palette.base05};
   }
 
-  #battery.warning {
-    background-color: #${palette.base09};
+  #clock {
+    margin-right: 10px;
+  }
+
+  #battery.charging {
+    color: #${palette.base0B};
+  }
+
+  #battery.warning:not(.charging) {
+    background-color: #${palette.base0A};
     color: #${palette.base00};
   }
 
-  #battery.critical {
+  #battery.critical:not(.charging) {
     background-color: #${palette.base08};
     color: #${palette.base00};
   }
@@ -67,19 +82,17 @@ in ''
     background-color: #${palette.base08};
   }
 
-  #tray {
-    margin-right: 4px;
-  }
-
   #pulseaudio.muted {
-    background-color: #${palette.base01};
-    color: #${palette.base03};
+    background-color: #${palette.base0A};
+    color: #${palette.base00};
   }
 
-  #window {
-    margin: 4px;
-    padding: 0 8px;
-    background-color: #${palette.base01};
-    border-radius: 2px;
+  tooltip {
+    background: #${palette.base00};
+    border: 1px solid #${palette.base05};
+  }
+
+  tooltip label {
+    color: #${palette.base05};
   }
 ''

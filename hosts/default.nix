@@ -16,12 +16,23 @@
       inherit inputs pkgs-stable self;
     };
   in {
-    nixos = nixosSystem {
+    # Desktop
+    whiteforest = nixosSystem {
       inherit specialArgs;
       modules = [
         sharedModules
         inputs.home-manager.nixosModules.home-manager
-        ./laptop/configuration.nix
+        ./whiteforest/configuration.nix
+      ];
+    };
+
+    # Laptop
+    ravenholm = nixosSystem {
+      inherit specialArgs;
+      modules = [
+        sharedModules
+        inputs.home-manager.nixosModules.home-manager
+        ./ravenholm/configuration.nix
       ];
     };
   };

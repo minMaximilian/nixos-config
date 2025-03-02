@@ -30,7 +30,6 @@ in {
       portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
     };
 
-    # Environment variables for Wayland and scaling
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
       MOZ_ENABLE_WAYLAND = "1";
@@ -38,7 +37,6 @@ in {
       QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
       GDK_BACKEND = "wayland";
       WLR_NO_HARDWARE_CURSORS = "1";
-      XCURSOR_SIZE = "24";
 
       GDK_SCALE = "1";
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
@@ -71,7 +69,6 @@ in {
           ];
 
           env = [
-            "XCURSOR_SIZE,24"
             "QT_QPA_PLATFORMTHEME,qt5ct"
           ];
 
@@ -186,6 +183,23 @@ in {
             "$mod SHIFT, k, movewindow, u"
             "$mod SHIFT, j, movewindow, d"
 
+            "$mod ALT, h, movecurrentworkspacetomonitor, l"
+            "$mod ALT, l, movecurrentworkspacetomonitor, r"
+            "$mod ALT, k, movecurrentworkspacetomonitor, u"
+            "$mod ALT, j, movecurrentworkspacetomonitor, d"
+
+            "$mod ALT, 1, focusmonitor, 0"
+            "$mod ALT, 2, focusmonitor, 1"
+            "$mod ALT, 3, focusmonitor, 2"
+
+            "$mod ALT SHIFT, 1, movewindow, mon:0"
+            "$mod ALT SHIFT, 2, movewindow, mon:1"
+            "$mod ALT SHIFT, 3, movewindow, mon:2"
+
+            "$mod ALT CTRL, 1, moveworkspacetomonitor, 1 0"
+            "$mod ALT CTRL, 2, moveworkspacetomonitor, 2 1"
+            "$mod ALT CTRL, 3, moveworkspacetomonitor, 3 2"
+
             "$mod, 1, workspace, 1"
             "$mod, 2, workspace, 2"
             "$mod, 3, workspace, 3"
@@ -215,23 +229,16 @@ in {
             "$mod, equal, exec, pamixer -i 5"
             "$mod, minus, exec, pamixer -d 5"
             "$mod, m, exec, pamixer -t"
-          ];
 
-          bindm = [
-            "$mod, mouse:272, movewindow"
-            "$mod, mouse:273, resizewindow"
+            "$mod ALT, o, exec, audio-switcher output"
+            "$mod ALT, i, exec, audio-switcher input"
+            "$mod ALT, p, exec, pavucontrol"
+            "$mod ALT, q, exec, qpwgraph"
+            "$mod ALT, h, exec, helvum"
+            "$mod ALT, e, exec, easyeffects"
           ];
         };
       };
-
-      services.hyprpaper = {
-        enable = true;
-        settings = {
-          preload = ["${self}/assets/wallpaper.png"];
-          wallpaper = [", ${self}/assets/wallpaper.png"];
-        };
-      };
-      systemd.user.services.hyprpaper.Unit.After = lib.mkForce "graphical-session.target";
     };
   };
 }

@@ -81,6 +81,11 @@ in {
               format-icons = {
                 default = ["󰕿" "󰖀" "󰕾"];
               };
+              on-click = "pavucontrol";
+              on-click-right = "audio-switcher output";
+              on-click-middle = "audio-switcher input";
+              tooltip = true;
+              tooltip-format = "Current Output: {desc}";
             };
             memory = {
               format = "󰍛 {}%";
