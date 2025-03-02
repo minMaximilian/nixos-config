@@ -51,7 +51,7 @@ in ''
     background: #${palette.base01};
   }
 
-  #clock, #battery, #cpu, #memory, #network, #pulseaudio, #tray {
+  #clock, #battery, #cpu, #memory, #network, #pulseaudio, #bluetooth, #tray {
     margin: 5px;
     margin-right: 10px;
     padding: 0 10px;
@@ -85,6 +85,18 @@ in ''
   #pulseaudio.muted {
     background-color: #${palette.base0A};
     color: #${palette.base00};
+  }
+
+  #bluetooth.disabled {
+    background-color: #${palette.base01};
+  }
+
+  #bluetooth.off {
+    background-color: #${palette.base08};
+  }
+
+  #bluetooth.connected {
+    color: #${palette.base0B};
   }
 
   tooltip {

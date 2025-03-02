@@ -45,6 +45,7 @@ in {
               "clock"
             ];
             modules-right = [
+              "bluetooth"
               "pulseaudio"
               "network"
               "cpu"
@@ -69,6 +70,15 @@ in {
               format = "󰁹 {capacity}%";
               format-charging = "󰂄 {capacity}%";
               format-plugged = "󰂄 {capacity}%";
+            };
+            bluetooth = {
+              format = "󰂯";
+              format-disabled = "󰂲";
+              format-connected = "󰂱 {num_connections}";
+              tooltip-format = "{device_alias}";
+              tooltip-format-connected = "{device_enumerate}";
+              tooltip-format-enumerate-connected = "{device_alias}";
+              on-click = "blueman-manager";
             };
             network = {
               format-wifi = "󰤨 {signalStrength}%";

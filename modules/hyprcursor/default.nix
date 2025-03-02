@@ -9,7 +9,7 @@
   cfg = config.myOptions.hyprcursor;
 
   cursorTheme = "Bibata-Modern-Classic";
-  cursorSize = 24;
+  cursorSize = 16;
 in {
   options.myOptions.hyprcursor = {
     enable =

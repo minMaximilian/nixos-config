@@ -73,7 +73,6 @@ in {
           confirm-close-surface = false;
           macos-option-as-alt = true;
           mouse-hide-while-typing = true;
-          scrollback-lines = 10000;
           shell-integration-features = "no-cursor";
           cursor-style = "block";
           cursor-style-blink = false;
