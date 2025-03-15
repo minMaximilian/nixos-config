@@ -35,5 +35,16 @@
         ./ravenholm/configuration.nix
       ];
     };
+
+    # WSL
+    wsl = nixosSystem {
+      inherit specialArgs;
+      modules = [
+        sharedModules
+        inputs.home-manager.nixosModules.home-manager
+        inputs.nixos-wsl.nixosModules.default
+        ./wsl/configuration.nix
+      ];
+    };
   };
 }
