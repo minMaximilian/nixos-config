@@ -35,5 +35,6 @@
     wget
     git
     home-manager
+    tree
   ];
 }

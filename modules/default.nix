@@ -23,5 +23,6 @@ _: {
     ./btop
     ./bluetooth
     ./spicetify
+    ./boot
   ];
 }

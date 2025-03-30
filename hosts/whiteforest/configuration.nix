@@ -10,8 +10,18 @@
   myOptions.vars.withGui = true;
   myOptions.amdgpu.enable = true; # Enable AMD GPU support for desktop
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Enable boot module with Windows dual-boot
+  myOptions.boot = {
+    enable = true;
+    loader = "systemd-boot";
+    configurationLimit = 10;
+    dualBoot = {
+      enable = true;
+      windows.enable = true;
+      # Uncomment and modify if your Windows EFI is in a non-standard location
+      # windows.efiPath = "/EFI/Microsoft/Boot/bootmgfw.efi";
+    };
+  };
 
   networking.hostName = "whiteforest";
   networking.networkmanager.enable = true;
