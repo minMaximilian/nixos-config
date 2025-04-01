@@ -6,7 +6,6 @@
   ...
 }: {
   imports = [
-    # No VSCode module import needed for manual approach
   ];
 
   myOptions.vars.withGui = false;

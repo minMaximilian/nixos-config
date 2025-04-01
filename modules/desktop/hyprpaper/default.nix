@@ -22,8 +22,8 @@ in {
       services.hyprpaper = {
         enable = true;
         settings = {
-          preload = ["${self}/assets/wallpaper.png"];
-          wallpaper = [", ${self}/assets/wallpaper.png"];
+          preload = ["${self}/modules/themes/wallpaper.png"];
+          wallpaper = [", ${self}/modules/themes/wallpaper.png"];
         };
       };
 
