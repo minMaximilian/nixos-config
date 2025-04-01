@@ -37,13 +37,13 @@
     };
 
     # WSL
-    wsl = nixosSystem {
+    blackmesa = nixosSystem {
       inherit specialArgs;
       modules = [
         sharedModules
         inputs.home-manager.nixosModules.home-manager
         inputs.nixos-wsl.nixosModules.default
-        ./wsl/configuration.nix
+        ./blackmesa/configuration.nix
       ];
     };
   };

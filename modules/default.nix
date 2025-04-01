@@ -24,5 +24,7 @@ _: {
     ./bluetooth
     ./spicetify
     ./boot
+    ./hyprpaper
+    ./desktop-environment
   ];
 }
