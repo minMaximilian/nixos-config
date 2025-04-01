@@ -6,7 +6,6 @@
   ...
 }: {
   imports = [
-    ./users.nix
     ./home-manager.nix
     inputs.home-manager.nixosModules.home-manager
   ];

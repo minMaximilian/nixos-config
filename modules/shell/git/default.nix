@@ -20,7 +20,7 @@ in {
       programs.git = {
         enable = true;
         package = pkgs.gitFull;
-        userEmail = "max.hodor@pm.me";
+        userEmail = "53843385+minMaximilian@users.noreply.github.com";
         userName = "minMaximilian";
       };
     };
