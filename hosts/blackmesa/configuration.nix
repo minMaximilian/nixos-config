@@ -28,12 +28,6 @@
     };
   };
 
-  users.users.max = {
-    uid = lib.mkForce 1000;
-    isNormalUser = true;
-    extraGroups = ["wheel"];
-  };
-
   networking.hostName = "wsl";
 
   home-manager.users.max.home.stateVersion = "24.05";

@@ -4,7 +4,6 @@
     ./hyprpaper
     ./fuzzel
     ./fonts
-    ./environment
     ./apps
   ];
 }

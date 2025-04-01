@@ -1,5 +1,5 @@
 {
   imports = [
-    ./vars
+    ./max.nix
   ];
 }

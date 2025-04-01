@@ -35,7 +35,6 @@
 
   environment.systemPackages = with pkgs; [
     code-cursor
-    firefox
   ];
 
   system.stateVersion = "24.11";

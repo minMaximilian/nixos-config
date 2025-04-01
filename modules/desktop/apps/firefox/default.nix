@@ -31,6 +31,8 @@ in {
   };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = [pkgs.firefox];
+
     home-manager.users.${config.myOptions.vars.username} = {osConfig, ...}: {
       programs.firefox = {
         enable = true;
