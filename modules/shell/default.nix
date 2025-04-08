@@ -2,5 +2,6 @@
   imports = [
     ./git
     ./fish
+    ./btop
   ];
 }

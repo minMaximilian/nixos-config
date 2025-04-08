@@ -5,5 +5,6 @@
     ./fuzzel
     ./fonts
     ./apps
+    ./hyprcursor
   ];
 }

@@ -4,7 +4,6 @@
     ./obsidian
     ./firefox
     ./discord
-    ./btop
     ./ghostty
   ];
 }
