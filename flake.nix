@@ -22,7 +22,7 @@
     hyprcursor.url = "github:hyprwm/hyprcursor";
     hyprcursor.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-colors.url = "github:misterio77/nix-colors";
+    stylix.url = "github:danth/stylix";
 
     spicetify-nix.url = "github:gerg-l/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";

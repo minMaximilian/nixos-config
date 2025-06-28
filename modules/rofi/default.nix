@@ -26,17 +26,11 @@ in {
 
   config = mkIf cfg.enable {
     home-manager.users.${config.myOptions.vars.username} = {
-      config,
-      osConfig,
-      ...
-    }: let
-      theme = import ./style.nix {inherit config;};
-    in {
       programs.rofi = {
         enable = true;
         package = pkgs.rofi-wayland;
         terminal = "${pkgs.ghostty}/bin/ghostty";
-        font = "JetBrainsMono Nerd Font 12";
+        # Font and theme handled by stylix
         extraConfig = {
           modi = "run,drun,window";
           icon-theme = "Papirus";
@@ -50,9 +44,6 @@ in {
           sidebar-mode = true;
         };
       };
-
-      # Write the theme directly to a file instead of using the theme option
-      xdg.configFile."rofi/config.rasi".text = theme;
     };
   };
 }

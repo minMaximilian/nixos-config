@@ -31,9 +31,7 @@ in {
       Xcursor.size: ${toString cursorSize}
     '';
 
-    home-manager.users.${config.myOptions.vars.username} = {config, ...}: let
-      inherit (config.colorScheme) palette;
-    in {
+    home-manager.users.${config.myOptions.vars.username} = {
       home.packages = [
         inputs.hyprcursor.packages.${pkgs.system}.hyprcursor
         pkgs.bibata-cursors
@@ -47,28 +45,14 @@ in {
         x11.enable = true;
       };
 
-      xdg.configFile."hyprcursor/themes/custom/hyprcursor.toml".text = ''
-        [theme]
-        name = "custom"
-        author = "user"
-
-        [colors]
-        primary = "#${palette.base0D}"
-        secondary = "#${palette.base0C}"
-        tertiary = "#${palette.base0B}"
-      '';
-
+      # Stylix handles cursor theming
       xdg.configFile."hyprcursor/themes/custom/cursors".source = "${pkgs.bibata-cursors}/share/icons/${cursorTheme}/cursors";
-
-      xdg.configFile."hyprcursor/hyprcursor.conf".text = ''
-        theme = "custom"
-      '';
 
       wayland.windowManager.hyprland.settings = {
         exec-once = ["hyprcursor"];
 
         env = [
-          "HYPRCURSOR_THEME,custom"
+          "HYPRCURSOR_THEME,${cursorTheme}"
           "HYPRCURSOR_SIZE,${toString cursorSize}"
           "XCURSOR_THEME,${cursorTheme}"
           "XCURSOR_SIZE,${toString cursorSize}"

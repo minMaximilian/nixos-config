@@ -27,7 +27,7 @@ in {
     colorScheme = mkOption {
       type = types.str;
       default = "catppuccin-mocha";
-      description = "The name of the nix-colors color scheme to use";
+      description = "The name of the base16 color scheme to use with stylix";
     };
   };
 }

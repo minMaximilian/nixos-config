@@ -107,7 +107,7 @@ in {
             };
           };
         };
-        style = import ./style.nix {inherit config;};
+        # Stylix handles styling automatically
       };
     };
   };

@@ -20,9 +20,7 @@ in {
     users.users.${username}.shell = pkgs.fish;
     programs.fish.enable = true;
 
-    home-manager.users.${username} = {config, ...}: let
-      inherit (config.colorScheme) palette;
-    in {
+    home-manager.users.${username} = {
       home.packages = lib.attrValues {
         inherit
           (pkgs)
@@ -40,9 +38,7 @@ in {
           functions = {
             fish_greeting = "";
           };
-          shellInit = ''
-            ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "set -U ${name} '${value}'") (import ./colors.nix {colors = palette;}))}
-          '';
+          # Colors handled by stylix
         };
         man.generateCaches = true;
         zoxide.enable = true;

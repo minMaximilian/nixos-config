@@ -15,6 +15,10 @@
 
   cfg = config.myOptions.theme;
 in {
+  imports = [
+    inputs.stylix.nixosModules.stylix
+  ];
+
   options = {
     myOptions.theme = {
       enable =
@@ -24,29 +28,60 @@ in {
         };
 
       colorScheme = mkOption {
-        type = types.attrs;
-        default = inputs.nix-colors.colorSchemes.${config.myOptions.vars.colorScheme};
+        type = types.str;
+        default = config.myOptions.vars.colorScheme;
         description = "The color scheme to use";
       };
-    };
 
-    # NixOS-level colorScheme option
-    colorScheme = mkOption {
-      type = types.attrs;
-      internal = true;
-      visible = false;
+      wallpaper = mkOption {
+        type = types.path;
+        default = ../../assets/wallpaper.png;
+        description = "The wallpaper image to use";
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    colorScheme = cfg.colorScheme;
+    stylix = {
+      enable = true;
+      image = cfg.wallpaper;
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.colorScheme}.yaml";
 
-    home-manager.users.${config.myOptions.vars.username} = {config, ...}: {
-      imports = [
-        inputs.nix-colors.homeManagerModules.default
-      ];
+      fonts = {
+        serif = {
+          package = pkgs.dejavu_fonts;
+          name = "DejaVu Serif";
+        };
+        sansSerif = {
+          package = pkgs.dejavu_fonts;
+          name = "DejaVu Sans";
+        };
+        monospace = {
+          package = pkgs.nerd-fonts.jetbrains-mono;
+          name = "JetBrainsMono Nerd Font";
+        };
+        emoji = {
+          package = pkgs.noto-fonts-emoji;
+          name = "Noto Color Emoji";
+        };
+      };
 
-      inherit (cfg) colorScheme;
+      fonts.sizes = {
+        applications = 12;
+        terminal = 14;
+        desktop = 12;
+        popups = 12;
+      };
+
+      autoEnable = true;
+    };
+
+    home-manager.users.${config.myOptions.vars.username}.stylix.targets = {
+      rofi.enable = false;
+      firefox = {
+        enable = true;
+        profileNames = [config.myOptions.vars.username];
+      };
     };
   };
 }

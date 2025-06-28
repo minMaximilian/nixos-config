@@ -43,22 +43,14 @@ in {
       NIXOS_SCALE = "1.0";
     };
 
-    home-manager.users.${config.myOptions.vars.username} = {config, ...}: let
-      inherit (config.colorScheme) palette;
-    in {
+    home-manager.users.${config.myOptions.vars.username} = {
       wayland.windowManager.hyprland = {
         enable = true;
         systemd.enable = true;
         package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
         settings = {
           "$mod" = "SUPER";
-
-          "$active" = "rgb(${palette.base0D})";
-          "$inactive" = "rgb(${palette.base02})";
-          "$groupActive" = "rgb(${palette.base0E})";
-          "$groupInactive" = "rgb(${palette.base01})";
-          "$text" = "rgb(${palette.base05})";
-          "$warning" = "rgb(${palette.base08})";
+          # Stylix handles color theming automatically
 
           exec-once = [
             "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
@@ -115,7 +107,7 @@ in {
               range = 8;
               render_power = 2;
               offset = "0 0";
-              color = "rgb(${palette.base00})";
+              # color set by stylix
             };
           };
 
@@ -123,8 +115,7 @@ in {
             gaps_in = 3;
             gaps_out = 3;
             border_size = 2;
-            "col.active_border" = "$active $groupActive 45deg";
-            "col.inactive_border" = "$inactive";
+            # borders themed by stylix
             layout = "dwindle";
           };
 

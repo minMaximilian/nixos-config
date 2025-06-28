@@ -26,57 +26,15 @@ in {
       DISCORD_SKIP_HOST_UPDATE = "1";
     };
 
-    home-manager.users.${config.myOptions.vars.username} = {config, ...}: let
-      inherit (config.colorScheme) palette;
-    in {
+    home-manager.users.${config.myOptions.vars.username} = {
       imports = [inputs.nixcord.homeModules.nixcord];
 
       programs.nixcord = {
         enable = true;
         vesktop.enable = true;
 
+        # Let stylix handle Discord theming automatically
         quickCss = ''
-          @import url("https://mrtipson.github.io/DiscordCSS/css/base.css");
-          @import url("https://mrtipson.github.io/DiscordCSS/css/base16.css");
-
-          .theme-light, .theme-dark {
-              --base00: #${palette.base00};
-              --base01: #${palette.base01};
-              --base02: #${palette.base02};
-              --base03: #${palette.base03};
-              --base04: #${palette.base04};
-              --base05: #${palette.base05};
-              --base06: #${palette.base06};
-              --base07: #${palette.base07};
-              --base08: #${palette.base08};
-              --base09: #${palette.base09};
-              --base0A: #${palette.base0A};
-              --base0B: #${palette.base0B};
-              --base0C: #${palette.base0C};
-              --base0D: #${palette.base0D};
-              --base0E: #${palette.base0E};
-              --base0F: #${palette.base0F};
-              --window-opacity: 1;
-          }
-
-          ::-webkit-scrollbar {
-              width: 8px !important;
-              height: 8px !important;
-          }
-
-          ::-webkit-scrollbar-track {
-              background-color: transparent !important;
-          }
-
-          ::-webkit-scrollbar-thumb {
-              background-color: var(--base02) !important;
-              border-radius: 4px !important;
-          }
-
-          ::-webkit-scrollbar-thumb:hover {
-              background-color: var(--base03) !important;
-          }
-
           code, pre, .hljs {
               font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
           }
