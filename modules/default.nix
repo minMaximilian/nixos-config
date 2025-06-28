@@ -16,6 +16,7 @@ _: {
     ./mako
     ./fonts
     ./fuzzel
+    ./rofi
     ./vars
     ./audio
     ./theme

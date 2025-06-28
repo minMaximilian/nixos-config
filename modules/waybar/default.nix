@@ -91,7 +91,7 @@ in {
               format-icons = {
                 default = ["󰕿" "󰖀" "󰕾"];
               };
-              on-click = "pavucontrol";
+              on-click = "rofi-volume";
               on-click-right = "audio-switcher output";
               on-click-middle = "audio-switcher input";
               tooltip = true;

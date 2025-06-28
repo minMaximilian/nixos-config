@@ -160,11 +160,24 @@ in {
           workspace = [
             "w[tv1], gapsout:0, gapsin:0"
             "f[1], gapsout:0, gapsin:0"
+            "1, monitor:0"
+            "2, monitor:0"
+            "3, monitor:0"
+            "4, monitor:0"
+            "5, monitor:0"
+            "6, monitor:0"
+            "7, monitor:0"
+            "8, monitor:0"
+            "9, monitor:0"
+            "10, monitor:0"
           ];
 
           bind = [
             "$mod, Q, exec, ${pkgs.ghostty}/bin/ghostty"
             "$mod, D, exec, ${pkgs.fuzzel}/bin/fuzzel"
+            "$mod, Space, exec, ${pkgs.rofi-wayland}/bin/rofi -show drun"
+            "$mod SHIFT, Space, exec, ${pkgs.rofi-wayland}/bin/rofi -show run"
+            "$mod ALT, Space, exec, ${pkgs.rofi-wayland}/bin/rofi -show window"
             "$mod, C, killactive"
             "$mod, M, exit"
             "$mod, F, fullscreen, 0"
@@ -236,6 +249,7 @@ in {
             "$mod ALT, q, exec, qpwgraph"
             "$mod ALT, h, exec, helvum"
             "$mod ALT, e, exec, easyeffects"
+            "$mod ALT, v, exec, rofi-volume"
           ];
         };
       };

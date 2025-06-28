@@ -26,17 +26,43 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.spicetify = {
-      enable = true;
+    home-manager.users.${config.myOptions.vars.username} = {config, ...}: let
+      inherit (config.colorScheme) palette;
+    in {
+      imports = [inputs.spicetify-nix.homeManagerModules.default];
 
-      theme = spicePkgs.themes.text;
+      programs.spicetify = {
+        enable = true;
 
-      enabledExtensions = with spicePkgs.extensions; [
-        fullAppDisplay
-        shuffle
-        adblockify
-        hidePodcasts
-      ];
+        theme = spicePkgs.themes.blossom;
+        colorScheme = "custom";
+
+        customColorScheme = {
+          text = "${palette.base05}";
+          subtext = "${palette.base04}";
+          sidebar-text = "${palette.base05}";
+          main = "${palette.base00}";
+          sidebar = "${palette.base01}";
+          player = "${palette.base01}";
+          card = "${palette.base01}";
+          shadow = "${palette.base00}";
+          selected-row = "${palette.base02}";
+          button = "${palette.base0E}";
+          button-active = "${palette.base0D}";
+          button-disabled = "${palette.base03}";
+          tab-active = "${palette.base0D}";
+          notification = "${palette.base0E}";
+          notification-error = "${palette.base08}";
+          misc = "${palette.base02}";
+        };
+
+        enabledExtensions = with spicePkgs.extensions; [
+          fullAppDisplay
+          shuffle
+          adblockify
+          hidePodcasts
+        ];
+      };
     };
   };
 }
