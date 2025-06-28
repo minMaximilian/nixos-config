@@ -7,7 +7,6 @@
   inherit (lib) mkOption mkIf types;
   cfg = config.myOptions.fish;
   username = config.myOptions.vars.username;
-  colors = config.myOptions.theme.colorScheme.palette;
 in {
   options.myOptions.fish = {
     enable = mkOption {
@@ -21,7 +20,9 @@ in {
     users.users.${username}.shell = pkgs.fish;
     programs.fish.enable = true;
 
-    home-manager.users.${username} = {
+    home-manager.users.${username} = {config, ...}: let
+      inherit (config.colorScheme) palette;
+    in {
       home.packages = lib.attrValues {
         inherit
           (pkgs)
@@ -40,7 +41,7 @@ in {
             fish_greeting = "";
           };
           shellInit = ''
-            ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "set -U ${name} '${value}'") (import ./colors.nix {inherit colors;}))}
+            ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "set -U ${name} '${value}'") (import ./colors.nix {colors = palette;}))}
           '';
         };
         man.generateCaches = true;

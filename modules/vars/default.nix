@@ -26,7 +26,7 @@ in {
 
     colorScheme = mkOption {
       type = types.str;
-      default = "atelier-dune";
+      default = "catppuccin-mocha";
       description = "The name of the nix-colors color scheme to use";
     };
   };

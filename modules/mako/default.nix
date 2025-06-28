@@ -30,19 +30,21 @@ in {
     in {
       services.mako = {
         enable = true;
-        font = "JetBrainsMono Nerd Font 10";
-        width = 400;
-        height = 150;
-        margin = "10";
-        padding = "15";
-        borderSize = 2;
-        defaultTimeout = 5000;
-        layer = "overlay";
+        settings = {
+          font = "JetBrainsMono Nerd Font 10";
+          width = 400;
+          height = 150;
+          margin = "10";
+          padding = "15";
+          border-size = 2;
+          default-timeout = 5000;
+          layer = "overlay";
 
-        backgroundColor = "#${palette.base00}";
-        borderColor = "#${palette.base0E}";
-        textColor = "#${palette.base05}";
-        progressColor = "over #${palette.base02}";
+          background-color = "#${palette.base00}";
+          border-color = "#${palette.base0E}";
+          text-color = "#${palette.base05}";
+          progress-color = "over #${palette.base02}";
+        };
 
         extraConfig = ''
           [urgency=high]

@@ -1,24 +1,24 @@
 {
-  default = "DuckDuckGo";
+  default = "ddg";
   force = true;
   engines = {
-    "Google" = {
+    "google" = {
       urls = [
         {
           template = "https://www.google.com/search?q={searchTerms}";
         }
       ];
-      iconUpdateURL = "https://www.google.com/favicon.ico";
+      icon = "https://www.google.com/favicon.ico";
       definedAliases = ["@g"];
     };
 
-    "DuckDuckGo" = {
+    "ddg" = {
       urls = [
         {
           template = "https://duckduckgo.com/?q={searchTerms}";
         }
       ];
-      iconUpdateURL = "https://duckduckgo.com/favicon.ico";
+      icon = "https://duckduckgo.com/favicon.ico";
       definedAliases = ["@d"];
     };
 
@@ -28,7 +28,7 @@
           template = "https://search.brave.com/search?q={searchTerms}";
         }
       ];
-      iconUpdateURL = "https://brave.com/favicon.ico";
+      icon = "https://brave.com/favicon.ico";
       definedAliases = ["@b"];
     };
 
@@ -38,17 +38,17 @@
           template = "https://github.com/search?q={searchTerms}";
         }
       ];
-      iconUpdateURL = "https://github.com/favicon.ico";
+      icon = "https://github.com/favicon.ico";
       definedAliases = ["@gh"];
     };
 
-    "YouTube" = {
+    "youtube" = {
       urls = [
         {
           template = "https://www.youtube.com/results?search_query={searchTerms}";
         }
       ];
-      iconUpdateURL = "https://www.youtube.com/favicon.ico";
+      icon = "https://www.youtube.com/favicon.ico";
       definedAliases = ["@yt"];
     };
 
@@ -58,7 +58,7 @@
           template = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query={searchTerms}";
         }
       ];
-      iconUpdateURL = "https://nixos.org/favicon.ico";
+      icon = "https://nixos.org/favicon.ico";
       definedAliases = ["@np"];
     };
 
@@ -68,7 +68,7 @@
           template = "https://mipmip.github.io/home-manager-option-search/?query={searchTerms}";
         }
       ];
-      iconUpdateURL = "https://nixos.org/favicon.ico";
+      icon = "https://nixos.org/favicon.ico";
       definedAliases = ["@ho"];
     };
 
@@ -78,7 +78,7 @@
           template = "https://sourcegraph.com/search?q={searchTerms}&patternType=literal";
         }
       ];
-      iconUpdateURL = "https://sourcegraph.com/favicon.ico";
+      icon = "https://sourcegraph.com/favicon.ico";
       definedAliases = ["@sg"];
     };
   };

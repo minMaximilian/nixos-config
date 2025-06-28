@@ -25,7 +25,7 @@ in {
 
       colorScheme = mkOption {
         type = types.attrs;
-        default = inputs.nix-colors.colorSchemes.catppuccin-mocha;
+        default = inputs.nix-colors.colorSchemes.${config.myOptions.vars.colorScheme};
         description = "The color scheme to use";
       };
     };

@@ -41,13 +41,16 @@ in {
           name = config.myOptions.vars.username;
           isDefault = true;
 
-          extensions = with inputs.firefox-addons.packages.${pkgs.system}; [
+          extensions.packages = with inputs.firefox-addons.packages.${pkgs.system}; [
             bitwarden
             sponsorblock
             ublock-origin
           ];
 
-          bookmarks = import ./bookmarks.nix;
+          bookmarks = {
+            force = true;
+            settings = import ./bookmarks.nix;
+          };
           search = import ./search.nix;
           settings = import ./settings.nix {inherit lib;};
 

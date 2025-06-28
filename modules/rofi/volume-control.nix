@@ -49,7 +49,7 @@
       local width=50
       local filled=$(($vol * $width / 100))
       local empty=$(($width - $filled))
-      
+
       bar="["
       for ((i=0; i<filled; i++)); do
         bar+="▓"
@@ -70,7 +70,7 @@
       "$VOLUME_SLIDER")
         # Create a temporary theme file for the slider
         TEMP_THEME=$(mktemp)
-        
+
         # Write theme contents directly using echo statements
         echo "element {" > "$TEMP_THEME"
         echo "  children: [element-text, element-index];" >> "$TEMP_THEME"
@@ -86,7 +86,7 @@
         echo "  scrollbar: false;" >> "$TEMP_THEME"
         echo "  fixed-columns: true;" >> "$TEMP_THEME"
         echo "}" >> "$TEMP_THEME"
-        
+
         # Generate numbers from 0 to 100
         numbers=""
         for i in {0..100}; do
@@ -96,20 +96,20 @@
             numbers+=" \n"
           fi
         done
-        
+
         # Display volume bar
         VOLUME_BAR=$(generate_volume_bar $VOLUME)
-        
+
         # Show slider selection
-        selected=$(echo -e "$numbers" | 
+        selected=$(echo -e "$numbers" |
           ${pkgs.rofi-wayland}/bin/rofi -dmenu -p "$VOLUME_BAR" -theme-str "window { width: 90%; }" \
           -theme-str "listview { lines: 1; columns: 21; }" \
           -theme-str "element-text { horizontal-align: 0.5; }" \
           -selected-row $(($VOLUME / 5)) -theme "$TEMP_THEME" -hover-select true -me-select-entry "" -me-accept-entry MousePrimary)
-        
+
         # Remove temp theme
         rm "$TEMP_THEME"
-        
+
         # Set the volume if a valid value was selected
         if [[ $selected =~ ^[0-9]+$ ]]; then
           pamixer --set-volume "$selected"
