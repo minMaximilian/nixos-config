@@ -57,8 +57,10 @@ in {
               "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
               "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
               "uwsm finalize"
-              "uwsm app -- waybar"
               "uwsm app -- ${pkgs.mako}"
+            ]
+            ++ lib.optionals config.myOptions.waybar.enable [
+              "uwsm app -- waybar"
             ]
             ++ lib.optionals config.myOptions.quickshell.enable [
               "uwsm app -- quickshell"

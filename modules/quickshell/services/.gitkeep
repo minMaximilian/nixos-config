@@ -1,0 +1,11 @@
+# Services Directory
+
+This directory contains service implementations for system integration.
+
+## Structure
+- Each service should be a self-contained QML component
+- Services handle background tasks and data providers
+- Examples: system monitoring, network status, battery management
+
+## Usage
+Import services directly or register them as singletons in qmldir.
