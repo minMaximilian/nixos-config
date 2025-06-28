@@ -35,5 +35,16 @@
         ./ravenholm/configuration.nix
       ];
     };
+
+    # WSL
+    blackmesa = nixosSystem {
+      inherit specialArgs;
+      modules = [
+        sharedModules
+        inputs.home-manager.nixosModules.home-manager
+        inputs.nixos-wsl.nixosModules.default
+        ./blackmesa/configuration.nix
+      ];
+    };
   };
 }
