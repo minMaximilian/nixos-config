@@ -27,6 +27,8 @@ in {
         material-design-icons
         font-awesome
 
+        inter
+
         noto-fonts
         noto-fonts-cjk-sans
         noto-fonts-emoji
@@ -35,13 +37,17 @@ in {
         fira-code-symbols
         nerd-fonts.fira-code
         nerd-fonts.jetbrains-mono
+        nerd-fonts.caskaydia-cove
+        nerd-fonts.hack
+        nerd-fonts.ubuntu-mono
+        nerd-fonts.symbols-only
       ];
 
       fontconfig = {
         defaultFonts = {
           serif = ["Noto Serif"];
           sansSerif = ["Noto Sans"];
-          monospace = ["FiraCode Nerd Font"];
+          monospace = ["CaskaydiaCove Nerd Font"];
           emoji = ["Noto Color Emoji"];
         };
         enable = true;
