@@ -1,6 +1,0 @@
-# Config Directory  
-# QML singletons for global configuration
-# - Theme.qml (colors, styling)
-# - Icons.qml (icon constants)
-# - Constants.qml (app constants)
-# All should be pragma Singleton

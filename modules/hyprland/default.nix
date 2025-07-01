@@ -61,9 +61,6 @@ in {
             ]
             ++ lib.optionals config.myOptions.waybar.enable [
               "uwsm app -- waybar"
-            ]
-            ++ lib.optionals config.myOptions.quickshell.enable [
-              "uwsm app -- quickshell"
             ];
 
           env = [
@@ -180,10 +177,17 @@ in {
               "$mod, M, exit"
               "$mod, F, fullscreen, 0"
 
-              "$mod, h, resizeactive, -20 0"
-              "$mod, l, resizeactive, 20 0"
+              # Vim-style window focus movement
+              "$mod, h, movefocus, l"
+              "$mod, j, movefocus, d" 
               "$mod, k, movefocus, u"
-              "$mod, j, movefocus, d"
+              "$mod, l, movefocus, r"
+              
+              # Move resize to Ctrl+hjkl
+              "$mod CTRL, h, resizeactive, -20 0"
+              "$mod CTRL, j, resizeactive, 0 20"
+              "$mod CTRL, k, resizeactive, 0 -20"
+              "$mod CTRL, l, resizeactive, 20 0"
 
               "$mod, left, movewindow, l"
               "$mod, right, movewindow, r"
@@ -248,9 +252,6 @@ in {
               "$mod ALT, h, exec, helvum"
               "$mod ALT, e, exec, easyeffects"
               "$mod ALT, v, exec, rofi-volume"
-            ]
-            ++ lib.optionals config.myOptions.quickshell.enable [
-              "$mod CTRL, r, exec, pkill quickshell; quickshell"
             ];
         };
       };

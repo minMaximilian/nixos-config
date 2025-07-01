@@ -10,10 +10,6 @@
   myOptions.vars.withGui = true;
   myOptions.amdgpu.enable = true; # Enable AMD GPU support for desktop
 
-  # Temporarily disable waybar to test quickshell (backup available)
-  myOptions.waybar.enable = false;
-  myOptions.quickshell.enable = true;
-
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 

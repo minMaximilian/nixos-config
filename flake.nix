@@ -22,9 +22,6 @@
     hyprcursor.url = "github:hyprwm/hyprcursor";
     hyprcursor.inputs.nixpkgs.follows = "nixpkgs";
 
-    quickshell.url = "github:quickshell-mirror/quickshell";
-    quickshell.inputs.nixpkgs.follows = "nixpkgs";
-
     stylix.url = "github:danth/stylix";
 
     spicetify-nix.url = "github:gerg-l/spicetify-nix";
