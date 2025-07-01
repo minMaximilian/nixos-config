@@ -50,7 +50,6 @@ in {
         package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
         settings = {
           "$mod" = "SUPER";
-          # Stylix handles color theming automatically
 
           exec-once =
             [
@@ -110,7 +109,6 @@ in {
               range = 8;
               render_power = 2;
               offset = "0 0";
-              # color set by stylix
             };
           };
 
@@ -118,7 +116,6 @@ in {
             gaps_in = 3;
             gaps_out = 3;
             border_size = 2;
-            # borders themed by stylix
             layout = "dwindle";
           };
 
@@ -176,13 +173,16 @@ in {
             "$mod, M, exit"
             "$mod, F, fullscreen, 0"
 
-            # Vim-style window focus movement
+            ", Print, exec, grimblast --notify copy screen"
+            "$mod, S, exec, grimblast --notify save area ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png"
+            "$mod SHIFT, S, exec, grimblast --notify save active ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png"
+            "$mod ALT, S, exec, grimblast --notify copy area"
+
             "$mod, h, movefocus, l"
             "$mod, j, movefocus, d"
             "$mod, k, movefocus, u"
             "$mod, l, movefocus, r"
 
-            # Move resize to Ctrl+hjkl
             "$mod CTRL, h, resizeactive, -20 0"
             "$mod CTRL, j, resizeactive, 0 20"
             "$mod CTRL, k, resizeactive, 0 -20"

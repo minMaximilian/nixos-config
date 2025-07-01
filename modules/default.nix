@@ -24,5 +24,6 @@ _: {
     ./btop
     ./bluetooth
     ./spicetify
+    ./screenshot
   ];
 }
