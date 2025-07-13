@@ -25,5 +25,6 @@ _: {
     ./bluetooth
     ./spicetify
     ./screenshot
+    ./devenv
   ];
 }
