@@ -26,5 +26,6 @@ _: {
     ./spicetify
     ./screenshot
     ./devenv
+    ./neovim
   ];
 }
