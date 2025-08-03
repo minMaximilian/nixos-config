@@ -44,6 +44,9 @@ in {
       categoryDefinitions.replace = {pkgs, ...}: {
         lspsAndRuntimeDeps.general = with pkgs; [
           lua-language-server
+          nixpkgs-fmt
+          statix
+          prettier
         ];
 
         startupPlugins.general = with pkgs.vimPlugins; [
@@ -52,9 +55,19 @@ in {
           nui-nvim
           nvim-web-devicons
           nvim-lspconfig
+          none-ls-nvim
           nvim-treesitter.withAllGrammars
           tokyonight-nvim
+          nvim-cmp
+          cmp-nvim-lsp
+          cmp-buffer
+          cmp-path
+          luasnip
+          cmp_luasnip
+          friendly-snippets
         ];
+
+        nativeBuildInputs.general = with pkgs; [];
       };
     };
   };

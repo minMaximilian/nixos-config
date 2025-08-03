@@ -28,6 +28,7 @@ in {
           fzf
           fd
           bat
+          nodejs_20
           ;
       };
 
@@ -37,6 +38,9 @@ in {
           plugins = import ./plugins.nix {inherit pkgs;};
           functions = {
             fish_greeting = "";
+          };
+          shellAliases = {
+            amp = "npx -y @sourcegraph/amp@latest";
           };
           # Colors handled by stylix
         };

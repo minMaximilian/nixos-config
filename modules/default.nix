@@ -21,6 +21,7 @@ _: {
     ./audio
     ./theme
     ./amdgpu
+    ./amp
     ./btop
     ./bluetooth
     ./spicetify
