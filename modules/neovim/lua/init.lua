@@ -3,6 +3,9 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
     'LazyVim/LazyVim',
     opts = {
       colorscheme = "tokyonight",
+      lazy = {
+        show = false,
+      },
     }
   },
 }) 
