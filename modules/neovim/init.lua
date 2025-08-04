@@ -53,6 +53,11 @@ vim.keymap.set("i", "<Caps_Lock>", "<Esc>", { desc = "Caps Lock to Escape" })
 vim.keymap.set("v", "<Caps_Lock>", "<Esc>", { desc = "Caps Lock to Escape" })
 vim.keymap.set("c", "<Caps_Lock>", "<Esc>", { desc = "Caps Lock to Escape" })
 
+vim.keymap.set("n", "<leader>y", '"+y', { desc = "Copy to clipboard" })
+vim.keymap.set("v", "<leader>y", '"+y', { desc = "Copy to clipboard" })
+vim.keymap.set("n", "<leader>p", '"+p', { desc = "Paste from clipboard" })
+vim.keymap.set("v", "<leader>p", '"+p', { desc = "Paste from clipboard" })
+
 local function getlockfilepath()
   if require('nixCatsUtils').isNixCats and type(nixCats.settings.unwrappedCfgPath) == 'string' then
     return nixCats.settings.unwrappedCfgPath .. '/lazy-lock.json'
@@ -75,8 +80,8 @@ require('nixCatsUtils.lazyCat').setup(nixCats.pawsible { 'allPlugins', 'start', 
     build = require('nixCatsUtils').lazyAdd ':TSUpdate',
     opts_extend = require('nixCatsUtils').lazyAdd(nil, false),
     opts = {
-      ensure_installed = require('nixCatsUtils').lazyAdd({ 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' }, false),
-      auto_install = require('nixCatsUtils').lazyAdd(true, false),
+      ensure_installed = require('nixCatsUtils').lazyAdd({ 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'zig' }, false),
+      auto_install = require('nixCatsUtils').lazyAdd(false, false),
     },
   },
   {
