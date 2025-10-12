@@ -42,6 +42,9 @@ in {
           shellAliases = {
             amp = "npx -y @sourcegraph/amp@latest";
           };
+          interactiveShellInit = ''
+            fish_vi_key_bindings
+          '';
           # Colors handled by stylix
         };
         man.generateCaches = true;

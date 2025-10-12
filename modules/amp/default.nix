@@ -23,8 +23,8 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.${config.myOptions.vars.username} = {
       home.packages = with pkgs; [
-        nodejs_20  # Ensure Node.js is available for npx
+        nodejs_20 # Ensure Node.js is available for npx
       ];
     };
   };
-} 
+}

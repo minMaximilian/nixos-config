@@ -1,18 +1,14 @@
 return {
-  "neovim/nvim-lspconfig",
+  'neovim/nvim-lspconfig',
   config = function()
-    vim.diagnostic.config({
-      virtual_text = true,
-      signs = true,
-      underline = true,
-      update_in_insert = false,
-      severity_sort = true,
-    })
+    vim.lsp.config.lua_ls = {
+      cmd = { 'lua-language-server' },
+    }
+    vim.lsp.enable('lua_ls')
 
-    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-    for type, icon in pairs(signs) do
-      local hl = "DiagnosticSign" .. type
-      vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-    end
-  end,
-} 
+    vim.lsp.config.nixd = {
+      cmd = { 'nixd' },
+    }
+    vim.lsp.enable('nixd')
+  end
+}
