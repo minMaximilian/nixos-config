@@ -35,7 +35,7 @@ in {
 
       wallpaper = mkOption {
         type = types.path;
-        default = ../../assets/wallpaper.png;
+        default = ../../../assets/wallpaper.png;
         description = "The wallpaper image to use";
       };
     };
@@ -61,7 +61,7 @@ in {
           name = "JetBrainsMono Nerd Font";
         };
         emoji = {
-          package = pkgs.noto-fonts-emoji;
+          package = pkgs.noto-fonts-color-emoji;
           name = "Noto Color Emoji";
         };
       };

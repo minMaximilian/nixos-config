@@ -1,6 +1,6 @@
 _: {
   imports = [
-    ./nixos
-    ./home
+    ./core
+    ./gui
   ];
 }

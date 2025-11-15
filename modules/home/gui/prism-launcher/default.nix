@@ -33,10 +33,8 @@ in {
 
     environment.systemPackages = with pkgs; [
       prismlauncher
-      temurin-bin-24
       temurin-bin-21
       temurin-bin-17
-      temurin-bin-12
       temurin-bin-8
     ];
 

@@ -28,7 +28,7 @@ in {
     home-manager.users.${config.myOptions.vars.username} = {
       programs.rofi = {
         enable = true;
-        package = pkgs.rofi-wayland;
+        package = pkgs.rofi;
         terminal = "${pkgs.ghostty}/bin/ghostty";
         # Font and theme handled by stylix
         extraConfig = {

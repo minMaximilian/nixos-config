@@ -16,12 +16,16 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.max = {
+    home-manager.users.${config.myOptions.vars.username} = {
       programs.git = {
         enable = true;
         package = pkgs.gitFull;
-        userEmail = "53843385+minMaximilian@users.noreply.github.com";
-        userName = "minMaximilian";
+        settings = {
+          user = {
+            email = "53843385+minMaximilian@users.noreply.github.com";
+            name = "minMaximilian";
+          };
+        };
       };
     };
   };

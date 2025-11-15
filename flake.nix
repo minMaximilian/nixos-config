@@ -45,5 +45,10 @@
         ./hosts
         ./parts
       ];
+
+      flake = {
+        # Export home modules for other repos to import
+        homeModules.default = ./modules/home;
+      };
     };
 }

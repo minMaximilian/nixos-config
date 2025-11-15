@@ -28,15 +28,12 @@ in {
       enable32Bit = true;
 
       extraPackages = with pkgs; [
-        amdvlk
-
         libvdpau-va-gl
-        vaapiVdpau
+        libva-vdpau-driver
         libva-utils
       ];
 
       extraPackages32 = with pkgs; [
-        driversi686Linux.amdvlk
       ];
     };
 

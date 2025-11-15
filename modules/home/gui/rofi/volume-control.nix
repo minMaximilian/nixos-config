@@ -63,7 +63,7 @@
 
     # Show rofi menu
     choice=$(printf "%s\n%s\n%s\n%s\n%s\n%s\n%s" "$VOLUME_SLIDER" "$INCREASE" "$DECREASE" "$TOGGLE_MUTE" "$SET_VOLUME" "$SELECT_OUTPUT" "$OPEN_MIXER" |
-      ${pkgs.rofi-wayland}/bin/rofi -dmenu -p "$ICON Volume: $VOLUME%" -theme-str "window { width: 25%; }")
+      ${pkgs.rofi}/bin/rofi -dmenu -p "$ICON Volume: $VOLUME%" -theme-str "window { width: 25%; }")
 
     # Handle the choice
     case "$choice" in
@@ -102,7 +102,7 @@
 
         # Show slider selection
         selected=$(echo -e "$numbers" |
-          ${pkgs.rofi-wayland}/bin/rofi -dmenu -p "$VOLUME_BAR" -theme-str "window { width: 90%; }" \
+          ${pkgs.rofi}/bin/rofi -dmenu -p "$VOLUME_BAR" -theme-str "window { width: 90%; }" \
           -theme-str "listview { lines: 1; columns: 21; }" \
           -theme-str "element-text { horizontal-align: 0.5; }" \
           -selected-row $(($VOLUME / 5)) -theme "$TEMP_THEME" -hover-select true -me-select-entry "" -me-accept-entry MousePrimary)
@@ -133,7 +133,7 @@
         fi
         ;;
       "$SET_VOLUME")
-        new_vol=$(${pkgs.rofi-wayland}/bin/rofi -dmenu -p "Enter volume (0-100):" -theme-str 'window { width: 25%; }')
+        new_vol=$(${pkgs.rofi}/bin/rofi -dmenu -p "Enter volume (0-100):" -theme-str 'window { width: 25%; }')
         if [[ $new_vol =~ ^[0-9]+$ ]] && [ "$new_vol" -ge 0 ] && [ "$new_vol" -le 100 ]; then
           pamixer --set-volume "$new_vol"
           notify-send "Volume" "Set to $new_vol%" -h string:x-canonical-private-synchronous:volume
@@ -143,7 +143,7 @@
         ;;
       "$SELECT_OUTPUT")
         ${pkgs.pulseaudio}/bin/pactl list short sinks | cut -f 2 |
-        ${pkgs.rofi-wayland}/bin/rofi -dmenu -p "Select output:" | xargs -I{} sh -c '
+        ${pkgs.rofi}/bin/rofi -dmenu -p "Select output:" | xargs -I{} sh -c '
           sink="$1"
           ${pkgs.pulseaudio}/bin/pactl set-default-sink "$sink"
           ${pkgs.pulseaudio}/bin/pactl list short sink-inputs | cut -f 1 | while read -r stream; do
