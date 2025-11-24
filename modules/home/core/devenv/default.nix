@@ -21,6 +21,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [pkgs.devenv];
+    home.packages = [pkgs.devenv];
   };
 }

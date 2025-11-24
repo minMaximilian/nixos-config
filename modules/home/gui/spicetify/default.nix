@@ -15,32 +15,26 @@
 
   cfg = config.myOptions.spotify;
 in {
-  imports = [inputs.spicetify-nix.nixosModules.default];
+  imports = [inputs.spicetify-nix.homeManagerModules.default];
 
   options.myOptions.spotify = {
     enable =
       mkEnableOption "spotify"
       // {
-        default = config.myOptions.vars.withGui;
+        default = true;
       };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.${config.myOptions.vars.username} = {
-      imports = [inputs.spicetify-nix.homeManagerModules.default];
+    programs.spicetify = {
+      enable = true;
 
-      programs.spicetify = {
-        enable = true;
-
-        # Let stylix handle theming
-
-        enabledExtensions = with spicePkgs.extensions; [
-          fullAppDisplay
-          shuffle
-          adblockify
-          hidePodcasts
-        ];
-      };
+      enabledExtensions = with spicePkgs.extensions; [
+        fullAppDisplay
+        shuffle
+        adblockify
+        hidePodcasts
+      ];
     };
   };
 }

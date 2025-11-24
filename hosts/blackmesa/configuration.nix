@@ -28,6 +28,7 @@
   networking.hostName = "blackmesa";
 
   home-manager.users.max.home.stateVersion = "24.05";
+  home-manager.users.max.myOptions.zed.enable = true;
 
   nixpkgs.config.allowUnfree = true;
 

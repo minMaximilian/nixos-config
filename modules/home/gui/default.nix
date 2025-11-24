@@ -16,5 +16,6 @@ _: {
     ./screenshot
     ./spicetify
     ./waybar
+    ./zed
   ];
 }

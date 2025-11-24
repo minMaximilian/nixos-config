@@ -6,50 +6,42 @@
 }: let
   inherit (lib) mkOption mkIf types;
   cfg = config.myOptions.fish;
-  username = config.myOptions.vars.username;
 in {
   options.myOptions.fish = {
     enable = mkOption {
       type = types.bool;
       default = true;
-      description = "Enable Fish Shell by default";
+      description = "Enable Fish Shell";
     };
   };
 
   config = mkIf cfg.enable {
-    users.users.${username}.shell = pkgs.fish;
-    programs.fish.enable = true;
+    home.packages = lib.attrValues {
+      inherit
+        (pkgs)
+        zoxide
+        fzf
+        fd
+        bat
+        nodejs_20
+        ;
+    };
 
-    home-manager.users.${username} = {
-      home.packages = lib.attrValues {
-        inherit
-          (pkgs)
-          zoxide
-          fzf
-          fd
-          bat
-          nodejs_20
-          ;
-      };
-
-      programs = {
-        fish = {
-          enable = true;
-          plugins = import ./plugins.nix {inherit pkgs;};
-          functions = {
-            fish_greeting = "";
-          };
-          shellAliases = {
-            amp = "npx -y @sourcegraph/amp@latest";
-          };
-          interactiveShellInit = ''
-            fish_vi_key_bindings
-          '';
-          # Colors handled by stylix
+    programs = {
+      fish = {
+        enable = true;
+        plugins = import ./plugins.nix {inherit pkgs;};
+        functions = {
+          fish_greeting = "";
+        };
+        shellAliases = {
+        };
+        interactiveShellInit = ''
+          fish_vi_key_bindings
+        '';
         };
         man.generateCaches = true;
-        zoxide.enable = true;
-      };
+      zoxide.enable = true;
     };
   };
 }

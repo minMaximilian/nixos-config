@@ -16,21 +16,19 @@ in {
     enable =
       mkEnableOption "Obsidian with custom configuration"
       // {
-        default = config.myOptions.vars.withGui;
+        default = true;
       };
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.${config.myOptions.vars.username} = {
-      home.packages = [pkgs.obsidian];
+    home.packages = [pkgs.obsidian];
 
-      xdg = {
+    xdg = {
+      enable = true;
+      mimeApps = {
         enable = true;
-        mimeApps = {
-          enable = true;
-          defaultApplications = {
-            "x-scheme-handler/obsidian" = ["obsidian.desktop"];
-          };
+        defaultApplications = {
+          "x-scheme-handler/obsidian" = ["obsidian.desktop"];
         };
       };
     };

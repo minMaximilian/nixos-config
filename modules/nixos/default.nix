@@ -6,7 +6,10 @@ _: {
     ./audio
     ./bluetooth
     ./fonts
+    ./desktop
+    ./games
     ./greetd
+    ./shell
     ./theme
   ];
 }

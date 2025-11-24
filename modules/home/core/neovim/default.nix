@@ -7,7 +7,6 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.neovim;
-  username = config.myOptions.vars.username;
 in {
   options.myOptions.neovim = {
     enable =
@@ -18,11 +17,11 @@ in {
   };
 
   imports = [
-    inputs.nixCats.nixosModules.default
+    inputs.nixCats.homeModule
   ];
 
   config = mkIf cfg.enable {
-    nixCats.users.${username} = {
+    nixCats = {
       enable = true;
       packageNames = ["nixcats-nvim"];
       luaPath = ./.;
