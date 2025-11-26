@@ -16,20 +16,14 @@ in {
     enable =
       mkEnableOption "Hyprlock screen locker"
       // {
-        default = config.myOptions.vars.withGui;
+        default = true;
       };
   };
 
   config = mkIf cfg.enable {
+    wayland.windowManager.hyprland.enable = true;
     programs.hyprlock = {
       enable = true;
-    };
-
-    home-manager.users.${config.myOptions.vars.username} = {
-      wayland.windowManager.hyprland.enable = true;
-      programs.hyprlock = {
-        enable = true;
-      };
     };
   };
 }

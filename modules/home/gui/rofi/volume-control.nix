@@ -159,8 +159,6 @@
   '';
 in {
   config = mkIf cfg.enable {
-    home-manager.users.${config.myOptions.vars.username} = {...}: {
-      home.packages = [volumeScript];
-    };
+    home.packages = [volumeScript];
   };
 }

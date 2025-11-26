@@ -3,6 +3,7 @@
   inputs,
   pkgs,
   config,
+  self,
   ...
 }: {
   imports = [
@@ -10,6 +11,8 @@
     ./home-manager.nix
     inputs.home-manager.nixosModules.home-manager
   ];
+
+  nixpkgs.overlays = [self.overlays.default];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
@@ -30,9 +33,14 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  environment.pathsToLink = ["/share/xdg-desktop-portal" "/share/applications"];
+
+  programs.dconf.enable = true;
+
   environment.systemPackages = with pkgs; [
     wget
     git
     home-manager
+    python3
   ];
 }

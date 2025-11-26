@@ -16,22 +16,20 @@ in {
     enable =
       mkEnableOption "Screenshot tools for Wayland/Hyprland"
       // {
-        default = config.myOptions.vars.withGui;
+        default = true;
       };
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
+    home.packages = with pkgs; [
       grim
       slurp
       grimblast
       wl-clipboard
     ];
 
-    home-manager.users.${config.myOptions.vars.username} = {
-      xdg.userDirs.pictures = "${config.users.users.${config.myOptions.vars.username}.home}/Pictures";
+    xdg.userDirs.pictures = "${config.home.homeDirectory}/Pictures";
 
-      home.file."Pictures/Screenshots/.keep".text = "";
-    };
+    home.file."Pictures/Screenshots/.keep".text = "";
   };
 }

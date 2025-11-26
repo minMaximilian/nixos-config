@@ -16,7 +16,6 @@
       inherit inputs pkgs-stable self;
     };
   in {
-    # Desktop
     whiteforest = nixosSystem {
       inherit specialArgs;
       modules = [
@@ -26,7 +25,6 @@
       ];
     };
 
-    # Laptop
     ravenholm = nixosSystem {
       inherit specialArgs;
       modules = [
@@ -36,7 +34,6 @@
       ];
     };
 
-    # WSL
     blackmesa = nixosSystem {
       inherit specialArgs;
       modules = [

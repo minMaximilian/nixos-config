@@ -47,7 +47,8 @@
       ];
 
       flake = {
-        # Export home modules for other repos to import
+        overlays.default = import ./overlays/default.nix;
+
         homeModules.default = ./modules/home;
       };
     };

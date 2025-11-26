@@ -3,6 +3,7 @@
   pkgs,
   lib,
   inputs,
+  self,
   ...
 }: {
   imports = [
@@ -14,9 +15,15 @@
     useUserPackages = true;
     backupFileExtension = "backup";
     extraSpecialArgs = {
-      inherit inputs;
+      inherit inputs self;
     };
     users.${config.myOptions.vars.username} = {
+      imports = [
+        ../../home
+        ../../nixos/vars/default.nix
+      ];
+      myOptions.vars = config.myOptions.vars;
+
       home = {
         username = config.myOptions.vars.username;
         homeDirectory = "/home/${config.myOptions.vars.username}";
