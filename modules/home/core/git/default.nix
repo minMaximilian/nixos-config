@@ -24,6 +24,9 @@ in {
           email = "53843385+minMaximilian@users.noreply.github.com";
           name = "minMaximilian";
         };
+        core = {
+          editor = "nvim";
+        };
       };
     };
   };

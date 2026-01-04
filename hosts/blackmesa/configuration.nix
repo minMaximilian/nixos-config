@@ -14,6 +14,10 @@
 
   programs.nix-ld.enable = true;
 
+  environment.systemPackages = with pkgs; [
+    gcc
+  ];
+
   wsl = {
     enable = true;
     defaultUser = "max";

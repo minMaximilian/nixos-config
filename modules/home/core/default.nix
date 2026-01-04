@@ -6,5 +6,6 @@ _: {
     ./neovim
     ./btop
     ./devenv
+    ./golang
   ];
 }
