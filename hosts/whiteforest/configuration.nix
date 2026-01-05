@@ -9,6 +9,7 @@
 
   myOptions.vars.withGui = true;
   myOptions.amdgpu.enable = true;
+  myOptions.logitech.enable = true;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

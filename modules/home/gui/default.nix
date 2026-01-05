@@ -6,9 +6,8 @@ _: {
     ./gammastep
     ./ghostty
     ./hyprcursor
-    ./hypridle
     ./hyprland
-    ./hyprlock
+    ./lockscreen
     ./mako
     ./obsidian
     ./prism-launcher

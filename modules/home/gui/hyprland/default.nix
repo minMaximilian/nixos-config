@@ -77,10 +77,8 @@ in {
             size = 5;
             passes = 3;
             vibrancy = 0.4;
-            new_optimizations = true;
             ignore_opacity = true;
             xray = true;
-            special = true;
           };
 
           shadow = {
@@ -104,6 +102,8 @@ in {
           repeat_rate = 30;
           repeat_delay = 300;
           kb_options = "ctrl:nocaps";
+          accel_profile = "flat";
+          sensitivity = 0;
 
           touchpad = {
             natural_scroll = false;
@@ -119,12 +119,9 @@ in {
         };
 
         layerrule = [
-          "blur, notifications"
-          "blur, launcher"
-          "blur, lockscreen"
-          "ignorealpha 0.69, notifications"
-          "ignorealpha 0.69, launcher"
-          "ignorealpha 0.69, lockscreen"
+          "blur on, ignore_alpha 0.69, match:namespace notifications"
+          "blur on, ignore_alpha 0.69, match:namespace launcher"
+          "blur on, ignore_alpha 0.69, match:namespace lockscreen"
         ];
 
         workspace = [
@@ -147,8 +144,7 @@ in {
           "$mod, Space, exec, ${pkgs.rofi}/bin/rofi -show drun"
           "$mod SHIFT, Space, exec, ${pkgs.rofi}/bin/rofi -show run"
           "$mod ALT, Space, exec, ${pkgs.rofi}/bin/rofi -show window"
-          "$mod, C, killactive"
-          "$mod, M, exit"
+
           "$mod, F, fullscreen, 0"
 
           ", Print, exec, grimblast --notify copy screen"
@@ -237,12 +233,23 @@ in {
       enable = true;
 
       settings = {
-        preload = ["${self}/assets/wallpaper.png"];
+        splash = false;
 
-        wallpaper = [", ${self}/assets/wallpaper.png"];
+        wallpaper = [
+          {
+            monitor = "";
+            path = "${self}/assets/wallpaper.png";
+          }
+        ];
       };
     };
 
-    systemd.user.services.hyprpaper.Unit.After = lib.mkForce "graphical-session.target";
+    systemd.user.services.hyprpaper = {
+      Unit = {
+        After = lib.mkForce ["graphical-session.target"];
+        PartOf = ["graphical-session.target"];
+      };
+      Install.WantedBy = lib.mkForce ["graphical-session.target"];
+    };
   };
 }

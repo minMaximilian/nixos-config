@@ -38,6 +38,10 @@
     nixCats = {
       url = "github:BirdeeHub/nixCats-nvim";
     };
+
+    nixcord = {
+      url = "github:FlameFlag/nixcord";
+    };
   };
 
   outputs = inputs @ {flake-parts, ...}:

@@ -10,11 +10,24 @@
     mkIf
     ;
 
-  cfg = config.myOptions.greetd;
+  cfg = config.myOptions.login;
+
+  hyprlandGreeterConfig = pkgs.writeText "hyprland-greeter.conf" ''
+    misc {
+      disable_hyprland_logo = true
+      disable_splash_rendering = true
+    }
+
+    animations {
+      enabled = false
+    }
+
+    exec-once = ${pkgs.regreet}/bin/regreet; hyprctl dispatch exit
+  '';
 in {
-  options.myOptions.greetd = {
+  options.myOptions.login = {
     enable =
-      mkEnableOption "Greetd display manager"
+      mkEnableOption "Login display manager (regreet)"
       // {
         default = config.myOptions.vars.withGui;
       };
@@ -25,22 +38,16 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = ''
-            ${pkgs.tuigreet}/bin/tuigreet \
-              --time \
-              --remember \
-              --remember-session \
-              --sessions ${pkgs.hyprland}/share/wayland-sessions \
-              --cmd "dbus-run-session ${pkgs.hyprland}/bin/Hyprland"
-          '';
+          command = "${pkgs.hyprland}/bin/Hyprland --config ${hyprlandGreeterConfig}";
           user = "greeter";
         };
       };
     };
 
+    programs.regreet.enable = true;
+
     environment = {
       systemPackages = with pkgs; [
-        tuigreet
         dbus
       ];
 

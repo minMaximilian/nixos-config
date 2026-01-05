@@ -1,7 +1,7 @@
 {
   config,
-  pkgs,
   lib,
+  inputs,
   ...
 }: let
   inherit
@@ -12,27 +12,23 @@
 
   cfg = config.myOptions.discord;
 in {
+  imports = [
+    inputs.nixcord.homeModules.nixcord
+  ];
+
   options.myOptions.discord = {
     enable =
-      mkEnableOption "Discord with custom configuration"
+      mkEnableOption "Discord via Nixcord"
       // {
         default = true;
       };
   };
 
   config = mkIf cfg.enable {
-    home.sessionVariables = {
-      DISCORD_SKIP_HOST_UPDATE = "1";
-    };
-
-    home.packages = [pkgs.vesktop];
-
-    xdg.desktopEntries.vesktop = {
-      name = "Discord";
-      exec = "vesktop --enable-features=UseOzonePlatform,VaapiVideoDecoder,VaapiVideoEncoder --ozone-platform=wayland";
-      terminal = false;
-      categories = ["Network" "InstantMessaging"];
-      type = "Application";
+    programs.nixcord = {
+      enable = true;
+      discord.enable = false;
+      vesktop.enable = true;
     };
   };
 }

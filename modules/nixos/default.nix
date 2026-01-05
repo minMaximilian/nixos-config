@@ -8,7 +8,8 @@ _: {
     ./fonts
     ./desktop
     ./games
-    ./greetd
+    ./login
+    ./logitech
     ./shell
     ./theme
   ];
