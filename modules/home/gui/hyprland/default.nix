@@ -144,7 +144,6 @@ in {
 
         bind = [
           "$mod, Q, exec, ${pkgs.ghostty}/bin/ghostty"
-          "$mod, D, exec, ${pkgs.fuzzel}/bin/fuzzel"
           "$mod, Space, exec, ${pkgs.rofi}/bin/rofi -show drun"
           "$mod SHIFT, Space, exec, ${pkgs.rofi}/bin/rofi -show run"
           "$mod ALT, Space, exec, ${pkgs.rofi}/bin/rofi -show window"

@@ -78,7 +78,7 @@ in {
     };
 
     home-manager.users.${config.myOptions.vars.username}.stylix.targets = {
-      rofi.enable = false;
+      rofi.enable = true;
       hyprpaper.enable = lib.mkForce false;
       zen-browser.profileNames = [config.myOptions.vars.username];
     };

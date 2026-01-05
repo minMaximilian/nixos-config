@@ -8,7 +8,7 @@
   ];
 
   myOptions.vars.withGui = true;
-  myOptions.amdgpu.enable = true; # Enable AMD GPU support for desktop
+  myOptions.amdgpu.enable = true;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

@@ -36,11 +36,11 @@
 
     case "$1" in
       "output")
-        selected=$(get_sinks | ${pkgs.fuzzel}/bin/fuzzel -d -p "Select output: ")
+        selected=$(get_sinks | ${pkgs.rofi}/bin/rofi -dmenu -p "Select output:")
         [[ -n "$selected" ]] && switch_sink "$selected"
         ;;
       "input")
-        selected=$(get_sources | ${pkgs.fuzzel}/bin/fuzzel -d -p "Select input: ")
+        selected=$(get_sources | ${pkgs.rofi}/bin/rofi -dmenu -p "Select input:")
         [[ -n "$selected" ]] && switch_source "$selected"
         ;;
       *)
