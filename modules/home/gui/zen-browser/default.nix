@@ -11,34 +11,34 @@
     mkIf
     ;
 
-  cfg = config.myOptions.firefox;
+  cfg = config.myOptions.zenBrowser;
+  username = config.myOptions.vars.username;
 
   betterfox = pkgs.fetchFromGitHub {
     owner = "yokoffing";
     repo = "Betterfox";
-    rev = "131.0";
-    hash = "sha256-CxPZxo9G44lRocNngjfwTBHSqL5dEJ5MNO5Iauoxp2Y=";
+    rev = "146.0";
+    hash = "sha256-zGpfQk2gY6ifxIk1fvCk5g5SIFo+o8RItmw3Yt3AeCg=";
   };
 in {
-  options.myOptions.firefox = {
+  options.myOptions.zenBrowser = {
     enable =
-      mkEnableOption "Firefox browser with custom configuration"
+      mkEnableOption "Zen browser with custom configuration"
       // {
         default = true;
       };
   };
 
   config = mkIf cfg.enable {
-    programs.firefox = {
+    programs.zen-browser = {
       enable = true;
-      package = pkgs.firefox;
 
-      profiles.default = {
+      profiles.${username} = {
         id = 0;
-        name = "default";
+        name = username;
         isDefault = true;
 
-        extensions.packages = with inputs.firefox-addons.packages.${pkgs.system}; [
+        extensions.packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
           bitwarden
           sponsorblock
           ublock-origin
@@ -72,9 +72,9 @@ in {
       mimeApps = {
         enable = true;
         defaultApplications = {
-          "text/html" = ["firefox.desktop"];
-          "x-scheme-handler/http" = ["firefox.desktop"];
-          "x-scheme-handler/https" = ["firefox.desktop"];
+          "text/html" = ["zen.desktop"];
+          "x-scheme-handler/http" = ["zen.desktop"];
+          "x-scheme-handler/https" = ["zen.desktop"];
         };
       };
     };

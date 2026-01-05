@@ -39,8 +39,8 @@ in {
         interactiveShellInit = ''
           fish_vi_key_bindings
         '';
-        };
-        man.generateCaches = true;
+      };
+      man.generateCaches = true;
       zoxide.enable = true;
     };
   };

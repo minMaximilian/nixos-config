@@ -2,8 +2,9 @@ _: {
   imports = [
     ./amp
     ./discord
-    ./firefox
+    ./zen-browser
     ./fuzzel
+    ./gammastep
     ./ghostty
     ./hyprcursor
     ./hypridle

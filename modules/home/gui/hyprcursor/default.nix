@@ -21,7 +21,7 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [
-      inputs.hyprcursor.packages.${pkgs.system}.hyprcursor
+      inputs.hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.hyprcursor
       pkgs.bibata-cursors
     ];
 

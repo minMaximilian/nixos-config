@@ -45,6 +45,7 @@ in {
     stylix = {
       enable = true;
       image = cfg.wallpaper;
+      polarity = config.myOptions.vars.polarity;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.colorScheme}.yaml";
 
       fonts = {
@@ -78,10 +79,8 @@ in {
 
     home-manager.users.${config.myOptions.vars.username}.stylix.targets = {
       rofi.enable = false;
-      firefox = {
-        enable = true;
-        profileNames = [config.myOptions.vars.username];
-      };
+      hyprpaper.enable = lib.mkForce false;
+      zen-browser.profileNames = [config.myOptions.vars.username];
     };
   };
 }

@@ -3,6 +3,8 @@
 in
   mkMerge [
     {
+      "extensions.autoDisableScopes" = 0;
+
       "browser.startup.homepage" = "about:home";
       "browser.search.region" = "US";
       "browser.search.isUS" = true;

@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }: let
   inherit
@@ -13,8 +12,6 @@
 
   cfg = config.myOptions.discord;
 in {
-  imports = [inputs.nixcord.homeModules.nixcord];
-
   options.myOptions.discord = {
     enable =
       mkEnableOption "Discord with custom configuration"
@@ -28,32 +25,9 @@ in {
       DISCORD_SKIP_HOST_UPDATE = "1";
     };
 
-    programs.nixcord = {
-      enable = true;
-      vesktop.enable = true;
+    home.packages = [pkgs.vesktop];
 
-      quickCss = ''
-        code, pre, .hljs {
-            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
-        }
-      '';
-
-      config = {
-        useQuickCss = true;
-        frameless = false;
-        plugins = {
-          youtubeAdblock.enable = true;
-          clearURLs.enable = true;
-          whoReacted.enable = true;
-          messageLogger.enable = true;
-          invisibleChat.enable = true;
-          serverInfo.enable = true;
-          voiceMessages.enable = true;
-        };
-      };
-    };
-
-    xdg.desktopEntries.discord = {
+    xdg.desktopEntries.vesktop = {
       name = "Discord";
       exec = "vesktop --enable-features=UseOzonePlatform,VaapiVideoDecoder,VaapiVideoEncoder --ozone-platform=wayland";
       terminal = false;
