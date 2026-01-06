@@ -1,6 +1,5 @@
 {
   # Helper to create the specialArgs needed by this flake's modules
-  # Consumers should call this with their inputs that match the required ones
   mkSpecialArgs = {
     inputs,
     self,
@@ -21,46 +20,34 @@
       else {}
     );
 
-  # Required flake inputs for full module compatibility
-  # Consumers should have these inputs in their flake to use all modules
-  requiredInputs = {
-    # Core
-    nixpkgs = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager = "github:nix-community/home-manager";
+  # Module metadata - documents required inputs for each module
+  # Used by consumers to know what inputs they need
+  moduleInputs = {
+    # Home modules
+    fish = [];
+    git = [];
+    btop = [];
+    devenv = [];
+    golang = [];
+    neovim = ["nixCats"];
 
-    # Desktop (required for desktop/GUI modules)
-    hyprland = "github:hyprwm/Hyprland";
-    hyprlock = "github:hyprwm/Hyprlock";
-    hyprcursor = "github:hyprwm/hyprcursor";
-    stylix = "github:danth/stylix";
-
-    # Applications (required for specific app modules)
-    zen-browser = "github:0xc000022070/zen-browser-flake";
-    firefox-addons = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-    spicetify-nix = "github:gerg-l/spicetify-nix";
-    nixcord = "github:FlameFlag/nixcord";
-    nixCats = "github:BirdeeHub/nixCats-nvim";
+    # NixOS modules
+    vars = [];
+    audio = [];
+    bluetooth = [];
+    fonts = [];
+    shell = [];
+    amdgpu = [];
+    logitech = [];
+    desktop = ["hyprland" "hyprlock" "hyprcursor"];
+    theme = ["stylix"];
+    login = ["hyprland"];
+    games = [];
   };
 
-  # Modules grouped by their input requirements
-  moduleGroups = {
-    # Modules with no external input dependencies (safe to use anywhere)
-    standalone = [
-      "vars"
-      "audio"
-      "bluetooth"
-      "fonts"
-      "shell"
-      "amdgpu"
-      "logitech"
-    ];
-
-    # Modules requiring specific inputs
-    withInputs = {
-      desktop = ["hyprland" "hyprlock" "hyprcursor"];
-      theme = ["stylix"];
-      login = ["hyprland"]; # Uses hyprland for greeter
-      games = []; # Check if any inputs needed
-    };
+  # Standalone modules (no input dependencies) - safe for any consumer
+  standalone = {
+    home = ["fish" "git" "btop" "devenv" "golang"];
+    nixos = ["vars" "audio" "bluetooth" "fonts" "shell" "amdgpu" "logitech" "games"];
   };
 }
