@@ -13,11 +13,7 @@
   cfg = config.myOptions.golang;
 in {
   options.myOptions.golang = {
-    enable =
-      mkEnableOption "golang"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "golang";
   };
 
   config = mkIf cfg.enable {

@@ -12,11 +12,7 @@
   cfg = config.myOptions.btop;
 in {
   options.myOptions.btop = {
-    enable =
-      mkEnableOption "btop system monitor"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "btop system monitor";
   };
 
   config = mkIf cfg.enable {

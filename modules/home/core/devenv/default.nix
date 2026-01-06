@@ -13,11 +13,7 @@
   cfg = config.myOptions.devenv;
 in {
   options.myOptions.devenv = {
-    enable =
-      mkEnableOption "devenv"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "devenv";
   };
 
   config = mkIf cfg.enable {

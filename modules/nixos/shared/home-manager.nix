@@ -21,7 +21,7 @@
     users.${config.myOptions.vars.username} = {
       imports = [
         ../../home
-        ../../nixos/vars/default.nix
+        ../../shared/vars.nix
       ];
       myOptions.vars = config.myOptions.vars;
 
