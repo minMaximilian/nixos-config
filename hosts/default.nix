@@ -12,8 +12,12 @@
       system = "x86_64-linux";
     };
 
+    pkgs-graalvm21 = import inputs.nixpkgs-graalvm21 {
+      system = "x86_64-linux";
+    };
+
     specialArgs = {
-      inherit inputs pkgs-stable self;
+      inherit inputs pkgs-stable pkgs-graalvm21 self;
     };
   in {
     whiteforest = nixosSystem {

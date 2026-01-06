@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-graalvm21,
   lib,
   inputs,
   self,
@@ -15,7 +16,7 @@
     useUserPackages = true;
     backupFileExtension = "backup";
     extraSpecialArgs = {
-      inherit inputs self;
+      inherit inputs self pkgs-graalvm21;
     };
     users.${config.myOptions.vars.username} = {
       imports = [

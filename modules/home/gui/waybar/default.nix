@@ -120,8 +120,9 @@ in {
                 "<span color='#${config.lib.stylix.colors.base0B}'>  </span>"
               ];
             };
+            on-click = "eww open --toggle volume-popup && eww open --toggle volume-overlay";
             on-click-right = "pavucontrol -t 3";
-            on-click = "pactl -- set-sink-mute 0 toggle";
+            on-click-middle = "pactl -- set-sink-mute 0 toggle";
             tooltip = true;
             tooltip-format = "Current system volume: {volume}%";
           };

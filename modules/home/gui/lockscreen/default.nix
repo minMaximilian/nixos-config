@@ -13,6 +13,7 @@
     ;
 
   cfg = config.myOptions.lockscreen;
+  colors = config.lib.stylix.colors;
 in {
   options.myOptions.lockscreen = {
     enable =
@@ -37,7 +38,39 @@ in {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland.enable = true;
 
-    programs.hyprlock.enable = true;
+    programs.hyprlock = {
+      enable = true;
+      settings = {
+        general = {
+          disable_loading_bar = true;
+          hide_cursor = true;
+          grace = 3;
+        };
+
+        label = [
+          {
+            monitor = "";
+            text = "$TIME";
+            color = "rgb(${colors.base05})";
+            font_size = 96;
+            font_family = "sans-serif";
+            position = "0, 250";
+            halign = "center";
+            valign = "center";
+          }
+          {
+            monitor = "";
+            text = "cmd[update:60000] date '+%A, %B %d'";
+            color = "rgb(${colors.base04})";
+            font_size = 24;
+            font_family = "sans-serif";
+            position = "0, 150";
+            halign = "center";
+            valign = "center";
+          }
+        ];
+      };
+    };
 
     services.hypridle = {
       enable = true;

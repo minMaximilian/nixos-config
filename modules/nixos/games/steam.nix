@@ -19,9 +19,21 @@ in {
       dedicatedServer.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
       gamescopeSession.enable = true;
+      extraPackages = with pkgs; [gamemode];
     };
 
-    programs.gamemode.enable = true;
+    programs.gamemode = {
+      enable = true;
+      settings = {
+        general = {
+          renice = 10;
+        };
+        custom = {
+          start = "${pkgs.procps}/bin/pkill -SIGUSR1 waybar; ${pkgs.systemd}/bin/systemctl --user stop gammastep";
+          end = "${pkgs.procps}/bin/pkill -SIGUSR1 waybar; ${pkgs.systemd}/bin/systemctl --user start gammastep";
+        };
+      };
+    };
     programs.gamescope.enable = true;
 
     hardware.steam-hardware.enable = true;

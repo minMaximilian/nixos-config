@@ -17,12 +17,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      piper
-    ];
-
-    services.ratbagd.enable = true;
-
     hardware.logitech.wireless = {
       enable = true;
       enableGraphical = true;

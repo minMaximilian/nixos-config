@@ -20,6 +20,13 @@ in {
       // {
         default = true;
       };
+
+    monitors = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [", preferred, auto, 1"];
+      description = "Monitor configuration strings for Hyprland";
+      example = ["DP-1, 2560x1440@144, 0x0, 1" "HDMI-A-1, 1920x1080@60, 2560x0, 1"];
+    };
   };
 
   config = mkIf cfg.enable {
@@ -29,6 +36,8 @@ in {
       package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
       settings = {
         "$mod" = "SUPER";
+
+        monitor = cfg.monitors;
 
         exec-once =
           [
@@ -145,9 +154,10 @@ in {
           "$mod SHIFT, Space, exec, ${pkgs.rofi}/bin/rofi -show run"
           "$mod ALT, Space, exec, ${pkgs.rofi}/bin/rofi -show window"
 
+          "$mod, C, killactive"
           "$mod, F, fullscreen, 0"
 
-          ", Print, exec, grimblast --notify copy screen"
+          ", Print, exec, grimblast --notify copy area"
           "$mod, S, exec, grimblast --notify save area ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png"
           "$mod SHIFT, S, exec, grimblast --notify save active ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png"
           "$mod ALT, S, exec, grimblast --notify copy area"

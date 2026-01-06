@@ -42,5 +42,6 @@
     git
     home-manager
     python3
+    unzip
   ];
 }

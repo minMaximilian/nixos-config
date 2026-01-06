@@ -2,6 +2,7 @@ _: {
   imports = [
     ./amp
     ./discord
+    ./eww
     ./zen-browser
     ./gammastep
     ./ghostty
@@ -11,8 +12,10 @@ _: {
     ./mako
     ./obsidian
     ./prism-launcher
+    ./protonmail
     ./rofi
     ./screenshot
+    ./signal
     ./spicetify
     ./waybar
     ./zed
