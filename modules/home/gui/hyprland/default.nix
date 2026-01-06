@@ -3,16 +3,23 @@
   pkgs,
   lib,
   inputs,
-  self,
+  self ? null,
   ...
 }: let
   inherit
     (lib)
     mkEnableOption
     mkIf
+    mkOption
+    types
     ;
 
   cfg = config.myOptions.hyprland;
+
+  defaultWallpaper =
+    if self != null
+    then "${self}/assets/wallpaper.png"
+    else null;
 in {
   options.myOptions.hyprland = {
     enable =
@@ -26,6 +33,12 @@ in {
       default = [", preferred, auto, 1"];
       description = "Monitor configuration strings for Hyprland";
       example = ["DP-1, 2560x1440@144, 0x0, 1" "HDMI-A-1, 1920x1080@60, 2560x0, 1"];
+    };
+
+    wallpaper = mkOption {
+      type = types.nullOr types.path;
+      default = defaultWallpaper;
+      description = "Path to wallpaper image for hyprpaper";
     };
   };
 
@@ -240,15 +253,15 @@ in {
     };
 
     services.hyprpaper = {
-      enable = true;
+      enable = cfg.wallpaper != null;
 
-      settings = {
+      settings = lib.mkIf (cfg.wallpaper != null) {
         splash = false;
 
         wallpaper = [
           {
             monitor = "";
-            path = "${self}/assets/wallpaper.png";
+            path = cfg.wallpaper;
           }
         ];
       };

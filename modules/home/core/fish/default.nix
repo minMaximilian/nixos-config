@@ -8,11 +8,7 @@
   cfg = config.myOptions.fish;
 in {
   options.myOptions.fish = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Enable Fish Shell";
-    };
+    enable = lib.mkEnableOption "Fish Shell";
   };
 
   config = mkIf cfg.enable {

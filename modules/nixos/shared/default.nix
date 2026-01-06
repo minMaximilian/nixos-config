@@ -3,7 +3,7 @@
   inputs,
   pkgs,
   config,
-  self,
+  self ? null,
   ...
 }: {
   imports = [
@@ -12,7 +12,7 @@
     inputs.home-manager.nixosModules.home-manager
   ];
 
-  nixpkgs.overlays = [self.overlays.default];
+  nixpkgs.overlays = lib.mkIf (self != null && self ? overlays) [self.overlays.default];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
