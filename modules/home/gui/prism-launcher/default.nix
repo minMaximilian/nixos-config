@@ -35,13 +35,13 @@ in {
     };
 
     xdg.desktopEntries.prismlauncher = {
-      name = "Prism Launcher";
+      name = "Minecraft";
       exec = "prismlauncher";
       terminal = false;
       categories = ["Game"];
       type = "Application";
       icon = "prismlauncher";
-      comment = "Minecraft launcher with support for multiple instances and mods";
+      genericName = "Minecraft Launcher";
     };
 
     xdg.configFile."PrismLauncher/prismlauncher.cfg" = {

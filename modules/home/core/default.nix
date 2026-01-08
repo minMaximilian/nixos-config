@@ -7,6 +7,7 @@
     ./btop
     ./devenv
     ./golang
+    ./zellij
   ];
 
   config.myOptions = {
@@ -16,5 +17,6 @@
     btop.enable = lib.mkDefault true;
     devenv.enable = lib.mkDefault true;
     golang.enable = lib.mkDefault true;
+    zellij.enable = lib.mkDefault true;
   };
 }

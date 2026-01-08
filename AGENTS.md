@@ -19,16 +19,18 @@ nix develop
 ## Project Structure
 
 ```
-flake.nix              # Main flake - exports modules, overlays, lib
+flake.nix              # Main flake - imports exports.nix for modules
 ├── modules/
 │   ├── shared/        # Context-agnostic modules (work in both NixOS and home-manager)
 │   │   └── vars.nix   # User variables (username, sshKeys, etc.)
 │   ├── nixos/         # NixOS system modules (exported as nixosModules.*)
 │   │   ├── default.nix    # Imports all nixos modules
-│   │   └── <feature>/     # Individual feature modules
+│   │   ├── exports.nix    # Auto-discovers and exports all modules
+│   │   └── <feature>/     # Individual feature modules (auto-exported)
 │   └── home/          # Home-manager modules (exported as homeModules.*)
 │       ├── default.nix    # Imports all home modules
-│       ├── core/          # Terminal/CLI modules (INTERNAL profile)
+│       ├── exports.nix    # Auto-discovers and exports core/* modules
+│       ├── core/          # Terminal/CLI modules (auto-exported individually)
 │       └── gui/           # GUI application modules
 ├── hosts/             # Host-specific configurations (NOT exported)
 │   ├── whiteforest/   # Desktop workstation
@@ -38,6 +40,21 @@ flake.nix              # Main flake - exports modules, overlays, lib
 ├── parts/             # Flake-parts configuration
 └── assets/            # Static assets (wallpapers, etc.)
 ```
+
+## Adding New Modules
+
+Modules are **auto-discovered** via `exports.nix` files using `builtins.readDir`.
+
+### Adding a new NixOS module
+
+1. Create `modules/nixos/<name>/default.nix`
+2. Run `nix flake check --no-build` — it's automatically exported as `nixosModules.<name>`
+
+### Adding a new home-manager module
+
+1. Create `modules/home/core/<name>/default.nix`
+2. Add import to `modules/home/core/default.nix`
+3. Run `nix flake check --no-build` — it's automatically exported as `homeModules.<name>`
 
 ## Module Compatibility Rules
 
@@ -246,6 +263,8 @@ Other flakes can import this flake's modules like this:
 | btop | none |
 | devenv | none |
 | golang | none |
+| zellij | none |
+| helium | none (auto-enabled when withGui=true) |
 | neovim | nixCats |
 | desktop | hyprland, hyprlock, hyprcursor |
 | theme | stylix |

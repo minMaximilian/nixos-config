@@ -55,36 +55,8 @@
       flake = {
         overlays.default = import ./overlays/default.nix;
 
-        nixosModules = {
-          default = ./modules/nixos;
-          vars = ./modules/shared/vars.nix;
-          shared = ./modules/nixos/shared;
-          amdgpu = ./modules/nixos/amdgpu;
-          audio = ./modules/nixos/audio;
-          bluetooth = ./modules/nixos/bluetooth;
-          desktop = ./modules/nixos/desktop;
-          fonts = ./modules/nixos/fonts;
-          games = ./modules/nixos/games;
-          login = ./modules/nixos/login;
-          logitech = ./modules/nixos/logitech;
-          shell = ./modules/nixos/shell;
-          theme = ./modules/nixos/theme;
-        };
-
-        homeModules = {
-          default = ./modules/home;
-          core = ./modules/home/core;
-          gui = ./modules/home/gui;
-          vars = ./modules/shared/vars.nix;
-
-          # Individual core modules for selective import
-          btop = ./modules/home/core/btop;
-          devenv = ./modules/home/core/devenv;
-          fish = ./modules/home/core/fish;
-          git = ./modules/home/core/git;
-          golang = ./modules/home/core/golang;
-          neovim = ./modules/home/core/neovim;
-        };
+        nixosModules = import ./modules/nixos/exports.nix;
+        homeModules = import ./modules/home/exports.nix;
 
         lib = import ./lib;
       };

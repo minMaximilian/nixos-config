@@ -14,7 +14,6 @@ in {
     programs.zed-editor = {
       enable = true;
       extraPackages = [pkgs.nil];
-      # Symlink the remote server binary (essential for WSL remote)
       installRemoteServer = true;
 
       userKeymaps = [
@@ -32,6 +31,15 @@ in {
           };
         }
       ];
+    };
+
+    xdg.desktopEntries.zed = {
+      name = "Editor";
+      genericName = "Code Editor";
+      exec = "zeditor %U";
+      icon = "zed";
+      terminal = false;
+      categories = ["Development" "TextEditor"];
     };
   };
 }

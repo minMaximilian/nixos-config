@@ -50,5 +50,14 @@ in {
         unfocused-split-opacity = 0.9;
       };
     };
+
+    xdg.desktopEntries.ghostty = {
+      name = "Terminal";
+      genericName = "Terminal Emulator";
+      exec = "ghostty";
+      icon = "com.mitchellh.ghostty";
+      terminal = false;
+      categories = ["System" "TerminalEmulator"];
+    };
   };
 }

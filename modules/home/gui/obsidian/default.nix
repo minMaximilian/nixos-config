@@ -31,6 +31,15 @@ in {
           "x-scheme-handler/obsidian" = ["obsidian.desktop"];
         };
       };
+      desktopEntries.obsidian = {
+        name = "Notes";
+        genericName = "Knowledge Base";
+        exec = "obsidian %U";
+        icon = "obsidian";
+        terminal = false;
+        categories = ["Office" "TextEditor"];
+        mimeType = ["x-scheme-handler/obsidian"];
+      };
     };
   };
 }

@@ -3,13 +3,14 @@ _: {
     ./amp
     ./discord
     ./eww
-    ./zen-browser
     ./gammastep
     ./ghostty
+    ./helium
     ./hyprcursor
     ./hyprland
     ./lockscreen
     ./mako
+    ./nautilus
     ./obsidian
     ./prism-launcher
     ./protonmail
@@ -19,5 +20,6 @@ _: {
     ./spicetify
     ./waybar
     ./zed
+    ./zen-browser
   ];
 }
