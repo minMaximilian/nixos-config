@@ -13,11 +13,7 @@
   cfg = config.myOptions.obsidian;
 in {
   options.myOptions.obsidian = {
-    enable =
-      mkEnableOption "Obsidian with custom configuration"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Obsidian with custom configuration";
   };
 
   config = mkIf cfg.enable {

@@ -4,20 +4,11 @@
   lib,
   ...
 }: let
-  inherit
-    (lib)
-    mkEnableOption
-    mkIf
-    ;
-
+  inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.amdgpu;
 in {
   options.myOptions.amdgpu = {
-    enable =
-      mkEnableOption "AMD GPU Support"
-      // {
-        default = false;
-      };
+    enable = mkEnableOption "AMD GPU Support";
   };
 
   config = mkIf cfg.enable {
@@ -32,14 +23,9 @@ in {
         libva-vdpau-driver
         libva-utils
       ];
-
-      extraPackages32 = with pkgs; [
-      ];
     };
 
-    hardware.firmware = with pkgs; [
-      linux-firmware
-    ];
+    hardware.firmware = [pkgs.linux-firmware];
 
     environment.variables = {
       AMD_VULKAN_ICD = "RADV";

@@ -17,11 +17,11 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      go
-      gopls
-      gotools
-      go-tools
+    home.packages = [
+      pkgs.go
+      pkgs.gopls
+      pkgs.gotools
+      pkgs.go-tools
     ];
   };
 }

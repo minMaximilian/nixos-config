@@ -2,41 +2,27 @@
   config,
   pkgs,
   lib,
-  inputs,
+  inputs ? {},
   ...
 }: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.hyprcursor;
 
-  cursorTheme = "Bibata-Modern-Classic";
-  cursorSize = 16;
+  hasHyprcursor = inputs ? hyprcursor;
+  cursorTheme = config.stylix.cursor.name or "Bibata-Modern-Classic";
+  cursorSize = config.stylix.cursor.size or 16;
 in {
   options.myOptions.hyprcursor = {
-    enable =
-      mkEnableOption "Hyprcursor cursor theme"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Hyprcursor environment variables for Hyprland";
   };
 
   config = mkIf cfg.enable {
-    home.packages = [
+    home.packages = lib.optionals hasHyprcursor [
       inputs.hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.hyprcursor
-      pkgs.bibata-cursors
     ];
 
-    home.pointerCursor = {
-      name = cursorTheme;
-      size = cursorSize;
-      package = pkgs.bibata-cursors;
-      gtk.enable = true;
-      x11.enable = true;
-    };
-
-    xdg.configFile."hyprcursor/themes/custom/cursors".source = "${pkgs.bibata-cursors}/share/icons/${cursorTheme}/cursors";
-
     wayland.windowManager.hyprland.settings = {
-      exec-once = ["hyprcursor"];
+      exec-once = lib.optionals hasHyprcursor ["hyprcursor"];
 
       env = [
         "HYPRCURSOR_THEME,${cursorTheme}"
@@ -44,35 +30,6 @@ in {
         "XCURSOR_THEME,${cursorTheme}"
         "XCURSOR_SIZE,${toString cursorSize}"
       ];
-    };
-
-    gtk = {
-      enable = true;
-      cursorTheme = {
-        name = cursorTheme;
-        size = cursorSize;
-      };
-
-      gtk2.extraConfig = ''
-        gtk-cursor-theme-name="${cursorTheme}"
-        gtk-cursor-theme-size=${toString cursorSize}
-      '';
-
-      gtk3.extraConfig = {
-        "gtk-cursor-theme-name" = cursorTheme;
-        "gtk-cursor-theme-size" = cursorSize;
-      };
-
-      gtk4.extraConfig = {
-        "gtk-cursor-theme-name" = cursorTheme;
-        "gtk-cursor-theme-size" = cursorSize;
-      };
-    };
-
-    dconf.enable = true;
-    dconf.settings."org/gnome/desktop/interface" = {
-      cursor-theme = cursorTheme;
-      cursor-size = cursorSize;
     };
   };
 }

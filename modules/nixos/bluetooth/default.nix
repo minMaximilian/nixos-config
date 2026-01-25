@@ -4,12 +4,7 @@
   lib,
   ...
 }: let
-  inherit
-    (lib)
-    mkEnableOption
-    mkIf
-    ;
-
+  inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.bluetooth;
 in {
   options.myOptions.bluetooth = {
@@ -28,6 +23,17 @@ in {
         General = {
           # Enable A2DP sink
           Enable = "Source,Sink,Media,Socket";
+          # Required for DualSense/DualShock controllers over Bluetooth
+          ClassicBondedOnly = false;
+          ControllerMode = "dual";
+        };
+      };
+      input = {
+        General = {
+          # Allow Bluetooth HID devices (controllers) without classic bonding
+          ClassicBondedOnly = false;
+          UserspaceHID = false;
+          IdleTimeout = 0;
         };
       };
     };

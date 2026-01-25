@@ -34,13 +34,13 @@ in {
 
     colorScheme = mkOption {
       type = types.str;
-      default = "catppuccin-latte";
+      default = "oxocarbon-dark";
       description = "The name of the base16 color scheme to use with stylix";
     };
 
     polarity = mkOption {
       type = types.enum ["light" "dark" "either"];
-      default = "light";
+      default = "dark";
       description = "Whether to use light or dark mode";
     };
   };

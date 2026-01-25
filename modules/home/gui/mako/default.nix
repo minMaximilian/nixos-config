@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }: let
@@ -13,18 +12,10 @@
   cfg = config.myOptions.mako;
 in {
   options.myOptions.mako = {
-    enable =
-      mkEnableOption "Mako notification daemon"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Mako notification daemon";
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      mako
-    ];
-
     services.mako = {
       enable = true;
       settings = {

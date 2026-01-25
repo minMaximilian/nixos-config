@@ -8,6 +8,7 @@
     ./devenv
     ./golang
     ./zellij
+    ./jj
   ];
 
   config.myOptions = {
@@ -18,5 +19,6 @@
     devenv.enable = lib.mkDefault true;
     golang.enable = lib.mkDefault true;
     zellij.enable = lib.mkDefault true;
+    jj.enable = lib.mkDefault true;
   };
 }

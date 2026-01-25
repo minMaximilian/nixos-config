@@ -13,14 +13,6 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
-    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-    firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
-
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
-
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprlock.url = "github:hyprwm/Hyprlock";
     hyprlock.inputs.nixpkgs.follows = "nixpkgs";
     hyprcursor.url = "github:hyprwm/hyprcursor";
@@ -31,18 +23,9 @@
     spicetify-nix.url = "github:gerg-l/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixCats.url = "github:BirdeeHub/nixCats-nvim";
 
-    nixCats = {
-      url = "github:BirdeeHub/nixCats-nvim";
-    };
-
-    nixcord = {
-      url = "github:FlameFlag/nixcord";
-    };
+    nixcord.url = "github:FlameFlag/nixcord";
   };
 
   outputs = inputs @ {flake-parts, ...}:

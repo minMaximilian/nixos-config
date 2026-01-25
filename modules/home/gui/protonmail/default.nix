@@ -13,11 +13,7 @@
   cfg = config.myOptions.protonmail;
 in {
   options.myOptions.protonmail = {
-    enable =
-      mkEnableOption "Proton Mail desktop client"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Proton Mail desktop client";
   };
 
   config = mkIf cfg.enable {
@@ -26,8 +22,8 @@ in {
     xdg.desktopEntries.protonmail-desktop = {
       name = "Mail";
       genericName = "Email Client";
-      exec = "protonmail-desktop %U";
-      icon = "protonmail-desktop";
+      exec = "proton-mail %U";
+      icon = "proton-mail";
       terminal = false;
       categories = ["Network" "Email"];
     };

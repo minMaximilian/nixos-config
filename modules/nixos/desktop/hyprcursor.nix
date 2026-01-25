@@ -8,8 +8,8 @@
   cfg = config.myOptions.hyprcursor;
   username = config.myOptions.vars.username;
 
-  cursorTheme = "Bibata-Modern-Classic";
-  cursorSize = 16;
+  cursorTheme = config.stylix.cursor.name or "Bibata-Modern-Classic";
+  cursorSize = config.stylix.cursor.size or 16;
 in {
   options.myOptions.hyprcursor = {
     enable = mkEnableOption "Hyprcursor" // {default = config.myOptions.vars.withGui;};

@@ -16,17 +16,22 @@
 
   cfg = config.myOptions.hyprland;
 
+  fullscreenToggle = pkgs.writeShellScript "fullscreen-toggle" ''
+    ${pkgs.hyprland}/bin/hyprctl dispatch fullscreen 0
+    if ${pkgs.hyprland}/bin/hyprctl activewindow -j | ${pkgs.jq}/bin/jq -e '.fullscreen != 0' > /dev/null; then
+      ${pkgs.systemd}/bin/systemctl --user stop gammastep
+    else
+      ${pkgs.systemd}/bin/systemctl --user start gammastep
+    fi
+  '';
+
   defaultWallpaper =
     if self != null
     then "${self}/assets/wallpaper.png"
     else null;
 in {
   options.myOptions.hyprland = {
-    enable =
-      mkEnableOption "Hyprland Window Manager"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Hyprland Window Manager";
 
     monitors = lib.mkOption {
       type = lib.types.listOf lib.types.str;
@@ -45,8 +50,8 @@ in {
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = true;
-      systemd.enable = true;
-      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+      systemd.enable = false;
+      package = pkgs.hyprland;
       settings = {
         "$mod" = "SUPER";
 
@@ -54,10 +59,16 @@ in {
 
         exec-once =
           [
+            "hyprlock"
             "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "uwsm finalize"
             "uwsm app -- ${pkgs.mako}"
+            "[workspace 1 silent] steam"
+            "[workspace 2 silent] discord"
+            "[workspace 3 silent] firefox"
+            "solaar --window=hide"
+            "[workspace 4 silent] spotify"
           ]
           ++ lib.optionals config.myOptions.waybar.enable [
             "uwsm app -- waybar"
@@ -68,17 +79,7 @@ in {
         ];
 
         animations = {
-          enabled = true;
-          bezier = ["myBezier, 0.05, 0.9, 0.1, 1.05"];
-          animation = [
-            "windows, 1, 7, myBezier"
-            "windowsOut, 1, 7, default, popin 80%"
-            "windowsMove, 1, 2, default, popin 80%"
-            "border, 1, 10, default"
-            "borderangle, 1, 8, default"
-            "fade, 1, 7, default"
-            "workspaces, 1, 6, default"
-          ];
+          enabled = false;
         };
 
         dwindle = {
@@ -90,25 +91,11 @@ in {
         decoration = {
           rounding = 0;
           active_opacity = 1.0;
-          inactive_opacity = 0.95;
+          inactive_opacity = 0.8;
           dim_inactive = false;
-          dim_strength = 0.7;
 
-          blur = {
-            enabled = true;
-            size = 5;
-            passes = 3;
-            vibrancy = 0.4;
-            ignore_opacity = true;
-            xray = true;
-          };
-
-          shadow = {
-            enabled = true;
-            range = 8;
-            render_power = 2;
-            offset = "0 0";
-          };
+          blur.enabled = false;
+          shadow.enabled = false;
         };
 
         general = {
@@ -135,9 +122,14 @@ in {
 
         misc = {
           disable_splash_rendering = true;
+          disable_hyprland_logo = true;
           force_default_wallpaper = false;
           vfr = true;
           vrr = 0;
+        };
+
+        ecosystem = {
+          no_update_news = true;
         };
 
         layerrule = [
@@ -168,7 +160,7 @@ in {
           "$mod ALT, Space, exec, ${pkgs.rofi}/bin/rofi -show window"
 
           "$mod, C, killactive"
-          "$mod, F, fullscreen, 0"
+          "$mod, F, exec, ${fullscreenToggle}"
 
           ", Print, exec, grimblast --notify copy area"
           "$mod, S, exec, grimblast --notify save area ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png"
@@ -189,8 +181,8 @@ in {
           "$mod, right, movewindow, r"
           "$mod, up, movewindow, u"
           "$mod, down, movewindow, d"
-          "$mod SHIFT, h, movewindow, l"
-          "$mod SHIFT, l, movewindow, r"
+          "$mod SHIFT, h, movewindow, mon:l"
+          "$mod SHIFT, l, movewindow, mon:r"
           "$mod SHIFT, k, movewindow, u"
           "$mod SHIFT, j, movewindow, d"
 

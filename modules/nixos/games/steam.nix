@@ -13,6 +13,8 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # Load PlayStation controller driver for DualSense/DualShock Bluetooth support
+    boot.kernelModules = ["hid_playstation"];
     programs.steam = {
       enable = true;
       remotePlay.openFirewall = true;
@@ -37,6 +39,14 @@ in {
     programs.gamescope.enable = true;
 
     hardware.steam-hardware.enable = true;
+
+    # Additional udev rules for Bluetooth controller support
+    services.udev.extraRules = ''
+      # Valve HID devices over bluetooth hidraw
+      KERNEL=="hidraw*", KERNELS=="*28DE:*", MODE="0666"
+      # Steam Controller udev write access
+      KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput"
+    '';
 
     environment.systemPackages = with pkgs; [
       mangohud

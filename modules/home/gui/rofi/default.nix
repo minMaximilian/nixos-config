@@ -11,18 +11,14 @@
     ;
 
   cfg = config.myOptions.rofi;
-  hasStylex = config.lib ? stylix;
+  hasStylex = config.lib ? stylix && config.lib.stylix ? colors;
 in {
   imports = [
     ./volume-control.nix
   ];
 
   options.myOptions.rofi = {
-    enable =
-      mkEnableOption "rofi"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "rofi";
   };
 
   config = mkIf cfg.enable {

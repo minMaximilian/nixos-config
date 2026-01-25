@@ -14,11 +14,7 @@
   cfg = config.myOptions.prismLauncher;
 in {
   options.myOptions.prismLauncher = {
-    enable =
-      mkEnableOption "Prism Launcher with custom configuration"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Prism Launcher with custom configuration";
   };
 
   config = mkIf cfg.enable {

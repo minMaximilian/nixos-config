@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   inherit
@@ -13,23 +12,9 @@
     ;
 
   cfg = config.myOptions.gammastep;
-
-  gammastep-toggle = pkgs.writeShellScriptBin "gammastep-toggle" ''
-    if systemctl --user is-active --quiet gammastep; then
-      systemctl --user stop gammastep
-      notify-send "Gammastep" "Disabled (gaming mode)"
-    else
-      systemctl --user start gammastep
-      notify-send "Gammastep" "Enabled"
-    fi
-  '';
 in {
   options.myOptions.gammastep = {
-    enable =
-      mkEnableOption "Gammastep blue light filter"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Gammastep blue light filter";
 
     latitude = mkOption {
       type = types.float;

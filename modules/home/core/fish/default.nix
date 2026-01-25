@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  inherit (lib) mkOption mkIf types;
+  inherit (lib) mkIf;
   cfg = config.myOptions.fish;
 in {
   options.myOptions.fish = {
@@ -19,6 +19,8 @@ in {
         fzf
         fd
         bat
+        nodejs_20
+        kakoune
         ;
     };
 

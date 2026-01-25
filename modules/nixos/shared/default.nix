@@ -9,7 +9,6 @@
   imports = [
     ./users.nix
     ./home-manager.nix
-    inputs.home-manager.nixosModules.home-manager
   ];
 
   nixpkgs.overlays = lib.mkIf (self != null && self ? overlays) [self.overlays.default];

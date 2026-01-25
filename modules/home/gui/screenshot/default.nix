@@ -13,11 +13,7 @@
   cfg = config.myOptions.screenshot;
 in {
   options.myOptions.screenshot = {
-    enable =
-      mkEnableOption "Screenshot tools for Wayland/Hyprland"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Screenshot tools for Wayland/Hyprland";
   };
 
   config = mkIf cfg.enable {

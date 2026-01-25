@@ -13,11 +13,7 @@
   cfg = config.myOptions.signal;
 in {
   options.myOptions.signal = {
-    enable =
-      mkEnableOption "Signal messenger"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Signal messenger";
   };
 
   config = mkIf cfg.enable {

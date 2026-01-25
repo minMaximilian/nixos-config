@@ -10,6 +10,7 @@ _: {
     ./games
     ./login
     ./logitech
+    ./miniflux
     ./shell
     ./theme
   ];

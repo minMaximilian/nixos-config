@@ -4,12 +4,7 @@
   lib,
   ...
 }: let
-  inherit
-    (lib)
-    mkEnableOption
-    mkIf
-    ;
-
+  inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.fonts;
 in {
   options.myOptions.fonts = {

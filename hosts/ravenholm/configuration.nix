@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{...}: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -15,10 +11,7 @@
   networking.hostName = "ravenholm";
   networking.networkmanager.enable = true;
 
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
+  services.xserver.xkb.layout = "us";
 
   services.printing.enable = true;
 

@@ -1,16 +1,10 @@
 {
   config,
   pkgs,
-  inputs,
   lib,
   ...
 }: let
-  inherit
-    (lib)
-    mkEnableOption
-    mkIf
-    ;
-
+  inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.hyprland;
 in {
   options.myOptions.hyprland = {
@@ -32,8 +26,8 @@ in {
     services.xserver.enable = true;
     programs.hyprland = {
       enable = true;
-      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+      package = pkgs.hyprland;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
     };
 
     environment.sessionVariables = {

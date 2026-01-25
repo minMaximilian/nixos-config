@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }: let
@@ -13,18 +12,10 @@
   cfg = config.myOptions.ghostty;
 in {
   options.myOptions.ghostty = {
-    enable =
-      mkEnableOption "Ghostty terminal emulator"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Ghostty terminal emulator";
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      ghostty
-    ];
-
     programs.ghostty = {
       enable = true;
       settings = {

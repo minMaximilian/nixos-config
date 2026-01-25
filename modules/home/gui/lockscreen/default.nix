@@ -16,11 +16,7 @@
   colors = config.lib.stylix.colors;
 in {
   options.myOptions.lockscreen = {
-    enable =
-      mkEnableOption "Lockscreen (hyprlock + hypridle)"
-      // {
-        default = true;
-      };
+    enable = mkEnableOption "Lockscreen (hyprlock + hypridle)";
 
     idleTimeout = mkOption {
       type = types.int;
@@ -42,29 +38,78 @@ in {
       enable = true;
       settings = {
         general = {
-          disable_loading_bar = true;
-          hide_cursor = true;
-          grace = 3;
+          hide_cursor = false;
+          immediate_render = true;
         };
 
-        label = [
+        animations = {
+          enabled = false;
+        };
+
+        background = lib.mkForce [
           {
             monitor = "";
-            text = "$TIME";
-            color = "rgb(${colors.base05})";
-            font_size = 96;
-            font_family = "sans-serif";
-            position = "0, 250";
+            color = "rgba(0, 0, 0, 0)";
+          }
+        ];
+
+        input-field = lib.mkForce [
+          {
+            monitor = "";
+            size = "250, 60";
+            outline_thickness = 2;
+            dots_size = 0.2;
+            dots_spacing = 0.35;
+            dots_center = true;
+            outer_color = "rgba(0, 0, 0, 0)";
+            inner_color = "rgba(0, 0, 0, 0.5)";
+            font_color = "rgb(${colors.base05})";
+            fade_on_empty = false;
+            rounding = -1;
+            check_color = "rgb(${colors.base0A})";
+            fail_color = "rgb(${colors.base08})";
+            capslock_color = "rgb(${colors.base0A})";
+            placeholder_text = "<i><span foreground=\"##${colors.base05}\">Input Password...</span></i>";
+            hide_input = false;
+            position = "0, -200";
             halign = "center";
             valign = "center";
           }
+        ];
+
+        label = lib.mkForce [
+          # Date (above time)
           {
             monitor = "";
-            text = "cmd[update:60000] date '+%A, %B %d'";
-            color = "rgb(${colors.base04})";
-            font_size = 24;
-            font_family = "sans-serif";
-            position = "0, 150";
+            text = "cmd[update:1000] date '+%A, %B %d'";
+            color = "rgb(${colors.base05})";
+            font_size = 22;
+            font_family = "JetBrains Mono";
+            position = "0, 300";
+            halign = "center";
+            valign = "center";
+          }
+          # Time
+          {
+            monitor = "";
+            text = "cmd[update:1000] date '+%-I:%M'";
+            color = "rgb(${colors.base05})";
+            font_size = 95;
+            font_family = "JetBrains Mono ExtraBold";
+            position = "0, 200";
+            halign = "center";
+            valign = "center";
+          }
+        ];
+
+        image = lib.mkForce [
+          {
+            monitor = "";
+            path = "$HOME/.face";
+            size = 100;
+            border_size = 2;
+            border_color = "rgb(${colors.base05})";
+            position = "0, -75";
             halign = "center";
             valign = "center";
           }
