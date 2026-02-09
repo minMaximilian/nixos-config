@@ -22,6 +22,7 @@
       imports = [
         ../../home
         ../../shared/vars.nix
+        ../../shared/theme.nix
       ];
       myOptions.vars = config.myOptions.vars;
 

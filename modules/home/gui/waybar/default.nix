@@ -11,6 +11,8 @@
     ;
 
   cfg = config.myOptions.waybar;
+  theme = config.myOptions.theme;
+  themeLib = config.lib.theme;
 in {
   options.myOptions.waybar = {
     enable =
@@ -23,10 +25,7 @@ in {
   config = mkIf cfg.enable {
     programs.waybar = {
       enable = true;
-      systemd = {
-        enable = true;
-        target = "hyprland-session.target";
-      };
+      systemd.enable = false;
       settings = {
         mainBar = {
           layer = "top";
@@ -120,7 +119,7 @@ in {
                 "<span color='#${config.lib.stylix.colors.base0B}'>  </span>"
               ];
             };
-            on-click = "eww open --toggle volume-popup && eww open --toggle volume-overlay";
+            on-click = "pavucontrol";
             on-click-right = "pavucontrol -t 3";
             on-click-middle = "pactl -- set-sink-mute 0 toggle";
             tooltip = true;
@@ -145,7 +144,7 @@ in {
           clock = {
             interval = 1;
             timezone = "Europe/Dublin";
-            format = "<span color='#${config.lib.stylix.colors.base0E}'>  </span>{:%H:%M} ";
+            format = "<span color='#${config.lib.stylix.colors.base0E}'>  </span>{:%a %d %b %H:%M} ";
             tooltip = true;
             tooltip-format = "{:%Y-%m-%d, %A}";
           };
@@ -177,12 +176,19 @@ in {
           };
         };
       };
-      style = ''
+      style = let
+        colors = config.lib.stylix.colors;
+        opacity = toString theme.opacity.background;
+        margin = themeLib.css.margin;
+        borderRadius = themeLib.css.borderRadius;
+        paddingSmall = themeLib.css.paddingSmall;
+        paddingMedium = themeLib.css.paddingMedium;
+      in ''
         * {
-          font-family: "CaskaydiaCove Nerd Font", "Font Awesome 6 Free", "Font Awesome 6 Free Solid", "Symbols Nerd Font Mono";
+          font-family: "${theme.fonts.mono}", "Font Awesome 6 Free", "Font Awesome 6 Free Solid", "Symbols Nerd Font Mono";
           font-weight: bold;
-          font-size: 16px;
-          color: #${config.lib.stylix.colors.base05};
+          font-size: ${themeLib.css.fontSizeLarge};
+          color: #${colors.base05};
         }
 
         window#waybar {
@@ -195,32 +201,32 @@ in {
         #workspaces,
         #window,
         #tray{
-          background-color: rgba(${config.lib.stylix.colors.base01-rgb-r}, ${config.lib.stylix.colors.base01-rgb-g}, ${config.lib.stylix.colors.base01-rgb-b}, 0.9);
-          padding: 4px 2px;
-          margin-top: 6px;
-          margin-left: 6px;
-          margin-right: 6px;
-          border-radius: 10px;
+          background-color: rgba(${colors.base01-rgb-r}, ${colors.base01-rgb-g}, ${colors.base01-rgb-b}, ${opacity});
+          padding: ${paddingSmall} 2px;
+          margin-top: ${margin};
+          margin-left: ${margin};
+          margin-right: ${margin};
+          border-radius: ${borderRadius};
           border-width: 0px;
         }
 
         #clock,
         #custom-power{
-          background-color: rgba(${config.lib.stylix.colors.base01-rgb-r}, ${config.lib.stylix.colors.base01-rgb-g}, ${config.lib.stylix.colors.base01-rgb-b}, 0.9);
-          margin-top: 6px;
-          margin-right: 6px;
-          padding: 4px 8px;
-          border-radius: 0 10px 10px 0;
+          background-color: rgba(${colors.base01-rgb-r}, ${colors.base01-rgb-g}, ${colors.base01-rgb-b}, ${opacity});
+          margin-top: ${margin};
+          margin-right: ${margin};
+          padding: ${paddingSmall} ${paddingMedium};
+          border-radius: 0 ${borderRadius} ${borderRadius} 0;
           border-width: 0px;
         }
 
         #network,
         #custom-lock{
-          background-color: rgba(${config.lib.stylix.colors.base01-rgb-r}, ${config.lib.stylix.colors.base01-rgb-g}, ${config.lib.stylix.colors.base01-rgb-b}, 0.9);
-          margin-top: 6px;
-          margin-left: 6px;
-          padding: 4px 8px;
-          border-radius: 10px 0 0 10px;
+          background-color: rgba(${colors.base01-rgb-r}, ${colors.base01-rgb-g}, ${colors.base01-rgb-b}, ${opacity});
+          margin-top: ${margin};
+          margin-left: ${margin};
+          padding: ${paddingSmall} ${paddingMedium};
+          border-radius: ${borderRadius} 0 0 ${borderRadius};
           border-width: 0px;
         }
 
@@ -232,15 +238,15 @@ in {
         #custom-temperature,
         #memory,
         #cpu{
-          background-color: rgba(${config.lib.stylix.colors.base01-rgb-r}, ${config.lib.stylix.colors.base01-rgb-g}, ${config.lib.stylix.colors.base01-rgb-b}, 0.9);
-          margin-top: 6px;
-          padding: 4px 8px;
+          background-color: rgba(${colors.base01-rgb-r}, ${colors.base01-rgb-g}, ${colors.base01-rgb-b}, ${opacity});
+          margin-top: ${margin};
+          padding: ${paddingSmall} ${paddingMedium};
           border-width: 0px;
         }
 
         #custom-temperature.critical,
         #pulseaudio.muted {
-          color: #${config.lib.stylix.colors.base08};
+          color: #${colors.base08};
           padding-top: 0;
         }
 
@@ -257,7 +263,7 @@ in {
         #custom-reboot:hover,
         #custom-power:hover,
         #window:hover {
-          background-color: rgba(${config.lib.stylix.colors.base02-rgb-r}, ${config.lib.stylix.colors.base02-rgb-g}, ${config.lib.stylix.colors.base02-rgb-b}, 0.9);
+          background-color: rgba(${colors.base02-rgb-r}, ${colors.base02-rgb-g}, ${colors.base02-rgb-b}, ${opacity});
         }
 
         #workspaces {
@@ -266,20 +272,19 @@ in {
 
         #workspaces button {
           all: unset;
-          padding: 2px 10px 2px 4px;
-          margin: 0 4px;
-          border: none;
+          padding: 2px 10px 2px ${paddingSmall};
+          margin: 0 ${paddingSmall};
           background: transparent;
+          border-bottom: ${themeLib.css.borderWidth} solid transparent;
         }
 
         #workspaces button:hover {
-          border: none;
           transition: all 1s ease;
         }
 
         #workspaces button.active {
-          color: #${config.lib.stylix.colors.base0D};
-          border: none;
+          color: #${colors.base0D};
+          border-bottom: ${themeLib.css.borderWidth} solid #${colors.base0D};
         }
       '';
     };

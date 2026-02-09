@@ -1,5 +1,59 @@
 # NixOS Config - Agent Guidelines
 
+## ⛔ STOP - READ BEFORE ANY EDIT
+
+Before modifying ANY file in this repo, you MUST:
+1. Run `web_search` or `read_web_page` for the relevant documentation
+2. State what you found and your plan in your response
+3. Only THEN make edits
+
+**NO EXCEPTIONS.** Do not rely on training data for syntax - it is outdated.
+
+---
+
+## ⚠️ CRITICAL: Pre-Update Requirements
+
+**This is a bleeding-edge NixOS system using nixos-unstable.** Before making ANY changes:
+
+### Mandatory Pre-Update Checklist
+
+1. **Research First** — Use `web_search` and `read_web_page` to look up current documentation for:
+   - Any package, option, or module being modified
+   - NixOS/home-manager release notes for breaking changes
+   - Upstream project changelogs (Hyprland, Stylix, nixCats, etc.)
+
+2. **Understand the Scope** — Use `finder` and `Read` to analyze:
+   - Which modules will be affected by the change
+   - Dependencies between modules (check `Required Inputs by Module` table)
+   - Whether the change affects external consumers of this flake
+
+3. **Formulate a Thorough Plan** — Before implementation:
+   - Document what changes will be made and why
+   - Identify potential breaking changes or conflicts
+   - List rollback strategies if the update fails
+   - Consult the `oracle` for complex architectural decisions
+
+4. **Use Subagents for Implementation** — Use the `Task` tool to:
+   - Delegate independent module updates to parallel subagents
+   - Keep changes atomic and reviewable
+   - Ensure each subagent runs `nix flake check --no-build` after changes
+
+5. **Verify Extensively** — After changes:
+   - Run `nix flake check --no-build`
+   - Dry-run build: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel --dry-run`
+   - Format with `nix run nixpkgs#alejandra -- .`
+
+### Documentation Sources to Check
+
+- [NixOS Options Search](https://search.nixos.org/options)
+- [NixOS Packages Search](https://search.nixos.org/packages)
+- [Home-Manager Options](https://nix-community.github.io/home-manager/options.xhtml)
+- [Hyprland Wiki](https://wiki.hyprland.org/)
+- [Stylix Documentation](https://danth.github.io/stylix/)
+- Flake input repos for breaking changes in their changelogs
+
+---
+
 ## Commands
 
 ```bash
@@ -22,7 +76,8 @@ nix develop
 flake.nix              # Main flake - imports exports.nix for modules
 ├── modules/
 │   ├── shared/        # Context-agnostic modules (work in both NixOS and home-manager)
-│   │   └── vars.nix   # User variables (username, sshKeys, etc.)
+│   │   ├── vars.nix   # User variables (username, sshKeys, etc.)
+│   │   └── theme.nix  # Unified styling (border-radius, padding, fonts, opacity)
 │   ├── nixos/         # NixOS system modules (exported as nixosModules.*)
 │   │   ├── default.nix    # Imports all nixos modules
 │   │   ├── exports.nix    # Auto-discovers and exports all modules
@@ -80,20 +135,50 @@ options.myOptions.myFeature = {
 
 ---
 
-### 2. Use Shared vars.nix for Both Contexts
+### 2. Use Shared vars.nix and theme.nix for Both Contexts
 
-The `modules/shared/vars.nix` file defines `myOptions.vars` and works in both NixOS and home-manager contexts:
+The `modules/shared/` directory contains context-agnostic modules:
+- **vars.nix** - User variables (username, sshKeys, etc.)
+- **theme.nix** - Unified styling (border-radius, padding, fonts, opacity)
 
 ```nix
 # In NixOS context
-imports = [ nixos-config.nixosModules.vars ];
+imports = [ nixos-config.nixosModules.vars nixos-config.nixosModules.theme ];
 
 # In home-manager context  
-imports = [ nixos-config.homeModules.vars ];
+imports = [ nixos-config.homeModules.vars nixos-config.homeModules.theme ];
 
-# Bridge them
-myOptions.vars = config.myOptions.vars;  # Pass NixOS vars to home-manager
+# Bridge vars (theme uses same values, no bridging needed)
+myOptions.vars = config.myOptions.vars;
 ```
+
+### Theme Module Usage
+
+Access theme values in GUI modules via `config.myOptions.theme` and helper functions via `config.lib.theme`:
+
+```nix
+# In a module
+theme = config.myOptions.theme;
+themeLib = config.lib.theme;
+
+# Use raw values
+border-radius = theme.borderRadius;        # 10 (int)
+padding = theme.padding.medium;            # 8 (int)
+opacity = theme.opacity.background;        # 0.9 (float)
+
+# Use CSS helpers
+border-radius = themeLib.css.borderRadius; # "10px" (string)
+padding = themeLib.css.paddingMedium;      # "8px" (string)
+
+# Convert opacity to hex for colors
+background-color = "#${colors.base01}${themeLib.opacityToHex theme.opacity.background}";
+```
+
+**Modules using theme.nix:**
+- `modules/home/gui/waybar/` - status bar
+- `modules/home/gui/rofi/` - launcher
+- `modules/home/gui/mako/` - notifications
+- `modules/home/gui/eww/` - widgets (partial)
 
 ---
 

@@ -63,16 +63,29 @@ in {
             "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "uwsm finalize"
-            "uwsm app -- ${pkgs.mako}"
-            "[workspace 1 silent] steam"
-            "[workspace 2 silent] discord"
-            "[workspace 3 silent] firefox"
+            "uwsm app -- ${pkgs.mako}/bin/mako"
+            "wl-paste --type text --watch cliphist store"
+            "wl-paste --type image --watch cliphist store"
+            "steam"
+            "vesktop"
+            "helium"
+            "spotify"
             "solaar --window=hide"
-            "[workspace 4 silent] spotify"
           ]
           ++ lib.optionals config.myOptions.waybar.enable [
             "uwsm app -- waybar"
+          ]
+          ++ [
+            "hyprctl dispatch workspace 1"
           ];
+
+        windowrule = [
+          "workspace 1 silent, match:class ^steam$"
+          "workspace 2 silent, match:class ^vesktop$"
+          "workspace 3 silent, match:class ^helium$"
+          "workspace 4 silent, match:class ^(S|s)potify$"
+          "workspace special:solaar silent, match:class ^solaar$"
+        ];
 
         env = [
           "QT_QPA_PLATFORMTHEME,qt5ct"
@@ -141,6 +154,7 @@ in {
         workspace = [
           "w[tv1], gapsout:0, gapsin:0"
           "f[1], gapsout:0, gapsin:0"
+          "0, monitor:1, default:true"
           "1, monitor:0"
           "2, monitor:0"
           "3, monitor:0"
@@ -212,7 +226,7 @@ in {
           "$mod, 7, workspace, 7"
           "$mod, 8, workspace, 8"
           "$mod, 9, workspace, 9"
-          "$mod, 0, workspace, 10"
+          "$mod, 0, workspace, 0"
 
           "$mod SHIFT, 1, movetoworkspacesilent, 1"
           "$mod SHIFT, 2, movetoworkspacesilent, 2"
@@ -223,7 +237,7 @@ in {
           "$mod SHIFT, 7, movetoworkspacesilent, 7"
           "$mod SHIFT, 8, movetoworkspacesilent, 8"
           "$mod SHIFT, 9, movetoworkspacesilent, 9"
-          "$mod SHIFT, 0, movetoworkspacesilent, 10"
+          "$mod SHIFT, 0, movetoworkspacesilent, 0"
 
           ", XF86AudioRaiseVolume, exec, pamixer -i 5"
           ", XF86AudioLowerVolume, exec, pamixer -d 5"
@@ -240,6 +254,9 @@ in {
           "$mod ALT, h, exec, helvum"
           "$mod ALT, e, exec, easyeffects"
           "$mod ALT, v, exec, rofi-volume"
+
+          "$mod, V, exec, cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy && wtype -M ctrl v -m ctrl"
+          "$mod SHIFT, V, exec, cliphist wipe"
         ];
       };
     };

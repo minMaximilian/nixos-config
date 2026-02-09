@@ -19,6 +19,9 @@
     Podcasts = {
       "Lemonade Stand" = {url = "https://www.youtube.com/feeds/videos.xml?channel_id=UCwVevVbti5Uuxj6Mkl5NHRA";};
     };
+    "Engineering Blogs" = {
+      "Sean Goedecke" = {url = "https://www.seangoedecke.com/rss.xml";};
+    };
   };
   myOptions.miniflux.quivrs = {
     enable = true;

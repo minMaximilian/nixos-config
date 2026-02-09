@@ -13,7 +13,22 @@
 
   nixpkgs.overlays = lib.mkIf (self != null && self ? overlays) [self.overlays.default];
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix = {
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+      auto-optimise-store = true;
+      warn-dirty = false;
+    };
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 14d";
+    };
+  };
+
+  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.initrd.systemd.enable = true;
 
   time.timeZone = "Europe/Dublin";
 

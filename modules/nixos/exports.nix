@@ -12,5 +12,6 @@ in
   {
     default = ./.;
     vars = ../shared/vars.nix;
+    theme = ../shared/theme.nix;
   }
   // getModules ./.

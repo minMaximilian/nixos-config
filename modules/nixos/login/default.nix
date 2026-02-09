@@ -17,15 +17,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.uwsm = {
-      enable = true;
-      waylandCompositors.hyprland = {
-        binPath = "${pkgs.hyprland}/bin/Hyprland";
-        prettyName = "Hyprland";
-        comment = "Hyprland compositor managed by uwsm";
-      };
-    };
-
     services.greetd = {
       enable = true;
       settings = {

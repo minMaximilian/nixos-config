@@ -11,6 +11,8 @@
     ;
 
   cfg = config.myOptions.rofi;
+  theme = config.myOptions.theme;
+  themeLib = config.lib.theme;
   hasStylex = config.lib ? stylix && config.lib.stylix ? colors;
 in {
   imports = [
@@ -41,11 +43,12 @@ in {
       theme = mkIf hasStylex (let
         inherit (config.lib.formats.rasi) mkLiteral;
         colors = config.lib.stylix.colors;
+        opacity = theme.opacity.background;
       in {
         "*" = {
-          font = "CaskaydiaCove Nerd Font 14";
-          background = mkLiteral "rgba(${colors.base00-rgb-r}, ${colors.base00-rgb-g}, ${colors.base00-rgb-b}, 0.9)";
-          background-alt = mkLiteral "rgba(${colors.base01-rgb-r}, ${colors.base01-rgb-g}, ${colors.base01-rgb-b}, 0.9)";
+          font = "${theme.fonts.mono} ${toString theme.fonts.size.medium}";
+          background = mkLiteral "rgba(${colors.base00-rgb-r}, ${colors.base00-rgb-g}, ${colors.base00-rgb-b}, ${toString opacity})";
+          background-alt = mkLiteral "rgba(${colors.base01-rgb-r}, ${colors.base01-rgb-g}, ${colors.base01-rgb-b}, ${toString opacity})";
           foreground = mkLiteral "#${colors.base05}";
           selected = mkLiteral "#${colors.base0D}";
           active = mkLiteral "#${colors.base0B}";
@@ -61,8 +64,8 @@ in {
           x-offset = mkLiteral "0px";
           y-offset = mkLiteral "0px";
           enabled = true;
-          border-radius = mkLiteral "10px";
-          border = mkLiteral "2px solid";
+          border-radius = mkLiteral themeLib.css.borderRadius;
+          border = mkLiteral "${themeLib.css.borderWidth} solid";
           border-color = mkLiteral "@selected";
           background-color = mkLiteral "@background";
         };
@@ -76,8 +79,8 @@ in {
         };
 
         "listbox" = {
-          spacing = mkLiteral "10px";
-          padding = mkLiteral "10px";
+          spacing = mkLiteral themeLib.css.paddingMedium;
+          padding = mkLiteral themeLib.css.paddingMedium;
           background-color = mkLiteral "transparent";
           orientation = mkLiteral "vertical";
           children = map mkLiteral ["message" "listview"];
@@ -85,13 +88,13 @@ in {
 
         "inputbar" = {
           enabled = true;
-          spacing = mkLiteral "10px";
-          padding = mkLiteral "15px";
+          spacing = mkLiteral themeLib.css.paddingMedium;
+          padding = mkLiteral themeLib.css.paddingLarge;
           background-color = mkLiteral "@background-alt";
           text-color = mkLiteral "@foreground";
           orientation = mkLiteral "horizontal";
           children = map mkLiteral ["prompt" "entry"];
-          border-radius = mkLiteral "10px 10px 0 0";
+          border-radius = mkLiteral "${themeLib.css.borderRadius} ${themeLib.css.borderRadius} 0 0";
         };
 
         "prompt" = {
@@ -127,9 +130,9 @@ in {
 
         "element" = {
           enabled = true;
-          spacing = mkLiteral "10px";
-          padding = mkLiteral "8px";
-          border-radius = mkLiteral "10px";
+          spacing = mkLiteral themeLib.css.paddingMedium;
+          padding = mkLiteral themeLib.css.paddingMedium;
+          border-radius = mkLiteral themeLib.css.borderRadius;
           background-color = mkLiteral "transparent";
           text-color = mkLiteral "@foreground";
           cursor = mkLiteral "pointer";
@@ -165,8 +168,8 @@ in {
         };
 
         "textbox" = {
-          padding = mkLiteral "10px";
-          border-radius = mkLiteral "10px";
+          padding = mkLiteral themeLib.css.paddingMedium;
+          border-radius = mkLiteral themeLib.css.borderRadius;
           background-color = mkLiteral "@background-alt";
           text-color = mkLiteral "@foreground";
           vertical-align = mkLiteral "0.5";
@@ -174,8 +177,8 @@ in {
         };
 
         "error-message" = {
-          padding = mkLiteral "10px";
-          border-radius = mkLiteral "10px";
+          padding = mkLiteral themeLib.css.paddingMedium;
+          border-radius = mkLiteral themeLib.css.borderRadius;
           background-color = mkLiteral "@background";
           text-color = mkLiteral "@urgent";
         };
