@@ -93,6 +93,12 @@ in {
   config.lib.theme = let
     theme = config.myOptions.theme;
   in {
+    hasStylix = config.lib ? stylix && config.lib.stylix ? colors;
+
+    mkRgba = colorName: opacity: let
+      colors = config.lib.stylix.colors;
+    in "rgba(${colors."${colorName}-rgb-r"}, ${colors."${colorName}-rgb-g"}, ${colors."${colorName}-rgb-b"}, ${toString opacity})";
+
     # Get opacity as hex suffix (e.g., 0.9 -> "E6")
     opacityToHex = opacity: let
       hexValue = builtins.floor (opacity * 255);

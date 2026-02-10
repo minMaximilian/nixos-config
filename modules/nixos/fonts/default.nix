@@ -42,7 +42,7 @@ in {
         defaultFonts = {
           serif = ["Noto Serif"];
           sansSerif = ["Noto Sans"];
-          monospace = ["CaskaydiaCove Nerd Font"];
+          monospace = [config.myOptions.theme.fonts.mono];
           emoji = ["Noto Color Emoji"];
         };
         enable = true;

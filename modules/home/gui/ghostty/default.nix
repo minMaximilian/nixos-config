@@ -10,6 +10,7 @@
     ;
 
   cfg = config.myOptions.ghostty;
+  theme = config.myOptions.theme;
 in {
   options.myOptions.ghostty = {
     enable = mkEnableOption "Ghostty terminal emulator";
@@ -19,16 +20,16 @@ in {
     programs.ghostty = {
       enable = true;
       settings = {
-        font-family = "JetBrainsMono Nerd Font";
-        font-size = 12;
+        font-family = theme.fonts.mono;
+        font-size = theme.fonts.size.small;
         font-feature = [
           "calt"
           "liga"
           "dlig"
         ];
 
-        window-padding-x = 10;
-        window-padding-y = 10;
+        window-padding-x = theme.padding.large;
+        window-padding-y = theme.padding.large;
         window-decoration = false;
         window-theme = "dark";
 
@@ -38,7 +39,7 @@ in {
         shell-integration-features = "no-cursor";
         cursor-style = "block";
         cursor-style-blink = false;
-        unfocused-split-opacity = 0.9;
+        unfocused-split-opacity = theme.opacity.background;
       };
     };
 

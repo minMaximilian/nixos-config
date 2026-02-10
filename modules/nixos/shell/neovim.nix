@@ -8,7 +8,7 @@
   username = config.myOptions.vars.username;
 in {
   options.myOptions.neovim = {
-    enable = mkEnableOption "Neovim" // {default = true;};
+    enable = mkEnableOption "Neovim";
   };
 
   config = mkIf cfg.enable {

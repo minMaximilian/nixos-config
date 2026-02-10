@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   self ? null,
   ...
 }: let
@@ -104,7 +103,7 @@ in {
         decoration = {
           rounding = 0;
           active_opacity = 1.0;
-          inactive_opacity = 0.8;
+          inactive_opacity = config.myOptions.theme.opacity.inactive;
           dim_inactive = false;
 
           blur.enabled = false;
@@ -114,7 +113,7 @@ in {
         general = {
           gaps_in = 3;
           gaps_out = 3;
-          border_size = 2;
+          border_size = config.myOptions.theme.borderWidth;
           layout = "dwindle";
         };
 
@@ -168,7 +167,7 @@ in {
         ];
 
         bind = [
-          "$mod, Q, exec, ${pkgs.ghostty}/bin/ghostty"
+          "$mod, Q, exec, ${config.myOptions.vars.terminal}"
           "$mod, Space, exec, ${pkgs.rofi}/bin/rofi -show drun"
           "$mod SHIFT, Space, exec, ${pkgs.rofi}/bin/rofi -show run"
           "$mod ALT, Space, exec, ${pkgs.rofi}/bin/rofi -show window"

@@ -8,8 +8,6 @@ let
     (builtins.removeAttrs
       (builtins.readDir dir)
       ["default.nix" "exports.nix" "shared"]);
-
-  coreModules = getModules ./.;
 in
   {
     default = ./.;

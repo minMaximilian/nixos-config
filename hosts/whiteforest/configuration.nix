@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -8,6 +12,9 @@
   myOptions.logitech.enable = true;
   myOptions.deadlockModManager.enable = true;
   myOptions.teamspeak.enable = true;
+  myOptions.memory.enable = true;
+  myOptions.fish.enable = true;
+  myOptions.neovim.enable = true;
   myOptions.miniflux.enable = true;
   myOptions.miniflux.feeds = {
     News = {
@@ -25,7 +32,7 @@
   };
   myOptions.miniflux.quivrs = {
     enable = true;
-    minifluxApiKeyFile = "/home/max/.config/miniflux/api-key.txt";
+    minifluxApiKeyFile = "/home/${config.myOptions.vars.username}/.config/miniflux/api-key.txt";
     feeds = {
       News = {
         kagi_uk = {
@@ -58,18 +65,9 @@
     "HDMI-A-1, 2560x1440@60, 0x0, 1"
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   networking.hostName = "whiteforest";
-  networking.networkmanager.enable = true;
 
-  # Use /etc/hosts for local resolution (required for miniflux.localhost, quivrs.localhost)
   services.resolved.enable = true;
-
-  services.xserver.xkb.layout = "us";
-
-  services.printing.enable = true;
 
   environment.systemPackages = with pkgs; [
     code-cursor

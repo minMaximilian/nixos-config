@@ -4,16 +4,11 @@
   ];
 
   myOptions.vars.withGui = true;
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  myOptions.memory.enable = true;
+  myOptions.fish.enable = true;
+  myOptions.neovim.enable = true;
 
   networking.hostName = "ravenholm";
-  networking.networkmanager.enable = true;
-
-  services.xserver.xkb.layout = "us";
-
-  services.printing.enable = true;
 
   system.stateVersion = "24.11";
 }

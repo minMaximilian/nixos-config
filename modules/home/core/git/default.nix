@@ -6,6 +6,7 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.git;
+  vars = config.myOptions.vars;
 in {
   options.myOptions.git = {
     enable = mkEnableOption "Git";
@@ -17,8 +18,8 @@ in {
       package = pkgs.gitFull;
       settings = {
         user = {
-          email = "53843385+minMaximilian@users.noreply.github.com";
-          name = "minMaximilian";
+          email = vars.gitEmail;
+          name = vars.gitName;
         };
         core = {
           editor = "nvim";

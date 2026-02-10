@@ -7,7 +7,7 @@ let
     (name: _: dir + "/${name}")
     (builtins.removeAttrs
       (builtins.readDir dir)
-      ["default.nix" "exports.nix" "vars"]);
+      ["default.nix" "exports.nix" "vars" "shared"]);
 in
   {
     default = ./.;

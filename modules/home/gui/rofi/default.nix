@@ -13,7 +13,7 @@
   cfg = config.myOptions.rofi;
   theme = config.myOptions.theme;
   themeLib = config.lib.theme;
-  hasStylex = config.lib ? stylix && config.lib.stylix ? colors;
+  hasStylix = config.lib.theme.hasStylix or false;
 in {
   imports = [
     ./volume-control.nix
@@ -27,7 +27,7 @@ in {
     programs.rofi = {
       enable = true;
       package = pkgs.rofi;
-      terminal = "${pkgs.ghostty}/bin/ghostty";
+      terminal = config.myOptions.vars.terminal;
       extraConfig = {
         modi = "run,drun,window";
         icon-theme = "Papirus";
@@ -40,7 +40,7 @@ in {
         display-Network = "Networks";
         sidebar-mode = true;
       };
-      theme = mkIf hasStylex (let
+      theme = mkIf hasStylix (let
         inherit (config.lib.formats.rasi) mkLiteral;
         colors = config.lib.stylix.colors;
         opacity = theme.opacity.background;

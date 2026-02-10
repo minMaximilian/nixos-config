@@ -29,8 +29,13 @@
 
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.initrd.systemd.enable = true;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  networking.networkmanager.enable = true;
+  services.xserver.xkb.layout = "us";
+  services.printing.enable = true;
 
-  time.timeZone = "Europe/Dublin";
+  time.timeZone = config.myOptions.vars.timezone;
 
   i18n.defaultLocale = "en_GB.UTF-8";
   i18n.extraLocaleSettings = {

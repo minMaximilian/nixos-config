@@ -12,8 +12,7 @@
   cfg = config.myOptions.mako;
   theme = config.myOptions.theme;
   themeLib = config.lib.theme;
-  hasStylex = config.lib ? stylix && config.lib.stylix ? colors;
-  colors = config.lib.stylix.colors;
+  hasStylix = config.lib.theme.hasStylix or false;
 in {
   options.myOptions.mako = {
     enable = mkEnableOption "Mako notification daemon";
@@ -25,7 +24,9 @@ in {
 
     services.mako = {
       enable = true;
-      settings = mkIf hasStylex {
+      settings = mkIf hasStylix (let
+        colors = config.lib.stylix.colors;
+      in {
         # Use shared theme values
         width = 400;
         height = 150;
@@ -55,7 +56,7 @@ in {
         "[app-name=lightbulb]" = {
           ignore-timeout = 1;
         };
-      };
+      });
     };
   };
 }

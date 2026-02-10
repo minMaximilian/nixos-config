@@ -4,7 +4,6 @@ _: {
     ./vars
     ../shared/theme.nix
     ./amdgpu
-    ./android
     ./audio
     ./bluetooth
     ./fonts

@@ -1,9 +1,8 @@
 {
-  description = "";
+  description = "NixOS configuration flake";
 
   inputs = {
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-graalvm21.url = "github:NixOS/nixpkgs/336eda0d07dc5e2be1f923990ad9fdb6bc8e28e3";
     nixpkgs.follows = "nixpkgs-unstable";
 
@@ -13,12 +12,11 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
-    hyprlock.url = "github:hyprwm/Hyprlock";
-    hyprlock.inputs.nixpkgs.follows = "nixpkgs";
     hyprcursor.url = "github:hyprwm/hyprcursor";
     hyprcursor.inputs.nixpkgs.follows = "nixpkgs";
 
     stylix.url = "github:danth/stylix";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
 
     spicetify-nix.url = "github:gerg-l/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -26,6 +24,7 @@
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
 
     nixcord.url = "github:FlameFlag/nixcord";
+    nixcord.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {flake-parts, ...}:
@@ -40,8 +39,6 @@
 
         nixosModules = import ./modules/nixos/exports.nix;
         homeModules = import ./modules/home/exports.nix;
-
-        lib = import ./lib;
       };
     };
 }

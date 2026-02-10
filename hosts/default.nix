@@ -8,23 +8,18 @@
 
     sharedModules = import ../modules;
 
-    pkgs-stable = import inputs.nixpkgs-stable {
-      system = "x86_64-linux";
-    };
-
     pkgs-graalvm21 = import inputs.nixpkgs-graalvm21 {
       system = "x86_64-linux";
     };
 
     specialArgs = {
-      inherit inputs pkgs-stable pkgs-graalvm21 self;
+      inherit inputs pkgs-graalvm21 self;
     };
   in {
     whiteforest = nixosSystem {
       inherit specialArgs;
       modules = [
         sharedModules
-        inputs.home-manager.nixosModules.home-manager
         ./whiteforest/configuration.nix
       ];
     };
@@ -33,7 +28,6 @@
       inherit specialArgs;
       modules = [
         sharedModules
-        inputs.home-manager.nixosModules.home-manager
         ./ravenholm/configuration.nix
       ];
     };

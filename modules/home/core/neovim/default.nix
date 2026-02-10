@@ -8,9 +8,9 @@
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.neovim;
   hasNixCats = inputs ? nixCats;
-  hasStylex = config.lib ? stylix && config.lib.stylix ? colors;
+  hasStylix = config.lib.theme.hasStylix or false;
   colors =
-    if hasStylex
+    if hasStylix
     then config.lib.stylix.colors
     else null;
 in {
@@ -46,25 +46,28 @@ in {
           categories = {
             general = true;
           };
-          extra = lib.optionalAttrs hasStylex {
-            colors = {
-              base00 = colors.base00;
-              base01 = colors.base01;
-              base02 = colors.base02;
-              base03 = colors.base03;
-              base04 = colors.base04;
-              base05 = colors.base05;
-              base06 = colors.base06;
-              base07 = colors.base07;
-              base08 = colors.base08;
-              base09 = colors.base09;
-              base0A = colors.base0A;
-              base0B = colors.base0B;
-              base0C = colors.base0C;
-              base0D = colors.base0D;
-              base0E = colors.base0E;
-              base0F = colors.base0F;
-            };
+          extra = lib.optionalAttrs hasStylix {
+            colors =
+              lib.genAttrs
+              [
+                "base00"
+                "base01"
+                "base02"
+                "base03"
+                "base04"
+                "base05"
+                "base06"
+                "base07"
+                "base08"
+                "base09"
+                "base0A"
+                "base0B"
+                "base0C"
+                "base0D"
+                "base0E"
+                "base0F"
+              ]
+              (name: colors.${name});
           };
         };
       };

@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  inputs,
+  inputs ? {},
   ...
 }: let
   inherit (lib) mkEnableOption mkOption mkIf types;
@@ -62,7 +62,7 @@
     then customSchemes.${cfg.colorScheme}
     else "${pkgs.base16-schemes}/share/themes/${cfg.colorScheme}.yaml";
 in {
-  imports = [
+  imports = lib.optionals (inputs ? stylix) [
     inputs.stylix.nixosModules.stylix
   ];
 
@@ -89,6 +89,12 @@ in {
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = inputs ? stylix;
+        message = "myOptions.theme requires inputs.stylix to be available";
+      }
+    ];
     stylix = {
       enable = true;
       image = cfg.wallpaper;

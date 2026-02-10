@@ -13,7 +13,8 @@
     ;
 
   cfg = config.myOptions.lockscreen;
-  colors = config.lib.stylix.colors;
+  hasStylix = config.lib.theme.hasStylix or false;
+  theme = config.myOptions.theme;
 in {
   options.myOptions.lockscreen = {
     enable = mkEnableOption "Lockscreen (hyprlock + hypridle)";
@@ -36,7 +37,9 @@ in {
 
     programs.hyprlock = {
       enable = true;
-      settings = {
+      settings = lib.mkIf hasStylix (let
+        colors = config.lib.stylix.colors;
+      in {
         general = {
           hide_cursor = false;
           immediate_render = true;
@@ -57,7 +60,7 @@ in {
           {
             monitor = "";
             size = "250, 60";
-            outline_thickness = 2;
+            outline_thickness = theme.borderWidth;
             dots_size = 0.2;
             dots_spacing = 0.35;
             dots_center = true;
@@ -84,7 +87,7 @@ in {
             text = "cmd[update:1000] date '+%A, %B %d'";
             color = "rgb(${colors.base05})";
             font_size = 22;
-            font_family = "JetBrains Mono";
+            font_family = theme.fonts.mono;
             position = "0, 300";
             halign = "center";
             valign = "center";
@@ -95,7 +98,7 @@ in {
             text = "cmd[update:1000] date '+%-I:%M'";
             color = "rgb(${colors.base05})";
             font_size = 95;
-            font_family = "JetBrains Mono ExtraBold";
+            font_family = "${theme.fonts.mono} ExtraBold";
             position = "0, 200";
             halign = "center";
             valign = "center";
@@ -107,14 +110,14 @@ in {
             monitor = "";
             path = "$HOME/.face";
             size = 100;
-            border_size = 2;
+            border_size = theme.borderWidth;
             border_color = "rgb(${colors.base05})";
             position = "0, -75";
             halign = "center";
             valign = "center";
           }
         ];
-      };
+      });
     };
 
     services.hypridle = {

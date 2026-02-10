@@ -1,10 +1,10 @@
 {
   config,
   pkgs,
-  pkgs-graalvm21,
+  pkgs-graalvm21 ? null,
   lib,
   inputs,
-  self,
+  self ? null,
   ...
 }: {
   imports = [

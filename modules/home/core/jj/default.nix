@@ -6,6 +6,7 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.jj;
+  vars = config.myOptions.vars;
 in {
   options.myOptions.jj = {
     enable = mkEnableOption "Jujutsu (jj) version control";
@@ -16,8 +17,8 @@ in {
       enable = true;
       settings = {
         user = {
-          email = "53843385+minMaximilian@users.noreply.github.com";
-          name = "minMaximilian";
+          email = vars.gitEmail;
+          name = vars.gitName;
         };
       };
     };

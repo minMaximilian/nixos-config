@@ -9,10 +9,7 @@
 in {
   options.myOptions.memory = {
     enable =
-      mkEnableOption "Memory management optimizations"
-      // {
-        default = true;
-      };
+      mkEnableOption "Memory management optimizations";
 
     zram = {
       enable = mkOption {

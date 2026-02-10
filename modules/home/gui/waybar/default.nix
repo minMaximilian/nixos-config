@@ -143,7 +143,7 @@ in {
           };
           clock = {
             interval = 1;
-            timezone = "Europe/Dublin";
+            timezone = config.myOptions.vars.timezone;
             format = "<span color='#${config.lib.stylix.colors.base0E}'>  </span>{:%a %d %b %H:%M} ";
             tooltip = true;
             tooltip-format = "{:%Y-%m-%d, %A}";
@@ -176,7 +176,7 @@ in {
           };
         };
       };
-      style = let
+      style = lib.mkIf (config.lib.theme.hasStylix or false) (let
         colors = config.lib.stylix.colors;
         opacity = toString theme.opacity.background;
         margin = themeLib.css.margin;
@@ -286,7 +286,7 @@ in {
           color: #${colors.base0D};
           border-bottom: ${themeLib.css.borderWidth} solid #${colors.base0D};
         }
-      '';
+      '');
     };
   };
 }

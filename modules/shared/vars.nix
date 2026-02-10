@@ -21,6 +21,18 @@ in {
       default = "ghostty";
     };
 
+    gitName = mkOption {
+      type = types.str;
+      default = "minMaximilian";
+      description = "Git user name for commits";
+    };
+
+    gitEmail = mkOption {
+      type = types.str;
+      default = "53843385+minMaximilian@users.noreply.github.com";
+      description = "Git email for commits";
+    };
+
     timezone = mkOption {
       type = types.str;
       default = "Europe/Dublin";

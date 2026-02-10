@@ -8,7 +8,7 @@
   cfg = config.myOptions.teamspeak;
 in {
   options.myOptions.teamspeak = {
-    enable = mkEnableOption "TeamSpeak client" // {default = false;};
+    enable = mkEnableOption "TeamSpeak client";
   };
 
   config = mkIf cfg.enable {
