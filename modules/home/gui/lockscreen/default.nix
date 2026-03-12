@@ -15,6 +15,7 @@
   cfg = config.myOptions.lockscreen;
   hasStylix = config.lib.theme.hasStylix or false;
   theme = config.myOptions.theme;
+  wallpaper = config.myOptions.hyprland.wallpaper or null;
 in {
   options.myOptions.lockscreen = {
     enable = mkEnableOption "Lockscreen (hyprlock + hypridle)";
@@ -46,13 +47,28 @@ in {
         };
 
         animations = {
-          enabled = false;
+          enabled = true;
+          bezier = ["windowIn, 0.06, 0.71, 0.25, 1"];
+          animation = [
+            "fadeIn, 1, 8, windowIn"
+            "fadeOut, 1, 8, windowIn"
+            "inputFieldColors, 1, 4, windowIn"
+            "inputFieldFade, 1, 4, windowIn"
+          ];
         };
 
         background = lib.mkForce [
           {
             monitor = "";
-            color = "rgba(0, 0, 0, 0)";
+            path = lib.optionalString (wallpaper != null) "${wallpaper}";
+            color = "rgba(${colors.base00}, 1.0)";
+            blur_passes = 3;
+            blur_size = 6;
+            noise = 0.02;
+            contrast = 0.9;
+            brightness = 0.7;
+            vibrancy = 0.2;
+            vibrancy_darkness = 0.1;
           }
         ];
 
@@ -81,7 +97,7 @@ in {
         ];
 
         label = lib.mkForce [
-          # Date (above time)
+          # Date
           {
             monitor = "";
             text = "cmd[update:1000] date '+%A, %B %d'";

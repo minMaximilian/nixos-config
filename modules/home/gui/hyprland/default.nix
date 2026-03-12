@@ -250,7 +250,7 @@ in {
           "$mod ALT, i, exec, audio-switcher input"
           "$mod ALT, p, exec, pavucontrol"
           "$mod ALT, q, exec, qpwgraph"
-          "$mod ALT, h, exec, helvum"
+          "$mod ALT, h, exec, qpwgraph"
           "$mod ALT, e, exec, easyeffects"
           "$mod ALT, v, exec, rofi-volume"
 

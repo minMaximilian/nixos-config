@@ -1,6 +1,7 @@
 {lib, ...}: {
   imports = [
     ./amp
+    ./chromium
     ./clipboard
     ./discord
     ./eww

@@ -6,7 +6,7 @@
 }: let
   cfg = config.myOptions.helium;
 
-  version = "0.7.9.1";
+  version = "0.8.5.1";
 
   helium = pkgs.appimageTools.wrapType2 {
     pname = "helium";
@@ -14,7 +14,7 @@
 
     src = pkgs.fetchurl {
       url = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-${version}-x86_64.AppImage";
-      hash = "sha256-69y8dNJPJk+HgnLzkyYLMdps1Med65yeN+77Nk6jbyM=";
+      hash = "sha256-jFSLLDsHB/NiJqFmn8S+JpdM8iCy3Zgyq+8l4RkBecM=";
     };
 
     extraInstallCommands = let
@@ -51,6 +51,17 @@ in {
       terminal = false;
       categories = ["Network" "WebBrowser"];
       mimeType = ["text/html" "x-scheme-handler/http" "x-scheme-handler/https"];
+    };
+
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "text/html" = "helium.desktop";
+        "x-scheme-handler/http" = "helium.desktop";
+        "x-scheme-handler/https" = "helium.desktop";
+        "x-scheme-handler/about" = "helium.desktop";
+        "x-scheme-handler/unknown" = "helium.desktop";
+      };
     };
   };
 }

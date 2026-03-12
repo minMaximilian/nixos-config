@@ -45,6 +45,18 @@
 
   opmlFile = pkgs.writeText "miniflux-feeds.opml" opmlContent;
 
+  # Build a JSON map of feed_url -> category_title from the declarative config
+  feedCategoryMap = let
+    pairs = lib.concatLists (mapAttrsToList (category: feeds:
+      mapAttrsToList (_name: feed: {
+        url = feed.url;
+        inherit category;
+      }) feeds
+    ) cfg.feeds);
+  in builtins.toJSON (builtins.listToAttrs (map (p: { name = p.url; value = p.category; }) pairs));
+
+  feedCategoryMapFile = pkgs.writeText "miniflux-feed-category-map.json" feedCategoryMap;
+
   syncScript = pkgs.writeShellScript "miniflux-sync-feeds" ''
     set -euo pipefail
 
@@ -52,6 +64,7 @@
     OPML_FILE="${opmlFile}"
     MAX_RETRIES=30
     RETRY_DELAY=2
+    JQ="${pkgs.jq}/bin/jq"
 
     # Wait for miniflux to be ready
     for i in $(seq 1 $MAX_RETRIES); do
@@ -82,7 +95,49 @@
         exit 1
       }
 
-    echo "Feed sync complete: $RESPONSE"
+    echo "Feed import complete: $RESPONSE"
+
+    # Enforce correct categories for existing feeds
+    echo "Enforcing feed categories..."
+    FEED_CATEGORY_MAP="${feedCategoryMapFile}"
+
+    # Get all categories and build a name->id map
+    CATEGORIES=$(${pkgs.curl}/bin/curl -sf \
+      -u "$ADMIN_USERNAME:$ADMIN_PASSWORD" \
+      "$MINIFLUX_URL/v1/categories")
+
+    # Get all feeds
+    FEEDS=$(${pkgs.curl}/bin/curl -sf \
+      -u "$ADMIN_USERNAME:$ADMIN_PASSWORD" \
+      "$MINIFLUX_URL/v1/feeds")
+
+    # For each feed, check if its category matches the declared config
+    echo "$FEEDS" | $JQ -c '.[]' | while read -r feed; do
+      FEED_ID=$(echo "$feed" | $JQ -r '.id')
+      FEED_URL=$(echo "$feed" | $JQ -r '.feed_url')
+      CURRENT_CATEGORY=$(echo "$feed" | $JQ -r '.category.title')
+
+      # Look up the desired category for this feed URL
+      DESIRED_CATEGORY=$(cat "$FEED_CATEGORY_MAP" | $JQ -r --arg url "$FEED_URL" '.[$url] // empty')
+
+      if [ -n "$DESIRED_CATEGORY" ] && [ "$DESIRED_CATEGORY" != "$CURRENT_CATEGORY" ]; then
+        # Find the category ID for the desired category
+        CATEGORY_ID=$(echo "$CATEGORIES" | $JQ -r --arg title "$DESIRED_CATEGORY" '.[] | select(.title == $title) | .id')
+
+        if [ -n "$CATEGORY_ID" ]; then
+          echo "Moving feed '$FEED_URL' from '$CURRENT_CATEGORY' to '$DESIRED_CATEGORY' (category_id=$CATEGORY_ID)"
+          ${pkgs.curl}/bin/curl -sf -X PUT \
+            -u "$ADMIN_USERNAME:$ADMIN_PASSWORD" \
+            -H "Content-Type: application/json" \
+            -d "{\"category_id\": $CATEGORY_ID}" \
+            "$MINIFLUX_URL/v1/feeds/$FEED_ID" > /dev/null
+        else
+          echo "Warning: Category '$DESIRED_CATEGORY' not found, skipping feed '$FEED_URL'"
+        fi
+      fi
+    done
+
+    echo "Feed sync complete"
   '';
 
   quivrsSetupScript = optionalString (cfg.quivrs.minifluxApiKeyFile != null) (pkgs.writeShellScript "quivrs-setup" ''
@@ -90,36 +145,59 @@
 
     API_KEY_FILE="${toString cfg.quivrs.minifluxApiKeyFile}"
     API_KEY_ENV="/var/lib/quivrs/api-key.env"
+    MINIFLUX_URL="http://127.0.0.1:${toString cfg.port}"
+    MAX_RETRIES=30
+    RETRY_DELAY=2
 
-    # If API key file doesn't exist, create it
+    # Read admin credentials
+    ADMIN_USERNAME=$(grep ADMIN_USERNAME ${cfg.adminCredentialsFile} | cut -d= -f2)
+    ADMIN_PASSWORD=$(grep ADMIN_PASSWORD ${cfg.adminCredentialsFile} | cut -d= -f2)
+
+    # If API key file doesn't exist, create one via Miniflux API
     if [ ! -f "$API_KEY_FILE" ]; then
+      # Wait for miniflux to be ready
+      for i in $(seq 1 $MAX_RETRIES); do
+        if ${pkgs.curl}/bin/curl -sf "$MINIFLUX_URL/healthcheck" > /dev/null 2>&1; then
+          echo "Miniflux is ready"
+          break
+        fi
+        if [ "$i" -eq "$MAX_RETRIES" ]; then
+          echo "Miniflux not ready after $MAX_RETRIES attempts, giving up"
+          exit 1
+        fi
+        echo "Waiting for miniflux... (attempt $i/$MAX_RETRIES)"
+        sleep $RETRY_DELAY
+      done
+
+      # Create API key via Miniflux API
+      RESPONSE=$(${pkgs.curl}/bin/curl -sf -X POST \
+        -u "$ADMIN_USERNAME:$ADMIN_PASSWORD" \
+        -H "Content-Type: application/json" \
+        -d '{"description": "quivrs"}' \
+        "$MINIFLUX_URL/v1/api-keys" 2>&1) || {
+          echo "Failed to create API key: $RESPONSE"
+          exit 1
+        }
+
+      API_KEY=$(echo "$RESPONSE" | ${pkgs.jq}/bin/jq -r '.token')
+      if [ -z "$API_KEY" ] || [ "$API_KEY" = "null" ]; then
+        echo "Failed to extract API key from response: $RESPONSE"
+        exit 1
+      fi
+
       mkdir -p "$(dirname "$API_KEY_FILE")"
-      API_KEY=$(${pkgs.openssl}/bin/openssl rand -base64 32)
       echo -n "$API_KEY" > "$API_KEY_FILE"
       chmod 600 "$API_KEY_FILE"
-      echo "Created new API key at $API_KEY_FILE"
+      echo "Created new API key via Miniflux API"
     fi
 
     # Create environment file for systemd
     mkdir -p "$(dirname "$API_KEY_ENV")"
     API_KEY=$(cat "$API_KEY_FILE")
-    echo "MINIFLUX_API_KEY=$API_KEY" > "$API_KEY_ENV"
+    echo "MINIFLUX_KEY=$API_KEY" > "$API_KEY_ENV"
     chmod 600 "$API_KEY_ENV"
 
     echo "API key setup complete"
-  '');
-
-  quivrsWrapper = optionalString (cfg.quivrs.minifluxApiKeyFile != null) (pkgs.writeShellScript "quivrs" ''
-    set -euo pipefail
-
-    API_KEY_FILE="${toString cfg.quivrs.minifluxApiKeyFile}"
-
-    # If API key file exists, load it
-    if [ -f "$API_KEY_FILE" ]; then
-      export MINIFLUX_API_KEY=$(cat "$API_KEY_FILE")
-    fi
-
-    exec ${quivrsPackage}/bin/quivrs
   '');
 in {
   options.myOptions.miniflux = {
@@ -194,7 +272,7 @@ in {
 
       minifluxUrl = mkOption {
         type = types.str;
-        default = "http://${cfg.virtualHost}";
+        default = "http://127.0.0.1:${toString cfg.port}";
         description = "URL of the Miniflux instance";
       };
 
@@ -275,7 +353,8 @@ in {
 
     systemd.services.quivrs-setup = mkIf (cfg.quivrs.enable && cfg.quivrs.minifluxApiKeyFile != null) {
       description = "Setup Quivrs API key";
-      after = ["network.target"];
+      after = ["network.target" "miniflux.service"];
+      requires = ["miniflux.service"];
       wantedBy = ["multi-user.target"];
       before = ["quivrs.service"];
 
@@ -293,10 +372,8 @@ in {
       wantedBy = ["multi-user.target"];
 
       serviceConfig = {
-        ExecStart =
-          if cfg.quivrs.minifluxApiKeyFile != null
-          then quivrsWrapper
-          else "${quivrsPackage}/bin/quivrs";
+        ExecStart = "${quivrsPackage}/bin/quivrs";
+        EnvironmentFile = lib.optional (cfg.quivrs.minifluxApiKeyFile != null) "/var/lib/quivrs/api-key.env";
         Restart = "always";
         DynamicUser = true;
         StateDirectory = "quivrs";
@@ -304,7 +381,7 @@ in {
 
       environment = {
         PORT = toString cfg.quivrs.port;
-        DATABASE_URL = cfg.quivrs.databasePath;
+        DATABASE_URL = "/var/lib/quivrs/quivrs.redb";
         MINIFLUX_URL = cfg.quivrs.minifluxUrl;
         QUIVRS_URL = "http://${cfg.quivrs.virtualHost}";
         CONFIG_PATH = (pkgs.formats.json {}).generate "quivrs.json" cfg.quivrs.feeds;

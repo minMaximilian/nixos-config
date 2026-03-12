@@ -9,6 +9,9 @@
     ./golang
     ./zellij
     ./jj
+
+    ./intellij
+    ./java
   ];
 
   config.myOptions = {
@@ -20,5 +23,7 @@
     golang.enable = lib.mkDefault true;
     zellij.enable = lib.mkDefault true;
     jj.enable = lib.mkDefault true;
+    intellij.enable = lib.mkDefault true;
+    java.enable = lib.mkDefault true;
   };
 }

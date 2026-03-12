@@ -53,7 +53,7 @@ in {
       protonup-qt
       protontricks
       winetricks
-      wineWowPackages.stable
+      wineWow64Packages.stable
       lutris
       heroic
       bottles

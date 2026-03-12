@@ -19,7 +19,7 @@ in {
         fzf
         fd
         bat
-        nodejs_20
+        nodejs_24
         kakoune
         ;
     };

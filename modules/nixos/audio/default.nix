@@ -78,7 +78,6 @@ in {
       pulseaudio
       qpwgraph
       easyeffects
-      helvum
       pw-volume
 
       audioSwitcher

@@ -1,0 +1,57 @@
+" Leader key
+let mapleader = " "
+
+" Editor settings (matching neovim config)
+set number
+set relativenumber
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+set scrolloff=5
+set showmode
+set showcmd
+set visualbell
+
+" IdeaVim plugins
+set ideajoin
+set commentary
+set surround
+set NERDTree
+set highlightedyank
+
+" LSP-style navigation (mapped to IDE actions)
+nmap gd <Action>(GotoDeclaration)
+nmap gD <Action>(GotoSuperMethod)
+nmap gr <Action>(FindUsages)
+nmap gi <Action>(GotoImplementation)
+nmap K <Action>(QuickJavaDoc)
+nmap <leader>rn <Action>(RenameElement)
+nmap <leader>ca <Action>(ShowIntentionActions)
+vmap <leader>ca <Action>(ShowIntentionActions)
+nmap <C-k> <Action>(ParameterInfo)
+
+" Diagnostics
+nmap [d <Action>(GotoPreviousError)
+nmap ]d <Action>(GotoNextError)
+nmap <leader>dd <Action>(ShowErrorDescription)
+
+" Search (Telescope equivalents)
+nmap <leader>f <Action>(GotoFile)
+nmap <leader>g <Action>(FindInPath)
+nmap <leader>b <Action>(Switcher)
+nmap <leader>h <Action>(GotoAction)
+
+" File tree (NvimTree equivalents)
+nmap <leader>e <Action>(ActivateProjectToolWindow)
+nmap <leader>o <Action>(SelectInProjectView)
+
+" Window navigation
+nmap <C-h> <C-w>h
+nmap <C-j> <C-w>j
+nmap <C-k> <C-w>k
+nmap <C-l> <C-w>l
+
+" Quality of life
+nmap <leader>q <Action>(CloseContent)
+nmap <leader>w <Action>(SaveAll)

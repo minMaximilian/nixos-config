@@ -6,6 +6,7 @@ _: {
     ./amdgpu
     ./audio
     ./bluetooth
+    ./commet
     ./fonts
     ./desktop
     ./games
@@ -13,6 +14,7 @@ _: {
     ./logitech
     ./memory
     ./miniflux
+    ./protonvpn
     ./shell
     ./theme
   ];

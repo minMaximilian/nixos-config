@@ -66,7 +66,7 @@ in {
       freeSwapThreshold = 10;
       extraArgs = [
         "--prefer"
-        "^(electron|vesktop|discord|firefox|chromium|steam)$"
+        "^(electron|vesktop|discord|chromium|steam)$"
         "--avoid"
         "^(Hyprland|waybar|mako|pipewire|wireplumber)$"
       ];

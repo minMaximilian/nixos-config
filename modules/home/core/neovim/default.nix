@@ -40,8 +40,6 @@ in {
           settings = {
             aliases = ["nvim" "vim" "vi"];
             wrapRc = true;
-            hosts.python3.enable = true;
-            hosts.node.enable = true;
           };
           categories = {
             general = true;
@@ -77,8 +75,6 @@ in {
           lua-language-server
           nixd
           nixpkgs-fmt
-          statix
-          prettier
           zls
           ripgrep
           fd
@@ -88,13 +84,30 @@ in {
           telescope-nvim
           plenary-nvim
           nvim-lspconfig
-          nvim-treesitter.withAllGrammars
+          (nvim-treesitter.withPlugins (p: [
+            p.lua
+            p.nix
+            p.zig
+            p.bash
+            p.json
+            p.markdown
+            p.yaml
+            p.toml
+          ]))
           nvim-tree-lua
           nvim-web-devicons
           lualine-nvim
           indent-blankline-nvim
           comment-nvim
           base16-nvim
+          nvim-cmp
+          cmp-nvim-lsp
+          luasnip
+          cmp_luasnip
+          friendly-snippets
+          cmp-buffer
+          cmp-path
+          gitsigns-nvim
         ];
       };
     };

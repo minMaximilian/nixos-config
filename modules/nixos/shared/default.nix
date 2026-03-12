@@ -51,6 +51,9 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "olm-3.2.16"
+  ];
 
   environment.pathsToLink = ["/share/xdg-desktop-portal" "/share/applications"];
 
@@ -62,5 +65,6 @@
     home-manager
     python3
     unzip
+    p7zip
   ];
 }

@@ -9,11 +9,11 @@
 
   deadlock-mod-manager = pkgs.appimageTools.wrapType2 {
     pname = "deadlock-mod-manager";
-    version = "0.13.0";
+    version = "0.15.0";
 
     src = pkgs.fetchurl {
-      url = "https://github.com/deadlock-mod-manager/deadlock-mod-manager/releases/download/v0.13.0/Deadlock.Mod.Manager_0.13.0_amd64.AppImage";
-      hash = "sha256-KrRqlCZNh38Q9XKyBxwssyl5BoKCWdS430fDrxaBlu4=";
+      url = "https://github.com/deadlock-mod-manager/deadlock-mod-manager/releases/download/v0.15.0/Deadlock.Mod.Manager_0.15.0_amd64.AppImage";
+      hash = "sha256-eW1MPf72G+qEHBjImjMD308IhGrAvxLDiZjtH75JGuc=";
     };
 
     extraPkgs = pkgs:

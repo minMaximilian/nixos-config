@@ -23,6 +23,8 @@
 
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
 
+    nix-jetbrains-plugins.url = "github:nix-community/nix-jetbrains-plugins";
+
     nixcord.url = "github:FlameFlag/nixcord";
     nixcord.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -35,7 +37,8 @@
       ];
 
       flake = {
-        overlays.default = import ./overlays/default.nix;
+        overlays.default = final: prev:
+          (import ./overlays/default.nix final prev);
 
         nixosModules = import ./modules/nixos/exports.nix;
         homeModules = import ./modules/home/exports.nix;
