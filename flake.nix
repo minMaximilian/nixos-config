@@ -37,8 +37,7 @@
       ];
 
       flake = {
-        overlays.default = final: prev:
-          (import ./overlays/default.nix final prev);
+        overlays.default = final: prev: (import ./overlays/default.nix final prev);
 
         nixosModules = import ./modules/nixos/exports.nix;
         homeModules = import ./modules/home/exports.nix;

@@ -11,6 +11,7 @@
     ./hyprcursor
     ./hyprland
     ./komikku
+    ./krita
     ./lockscreen
     ./mako
     ./nautilus
@@ -36,6 +37,7 @@
     helium.enable = lib.mkDefault true;
     hyprland.enable = lib.mkDefault true;
     komikku.enable = lib.mkDefault true;
+    krita.enable = lib.mkDefault true;
     lockscreen.enable = lib.mkDefault true;
     mako.enable = lib.mkDefault true;
     nautilus.enable = lib.mkDefault true;
