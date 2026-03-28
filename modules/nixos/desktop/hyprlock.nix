@@ -13,8 +13,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.hyprlock.enable = true;
-
     home-manager.users.${username}.myOptions.lockscreen.enable = true;
   };
 }

@@ -16,6 +16,7 @@ _: {
     ./miniflux
     ./protonvpn
     ./shell
+    ./tablet
     ./theme
   ];
 }

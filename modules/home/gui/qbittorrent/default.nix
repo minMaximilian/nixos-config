@@ -126,7 +126,7 @@ in {
     # Preconfigure qBittorrent to automatically add trackers to new downloads.
     # Won't overwrite if user has already configured via GUI.
     xdg.configFile."qBittorrent/qBittorrent.conf" = {
-      force = false;
+      force = true;
       text = ''
         [LegalNotice]
         Accepted=true
@@ -134,6 +134,27 @@ in {
         [BitTorrent]
         Session\AddTrackersEnabled=true
         Session\AdditionalTrackers=${trackersString}
+
+        [Preferences]
+        General\Locale=en
+        Search\SearchEnabled=true
+        Downloads\SavePath=/home/${config.myOptions.vars.username}/Downloads
+        Downloads\PreAllocation=true
+        Connection\UPnP=true
+        Bittorrent\DHT=true
+        Bittorrent\PeX=true
+        Bittorrent\LSD=true
+        Bittorrent\Encryption=1
+        General\CloseToTray=true
+        General\MinimizeToTray=true
+      '';
+    };
+
+    xdg.configFile."qBittorrent/qBittorrent-data.conf" = {
+      force = true;
+      text = ''
+        [Meta]
+        MigrationVersion=6
       '';
     };
 

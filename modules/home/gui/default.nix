@@ -1,10 +1,12 @@
-{lib, ...}: {
+{
+  lib,
+  config,
+  ...
+}: {
   imports = [
     ./amp
-    ./chromium
     ./clipboard
     ./discord
-    ./eww
     ./gammastep
     ./ghostty
     ./helium
@@ -13,7 +15,6 @@
     ./komikku
     ./krita
     ./lockscreen
-    ./mako
     ./nautilus
     ./obsidian
     ./prism-launcher
@@ -23,15 +24,14 @@
     ./signal
     ./spicetify
     ./qbittorrent
-    ./waybar
-    ./zed
+    ./quickshell
+    ./vlc
   ];
 
   config.myOptions = {
     amp.enable = lib.mkDefault true;
     clipboard.enable = lib.mkDefault true;
     discord.enable = lib.mkDefault true;
-    eww.enable = lib.mkDefault true;
     gammastep.enable = lib.mkDefault true;
     ghostty.enable = lib.mkDefault true;
     helium.enable = lib.mkDefault true;
@@ -39,7 +39,6 @@
     komikku.enable = lib.mkDefault true;
     krita.enable = lib.mkDefault true;
     lockscreen.enable = lib.mkDefault true;
-    mako.enable = lib.mkDefault true;
     nautilus.enable = lib.mkDefault true;
     obsidian.enable = lib.mkDefault true;
     prismLauncher.enable = lib.mkDefault true;
@@ -50,6 +49,7 @@
     spotify.enable = lib.mkDefault true;
     hyprcursor.enable = lib.mkDefault true;
     qbittorrent.enable = lib.mkDefault true;
-    waybar.enable = lib.mkDefault true;
+    quickshell.enable = lib.mkDefault true;
+    vlc.enable = lib.mkDefault true;
   };
 }

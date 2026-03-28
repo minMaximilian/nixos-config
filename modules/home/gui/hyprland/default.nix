@@ -58,11 +58,9 @@ in {
 
         exec-once =
           [
-            "hyprlock"
             "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "uwsm finalize"
-            "uwsm app -- ${pkgs.mako}/bin/mako"
             "wl-paste --type text --watch cliphist store"
             "wl-paste --type image --watch cliphist store"
             "steam"
@@ -70,9 +68,6 @@ in {
             "helium"
             "spotify"
             "solaar --window=hide"
-          ]
-          ++ lib.optionals config.myOptions.waybar.enable [
-            "uwsm app -- waybar"
           ]
           ++ [
             "hyprctl dispatch workspace 1"
