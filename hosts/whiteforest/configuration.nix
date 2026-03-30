@@ -12,7 +12,7 @@
   myOptions.amdgpu.enable = true;
   myOptions.logitech.enable = true;
   myOptions.tablet.enable = true;
-  myOptions.commet.enable = true;
+
   myOptions.deadlockModManager.enable = true;
   myOptions.teamspeak.enable = true;
   myOptions.protonvpn.enable = true;

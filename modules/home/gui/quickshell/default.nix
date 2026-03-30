@@ -18,7 +18,7 @@
   hasQuickshell = inputs ? quickshell;
   hasStylix = themeLib.hasStylix or false;
 
-  quickshellPkg = (inputs.quickshell.packages.${pkgs.system}.default.override {
+  quickshellPkg = (inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
     libgbm = pkgs.libgbm;
   }).withModules [pkgs.kdePackages.qt5compat];
 
@@ -110,7 +110,11 @@
         readonly property color accentOrange: "${col "base09" "#fab387"}"
 
         /* Lockscreen */
-        readonly property string wallpaperPath: "${if wallpaper != null then toString wallpaper else ""}"
+        readonly property string wallpaperPath: "${
+      if wallpaper != null
+      then toString wallpaper
+      else ""
+    }"
     }
   '';
 

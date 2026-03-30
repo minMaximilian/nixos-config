@@ -23,6 +23,7 @@
     ./screenshot
     ./signal
     ./spicetify
+    ./tauon
     ./qbittorrent
     ./quickshell
     ./vlc
@@ -47,6 +48,7 @@
     screenshot.enable = lib.mkDefault true;
     signal.enable = lib.mkDefault true;
     spotify.enable = lib.mkDefault true;
+    tauon.enable = lib.mkDefault true;
     hyprcursor.enable = lib.mkDefault true;
     qbittorrent.enable = lib.mkDefault true;
     quickshell.enable = lib.mkDefault true;

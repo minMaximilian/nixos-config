@@ -74,6 +74,7 @@ Scope {
                             spacing: 2
 
                             NetworkWidget {}
+                            BluetoothWidget {}
                             BatteryWidget {}
                             VolumeWidget {}
                             TempWidget {}

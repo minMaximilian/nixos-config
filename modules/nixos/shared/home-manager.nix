@@ -26,6 +26,8 @@
       ];
       myOptions.vars = config.myOptions.vars;
 
+      gtk.gtk4.theme = null;
+
       home = {
         username = config.myOptions.vars.username;
         homeDirectory = "/home/${config.myOptions.vars.username}";

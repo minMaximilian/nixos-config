@@ -6,7 +6,7 @@ _: {
     ./amdgpu
     ./audio
     ./bluetooth
-    ./commet
+
     ./fonts
     ./desktop
     ./games
