@@ -61,6 +61,7 @@ in {
             "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "uwsm finalize"
+            "sh -c 'sleep 2 && qs ipc call lockscreen lock'"
             "wl-paste --type text --watch cliphist store"
             "wl-paste --type image --watch cliphist store"
             "steam"
@@ -120,6 +121,7 @@ in {
           kb_options = "ctrl:nocaps";
           accel_profile = "flat";
           sensitivity = 0;
+          scroll_factor = 2.0;
 
           touchpad = {
             natural_scroll = false;
