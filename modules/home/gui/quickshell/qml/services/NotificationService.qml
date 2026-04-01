@@ -41,13 +41,17 @@ Singleton {
         }
 
         property Timer timer: Timer {
-            running: true
+            running: false
             interval: notif.notification.expireTimeout > 0 ? notif.notification.expireTimeout : Config.notificationDefaultTimeout
             onTriggered: {
                 if (notif !== null) {
                     notif.hideNotif();
                 }
             }
+        }
+
+        function startTimer(): void {
+            timer.restart();
         }
 
         readonly property Connections conn: Connections {

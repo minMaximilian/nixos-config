@@ -61,12 +61,12 @@
     # ThePirateBay — general purpose (LightDestory)
     thepiratebay = pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/LightDestory/qBittorrent-Search-Plugins/master/src/engines/thepiratebay.py";
-      hash = "sha256-GYBklERdFYmb3iDVFa82HS/m4AIdF1Ev12B2WxPv9qI=";
+      hash = "sha256-Co6D7q8VqmWnFIKNKO+bapkTnG4FYphnHUodXGp0N9U=";
     };
     # KickassTorrents (katcr.to) — general purpose
     kickasstorrents = pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/LightDestory/qBittorrent-Search-Plugins/master/src/engines/kickasstorrents.py";
-      hash = "sha256-VrelwYAmbsgbYrT+/LHagQ1unbOJhkHsnlSdKGUUH1k=";
+      hash = "sha256-s+n3FPBpNqkYWzpUvVim9CMNE9E3jYcBIoTylVv2jWk=";
     };
     # BitSearch — torrent meta-search (BurningMop, Jan 2026)
     bitsearch = pkgs.fetchurl {
@@ -81,14 +81,14 @@
     # TorrentDownload — general purpose aggregator
     torrentdownload = pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/LightDestory/qBittorrent-Search-Plugins/master/src/engines/torrentdownload.py";
-      hash = "sha256-6YqbrpAWCp1JiDGN6VHzCDrB+MM0003A8yWmYbwOpQg=";
+      hash = "sha256-M6apIwfjAg6c8pgEr1sGTb8QNsezg61wJzPEbyBpKAQ=";
     };
 
     ## — Specialised —
     # YTS — high-quality movie torrents
     yts = pkgs.fetchurl {
       url = "https://codeberg.org/lazulyra/qbit-plugins/raw/branch/main/yts/yts.py";
-      hash = "sha256-yqW9/lSc3nVU3OMBP1ckf7K9A1yz3krLW7hxtKNWQXA=";
+      hash = "sha256-VpihlTXG0Pcj7hiLY4AjX6kOMxgXdl7XknjBOSTnTiE=";
     };
     # EZTV — TV shows (official qBittorrent plugin)
     eztv = pkgs.fetchurl {
@@ -98,7 +98,7 @@
     # LimeTorrents — general purpose (LightDestory, Jun 2025)
     limetorrents = pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/LightDestory/qBittorrent-Search-Plugins/master/src/engines/limetorrents.py";
-      hash = "sha256-HDcxAOh0cTcrz0oV1xYKeX490aw9vN3RpOacnhAi4c8=";
+      hash = "sha256-1aaN2+dE10MsXcH+di4KbBME5YQVSGr4grIyFKdY22Q=";
     };
     # AudioBook Bay — ebooks and audiobooks
     audiobookbay = pkgs.fetchurl {

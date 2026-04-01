@@ -197,6 +197,7 @@ in {
       enable = true;
       adminCredentialsFile = cfg.adminCredentialsFile;
       config = {
+        FETCHER_ALLOW_PRIVATE_NETWORKS = "1";
         LISTEN_ADDR = "127.0.0.1:${toString cfg.port}";
         BASE_URL = "http://${cfg.virtualHost}";
       };

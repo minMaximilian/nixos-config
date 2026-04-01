@@ -4,6 +4,7 @@ _: {
     ./vars
     ../shared/theme.nix
     ./amdgpu
+    ./android
     ./audio
     ./bluetooth
 
@@ -18,5 +19,6 @@ _: {
     ./shell
     ./tablet
     ./theme
+    ./impermanence
   ];
 }

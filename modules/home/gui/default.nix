@@ -27,6 +27,7 @@
     ./qbittorrent
     ./quickshell
     ./vlc
+    ./zed
   ];
 
   config.myOptions = {
@@ -53,5 +54,6 @@
     qbittorrent.enable = lib.mkDefault true;
     quickshell.enable = lib.mkDefault true;
     vlc.enable = lib.mkDefault true;
+    zed.enable = lib.mkDefault true;
   };
 }

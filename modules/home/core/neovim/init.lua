@@ -5,6 +5,11 @@ require('nixCatsUtils').setup {
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Clipboard yank/paste
+vim.keymap.set({ 'n', 'v' }, '<leader>y', '"+y', { desc = 'Yank to clipboard' })
+vim.keymap.set('n', '<leader>Y', '"+Y', { desc = 'Yank line to clipboard' })
+vim.keymap.set({ 'n', 'v' }, '<leader>p', '"+p', { desc = 'Paste from clipboard' })
+
 -- Colorscheme from stylix
 local colors = nixCats.extra.colors
 if colors then
@@ -52,6 +57,17 @@ vim.opt.listchars = {
 }
 
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
+
+-- Auto-save when leaving insert mode or switching away
+vim.o.autowriteall = true
+vim.api.nvim_create_autocmd({ 'InsertLeave', 'TextChanged', 'FocusLost', 'BufLeave' }, {
+  callback = function(args)
+    local buf = args.buf
+    if vim.bo[buf].modified and vim.bo[buf].buftype == '' and vim.fn.bufname(buf) ~= '' then
+      vim.api.nvim_buf_call(buf, function() vim.cmd('silent! write') end)
+    end
+  end,
+})
 
 -- Format on :w (only when an LSP client is attached)
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -169,7 +185,11 @@ cmp.setup({
 
 -- nvim-tree
 require('nvim-tree').setup {
-  view = { width = 30 },
+  view = {
+    width = 30,
+    number = true,
+    relativenumber = true,
+  },
   filters = { dotfiles = false },
 }
 vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle file tree' })

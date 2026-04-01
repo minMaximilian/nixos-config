@@ -23,6 +23,7 @@ Rectangle {
         };
 
         appearAnimation.running = true;
+        root.modelData.startTimer();
     }
 
     // initially offscreen

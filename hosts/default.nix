@@ -20,6 +20,7 @@
       inherit specialArgs;
       modules = [
         sharedModules
+        inputs.rss-archive-proxy.nixosModules.default
         ./whiteforest/configuration.nix
       ];
     };

@@ -20,7 +20,6 @@ in {
     home.packages = [
       pkgs.go
       pkgs.gopls
-      pkgs.gotools
       pkgs.go-tools
     ];
   };

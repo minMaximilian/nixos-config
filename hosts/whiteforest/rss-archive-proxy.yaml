@@ -1,0 +1,11 @@
+server:
+  port: 8090
+  host: "127.0.0.1"
+
+poll_interval: 30
+cache_path: "/var/lib/rss-archive-proxy/cache.json"
+
+feeds:
+  - name: "Financial Times"
+    source_url: "https://www.ft.com/rss/home"
+    strategy: "archive.ph"
