@@ -10,6 +10,8 @@
     ./zellij
     ./jj
 
+    ./zig
+
     ./intellij
     ./java
   ];
@@ -23,6 +25,7 @@
     golang.enable = lib.mkDefault true;
     zellij.enable = lib.mkDefault true;
     jj.enable = lib.mkDefault true;
+    zig.enable = lib.mkDefault true;
     intellij.enable = lib.mkDefault true;
     java.enable = lib.mkDefault true;
   };

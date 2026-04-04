@@ -35,6 +35,7 @@ vim.o.autoindent = true
 vim.o.copyindent = true
 vim.o.breakindent = true
 vim.o.termguicolors = true
+vim.o.showcmd = false
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.smartindent = true
@@ -202,3 +203,63 @@ require('Comment').setup()
 
 -- gitsigns
 require('gitsigns').setup()
+
+-- DAP (Debug Adapter Protocol)
+if nixCats('debug') then
+  local dap = require('dap')
+  local dapui = require('dapui')
+
+  dapui.setup()
+
+  -- codelldb adapter (lldb-dap fallback)
+  dap.adapters.codelldb = {
+    type = 'server',
+    port = '${port}',
+    executable = {
+      command = 'lldb-dap',
+      args = { '--port', '${port}' },
+    },
+  }
+
+  dap.configurations.zig = {
+    {
+      name = 'Launch',
+      type = 'codelldb',
+      request = 'launch',
+      program = function()
+        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/zig-out/bin/', 'file')
+      end,
+      cwd = '${workspaceFolder}',
+      stopOnEntry = false,
+      args = function()
+        local input = vim.fn.input('Args: ')
+        local args = {}
+        for arg in input:gmatch('%S+') do
+          table.insert(args, arg)
+        end
+        return args
+      end,
+    },
+  }
+
+  dap.configurations.c = dap.configurations.zig
+  dap.configurations.cpp = dap.configurations.zig
+
+  -- Auto open/close DAP UI
+  dap.listeners.after.event_initialized['dapui_config'] = function() dapui.open() end
+  dap.listeners.before.event_terminated['dapui_config'] = function() dapui.close() end
+  dap.listeners.before.event_exited['dapui_config'] = function() dapui.close() end
+
+  -- Keybindings
+  vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle breakpoint' })
+  vim.keymap.set('n', '<leader>dB', function()
+    dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
+  end, { desc = 'Conditional breakpoint' })
+  vim.keymap.set('n', '<leader>dc', dap.continue, { desc = 'Continue / Start' })
+  vim.keymap.set('n', '<leader>do', dap.step_over, { desc = 'Step over' })
+  vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'Step into' })
+  vim.keymap.set('n', '<leader>dO', dap.step_out, { desc = 'Step out' })
+  vim.keymap.set('n', '<leader>dr', dap.restart, { desc = 'Restart' })
+  vim.keymap.set('n', '<leader>dx', dap.terminate, { desc = 'Terminate' })
+  vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = 'Toggle DAP UI' })
+end

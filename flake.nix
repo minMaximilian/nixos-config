@@ -33,6 +33,15 @@
 
     helium.url = "github:AlvaroParker/helium-nix";
     helium.inputs.nixpkgs.follows = "nixpkgs";
+
+    neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
+
+    zig-overlay.url = "github:mitchellh/zig-overlay";
+    zig-overlay.inputs.nixpkgs.follows = "nixpkgs";
+
+    zls-overlay.url = "github:zigtools/zls";
+    zls-overlay.inputs.zig-overlay.follows = "zig-overlay";
+    zls-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {flake-parts, ...}:

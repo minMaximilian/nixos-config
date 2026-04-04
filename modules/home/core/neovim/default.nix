@@ -8,6 +8,8 @@
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.neovim;
   hasNixCats = inputs ? nixCats;
+  hasNeovimNightly = inputs ? neovim-nightly;
+  hasZlsOverlay = inputs ? zls-overlay;
   hasStylix = config.lib.theme.hasStylix or false;
   colors =
     if hasStylix
@@ -36,13 +38,18 @@ in {
       luaPath = ./.;
 
       packageDefinitions.replace = {
-        nixcats-nvim = {...}: {
+        nixcats-nvim = {pkgs, ...}: {
           settings = {
             aliases = ["nvim" "vim" "vi"];
             wrapRc = true;
+            neovim-unwrapped =
+              if hasNeovimNightly
+              then inputs.neovim-nightly.packages.${pkgs.system}.neovim
+              else pkgs.neovim-unwrapped;
           };
           categories = {
             general = true;
+            debug = true;
           };
           extra = lib.optionalAttrs hasStylix {
             colors =
@@ -75,9 +82,23 @@ in {
           lua-language-server
           nixd
           nixpkgs-fmt
-          zls
+          (
+            if hasZlsOverlay
+            then inputs.zls-overlay.packages.${pkgs.system}.zls
+            else zls
+          )
           ripgrep
           fd
+        ];
+
+        lspsAndRuntimeDeps.debug = with pkgs; [
+          lldb
+        ];
+
+        startupPlugins.debug = with pkgs.vimPlugins; [
+          nvim-dap
+          nvim-dap-ui
+          nvim-nio
         ];
 
         startupPlugins.general = with pkgs.vimPlugins; [

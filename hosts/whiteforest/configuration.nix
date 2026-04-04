@@ -33,6 +33,7 @@
     };
     "Engineering Blogs" = {
       "Sean Goedecke" = {url = "https://www.seangoedecke.com/rss.xml";};
+      "Paged Out!" = {url = "https://pagedout.institute/rss.xml";};
     };
   };
 

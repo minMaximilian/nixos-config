@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
+import Quickshell.Wayland
 import Quickshell.Hyprland
 
 import qs
@@ -79,29 +80,35 @@ Item {
         }
     }
 
-    PopupWindow {
-        id: popup
-        visible: root.panelOpen
-        anchor {
-            item: iconText
-            margins.top: Config.barMargin
-            rect { y: iconText.height }
-        }
-        implicitWidth: 300
-        implicitHeight: popupContent.implicitHeight + 2
-        color: "transparent"
+    LazyLoader {
+        active: root.panelOpen
 
-        Rectangle {
-            anchors.fill: parent
-            radius: Config.barBorderRadius
-            color: Config.notificationBackground
-            border.color: Config.accentBlue
-            border.width: Config.notificationBorderWidth
+        PanelWindow {
+            id: popup
+            color: "transparent"
+            implicitWidth: 300
+            focusable: true
 
-            ColumnLayout {
-                id: popupContent
-                width: parent.width
-                spacing: 0
+            WlrLayershell.namespace: "quickshell:bluetooth"
+            WlrLayershell.layer: WlrLayer.Overlay
+            WlrLayershell.exclusiveZone: 0
+
+            anchors.top: true
+            anchors.right: true
+            margins.top: Config.barHeight + Config.barMargin * 2
+            margins.right: Config.barMargin
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Config.barBorderRadius
+                color: Config.notificationBackground
+                border.color: Config.accentBlue
+                border.width: Config.notificationBorderWidth
+
+                ColumnLayout {
+                    id: popupContent
+                    width: parent.width
+                    spacing: 0
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -354,6 +361,7 @@ Item {
                     }
                 }
             }
+        }
         }
     }
 
