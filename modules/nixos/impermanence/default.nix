@@ -6,12 +6,11 @@
 }: let
   cfg = config.myOptions.impermanence;
   username = config.myOptions.vars.username;
-  hasImpermanence = inputs ? impermanence;
+  hasPreservation = inputs ? preservation;
 in {
-  imports =
-    lib.optionals hasImpermanence [
-      inputs.impermanence.nixosModules.impermanence
-    ];
+  imports = lib.optionals hasPreservation [
+    inputs.preservation.nixosModules.preservation
+  ];
 
   options.myOptions.impermanence = {
     enable = lib.mkEnableOption "impermanence persistence";
@@ -40,8 +39,8 @@ in {
     {
       assertions = [
         {
-          assertion = hasImpermanence;
-          message = "myOptions.impermanence requires inputs.impermanence";
+          assertion = hasPreservation;
+          message = "myOptions.impermanence requires inputs.preservation";
         }
         {
           assertion = cfg.tmpfsRoot -> cfg.rootUuid != "";
@@ -49,70 +48,100 @@ in {
         }
       ];
 
-      environment.persistence.${cfg.persistPath} = {
-        hideMounts = true;
+      preservation = {
+        enable = true;
 
-        directories = [
-          "/var/lib/nixos"
-          "/var/lib/NetworkManager"
-          "/var/lib/bluetooth"
-          "/var/lib/systemd/coredump"
-          "/var/lib/postgresql"
-          "/var/log"
-          "/etc/NetworkManager/system-connections"
-        ];
+        preserveAt.${cfg.persistPath} = {
+          commonMountOptions = ["x-gvfs-hide"];
 
-        files = [
-          "/etc/machine-id"
-        ];
-
-        users.${username} = {
           directories = [
             {
-              directory = ".ssh";
-              mode = "0700";
+              directory = "/var/lib/nixos";
+              inInitrd = true;
             }
-            {
-              directory = ".gnupg";
-              mode = "0700";
-            }
-            {
-              directory = ".local/share/keyrings";
-              mode = "0700";
-            }
-
-            # Browser logins
-            ".config/net.imput.helium"
-
-            # Comics
-            ".local/share/komikku"
-
-            # Gaming
-            ".local/share/Steam"
-            ".local/share/PrismLauncher"
-            ".local/share/bottles"
-            ".local/share/Paradox Interactive"
-            ".local/share/Tabletop Simulator"
-            ".local/share/SlayTheSpire2"
-
-            # Chat
-            ".config/Signal"
-            ".config/vesktop"
-
-            # User data
-            "Documents"
-            "Downloads"
-            "Pictures"
-            "Videos"
-            "Music"
-            "workspace"
-
-            # Desktop state
-            ".config/dconf"
-
-            # Shell history
-            ".local/share/fish"
+            "/var/lib/NetworkManager"
+            "/var/lib/bluetooth"
+            "/var/lib/systemd/coredump"
+            "/var/lib/postgresql"
+            "/var/log"
+            "/etc/NetworkManager/system-connections"
           ];
+
+          files = [
+            {
+              file = "/etc/machine-id";
+              inInitrd = true;
+            }
+            {
+              file = "/etc/shadow";
+              inInitrd = true;
+              mode = "0640";
+              group = "shadow";
+            }
+          ];
+
+          users.${username} = {
+            directories = [
+              {
+                directory = ".ssh";
+                mode = "0700";
+              }
+              {
+                directory = ".gnupg";
+                mode = "0700";
+              }
+              {
+                directory = ".local/share/keyrings";
+                mode = "0700";
+              }
+
+              # Browser logins
+              ".config/net.imput.helium"
+
+              # Comics
+              ".local/share/komikku"
+
+              # Gaming
+              ".local/share/Steam"
+              ".local/share/PrismLauncher"
+              ".local/share/bottles"
+              ".local/share/Paradox Interactive"
+              ".local/share/Tabletop Simulator"
+              ".local/share/SlayTheSpire2"
+
+              # Chat
+              ".config/Signal"
+              ".config/vesktop"
+
+              # User data
+              "Documents"
+              "Downloads"
+              "Pictures"
+              "Videos"
+              "Music"
+              "workspace"
+
+              # Desktop state
+              ".config/dconf"
+
+              # Shell history
+              ".local/share/fish"
+
+              # Zoxide directory database
+              ".local/share/zoxide"
+
+              # WirePlumber sound device settings
+              ".local/state/wireplumber"
+
+              # Nix user profile GC roots
+              ".local/state/nix"
+
+              # Amp CLI session + credentials
+              ".amp"
+              ".config/amp"
+              ".local/share/amp"
+            ];
+          };
         };
       };
 
@@ -120,6 +149,8 @@ in {
         # rollback results in sudo lectures after each reboot
         Defaults lecture = never
       '';
+
+      systemd.suppressedSystemUnits = ["systemd-machine-id-commit.service"];
     }
 
     (lib.mkIf cfg.tmpfsRoot {

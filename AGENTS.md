@@ -43,6 +43,12 @@ Before modifying ANY file in this repo, you MUST:
    - Dry-run build: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel --dry-run`
    - Format with `nix run nixpkgs#alejandra -- .`
 
+6. **Update Impermanence Persistence** — This system uses **tmpfs root with impermanence** (`modules/nixos/impermanence/default.nix`). After any change:
+   - **Adding a new application**: Check if it stores user state (configs, databases, auth tokens, etc.) that isn't managed by Nix/home-manager. If so, add the relevant directories/files to the persist list.
+   - **Removing an application**: Remove its entries from the persist list — don't leave stale persist paths.
+   - **Making something declarative**: If a previously manual config is now managed by home-manager/NixOS, **remove** it from the persist list — Nix will regenerate it on boot, so persisting it is redundant.
+   - **Key principle**: Only persist state that is user-created or not reproducible from the NixOS config. Anything Nix generates should NOT be persisted.
+
 ### Documentation Sources to Check
 
 - [NixOS Options Search](https://search.nixos.org/options)

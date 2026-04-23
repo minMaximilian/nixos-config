@@ -48,7 +48,7 @@
     rofi.enable = lib.mkDefault true;
     screenshot.enable = lib.mkDefault true;
     signal.enable = lib.mkDefault true;
-    spotify.enable = lib.mkDefault true;
+    spotify.enable = lib.mkDefault false;
     tauon.enable = lib.mkDefault true;
     hyprcursor.enable = lib.mkDefault true;
     qbittorrent.enable = lib.mkDefault true;

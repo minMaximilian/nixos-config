@@ -24,7 +24,7 @@
 
   myOptions.impermanence = {
     enable = true;
-    tmpfsRoot = false; # Phase 1: test persistence declarations without tmpfs root
+    tmpfsRoot = true;
     rootUuid = "b41e5b4b-5020-4c15-bd40-0f78d2c8e237";
   };
 

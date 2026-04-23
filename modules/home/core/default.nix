@@ -14,6 +14,7 @@
 
     ./intellij
     ./java
+    ./packwiz
   ];
 
   config.myOptions = {
@@ -28,5 +29,6 @@
     zig.enable = lib.mkDefault true;
     intellij.enable = lib.mkDefault true;
     java.enable = lib.mkDefault true;
+    packwiz.enable = lib.mkDefault true;
   };
 }

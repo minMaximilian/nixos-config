@@ -5,43 +5,30 @@
   inputs ? {},
   ...
 }: let
-  inherit
-    (lib)
-    mkEnableOption
-    mkIf
-    ;
-
   hasSpicetify = inputs ? spicetify-nix;
-  spicePkgs =
-    if hasSpicetify
-    then inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system}
-    else null;
-
   cfg = config.myOptions.spotify;
 in {
-  imports = lib.optionals hasSpicetify [inputs.spicetify-nix.homeManagerModules.default];
+  imports =
+    lib.optionals hasSpicetify
+    [inputs.spicetify-nix.homeManagerModules.default];
 
   options.myOptions.spotify = {
-    enable = mkEnableOption "spotify";
+    enable = lib.mkEnableOption "spotify";
   };
 
-  config = mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = hasSpicetify;
-        message = "myOptions.spotify requires inputs.spicetify-nix to be available";
+  config =
+    if hasSpicetify
+    then
+      lib.mkIf cfg.enable {
+        programs.spicetify = {
+          enable = true;
+          enabledExtensions = with inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system}.extensions; [
+            fullAppDisplay
+            shuffle
+            adblockify
+            hidePodcasts
+          ];
+        };
       }
-    ];
-
-    programs.spicetify = lib.mkIf hasSpicetify {
-      enable = true;
-
-      enabledExtensions = with spicePkgs.extensions; [
-        fullAppDisplay
-        shuffle
-        adblockify
-        hidePodcasts
-      ];
-    };
-  };
+    else {};
 }

@@ -44,7 +44,7 @@ in {
             wrapRc = true;
             neovim-unwrapped =
               if hasNeovimNightly
-              then inputs.neovim-nightly.packages.${pkgs.system}.neovim
+              then inputs.neovim-nightly.packages.${pkgs.stdenv.hostPlatform.system}.neovim
               else pkgs.neovim-unwrapped;
           };
           categories = {
@@ -84,7 +84,7 @@ in {
           nixpkgs-fmt
           (
             if hasZlsOverlay
-            then inputs.zls-overlay.packages.${pkgs.system}.zls
+            then inputs.zls-overlay.packages.${pkgs.stdenv.hostPlatform.system}.zls
             else zls
           )
           ripgrep

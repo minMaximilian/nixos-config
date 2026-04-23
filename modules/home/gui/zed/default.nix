@@ -103,11 +103,17 @@ in {
             # Telescope equivalents (nvim: <leader>f, <leader>g, <leader>b, <leader>h)
             "space f" = [
               "task::Spawn"
-              {task_name = "tv_file_finder"; reveal_target = "center";}
+              {
+                task_name = "tv_file_finder";
+                reveal_target = "center";
+              }
             ];
             "space g" = [
               "task::Spawn"
-              {task_name = "tv_live_grep"; reveal_target = "center";}
+              {
+                task_name = "tv_live_grep";
+                reveal_target = "center";
+              }
             ];
             "space b" = "tab_switcher::Toggle";
 
@@ -120,8 +126,6 @@ in {
             "space r n" = "editor::Rename";
             "space c a" = "editor::ToggleCodeActions";
             "space d d" = "diagnostics::Deploy";
-
-
           };
         }
         {

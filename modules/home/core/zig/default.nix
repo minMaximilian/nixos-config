@@ -15,7 +15,7 @@
   hasZigOverlay = inputs ? zig-overlay;
   zigPkg =
     if hasZigOverlay
-    then inputs.zig-overlay.packages.${pkgs.system}.master
+    then inputs.zig-overlay.packages.${pkgs.stdenv.hostPlatform.system}.master
     else pkgs.zig;
 in {
   options.myOptions.zig = {

@@ -67,7 +67,7 @@ in {
             "steam"
             "vesktop"
             "helium"
-            "spotify"
+
             "solaar --window=hide"
           ]
           ++ [
@@ -78,7 +78,7 @@ in {
           "workspace 1 silent, match:class ^steam$"
           "workspace 2 silent, match:class ^vesktop$"
           "workspace 3 silent, match:class ^helium$"
-          "workspace 4 silent, match:class ^(S|s)potify$"
+
           "workspace special:solaar silent, match:class ^solaar$"
         ];
 
@@ -121,7 +121,7 @@ in {
           kb_options = "ctrl:nocaps";
           accel_profile = "flat";
           sensitivity = 0;
-          scroll_factor = 2.0;
+          scroll_factor = 1.0;
 
           touchpad = {
             natural_scroll = false;

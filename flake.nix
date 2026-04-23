@@ -18,9 +18,6 @@
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 
-    spicetify-nix.url = "github:gerg-l/spicetify-nix";
-    spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
-
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
 
     nix-jetbrains-plugins.url = "github:nix-community/nix-jetbrains-plugins";
@@ -34,13 +31,17 @@
     helium.url = "github:AlvaroParker/helium-nix";
     helium.inputs.nixpkgs.follows = "nixpkgs";
 
+    rss-archive-proxy.url = "path:/home/max/workspace/repos/rss-archive-proxy";
+    rss-archive-proxy.inputs.nixpkgs.follows = "nixpkgs";
+
+    preservation.url = "github:nix-community/preservation";
+
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
 
     zig-overlay.url = "github:mitchellh/zig-overlay";
     zig-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
     zls-overlay.url = "github:zigtools/zls";
-    zls-overlay.inputs.zig-overlay.follows = "zig-overlay";
     zls-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
