@@ -61,10 +61,9 @@
     "HDMI-A-1, 2560x1440@60, 0x0, 1"
   ];
 
-  # Niri trial — switches greetd to launch niri instead of hyprland.
-  # Set myOptions.login.compositor = "hyprland" to roll back without removing the niri config.
+  # Niri trial config (disabled)
   myOptions.niri = {
-    enable = true;
+    enable = false;
     monitors = {
       "DP-3" = {
         mode = {
@@ -92,7 +91,7 @@
       };
     };
   };
-  myOptions.login.compositor = "niri";
+  myOptions.login.compositor = "hyprland";
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
