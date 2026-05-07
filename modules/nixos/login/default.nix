@@ -4,16 +4,34 @@
   lib,
   ...
 }: let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkEnableOption mkIf mkOption types;
   cfg = config.myOptions.login;
   username = config.myOptions.vars.username;
+
+  isHyprland = cfg.compositor == "hyprland";
+
+  sessionCommand =
+    if isHyprland
+    then "${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop"
+    else "niri-session";
+
+  desktopName =
+    if isHyprland
+    then "Hyprland"
+    else "niri";
 in {
   options.myOptions.login = {
     enable =
-      mkEnableOption "Login display manager (auto-login with hyprlock)"
+      mkEnableOption "Login display manager (auto-login compositor)"
       // {
         default = config.myOptions.vars.withGui;
       };
+
+    compositor = mkOption {
+      type = types.enum ["hyprland" "niri"];
+      default = "hyprland";
+      description = "Compositor session greetd should auto-launch.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -21,7 +39,7 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop";
+          command = sessionCommand;
           user = username;
         };
       };
@@ -34,8 +52,8 @@ in {
 
       sessionVariables = {
         XDG_SESSION_TYPE = "wayland";
-        XDG_CURRENT_DESKTOP = "Hyprland";
-        XDG_SESSION_DESKTOP = "Hyprland";
+        XDG_CURRENT_DESKTOP = desktopName;
+        XDG_SESSION_DESKTOP = desktopName;
       };
     };
 

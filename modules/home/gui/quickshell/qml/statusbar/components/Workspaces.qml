@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
 
 import qs
+import qs.services
 
 BarPill {
     id: root
@@ -20,17 +20,15 @@ BarPill {
 
             Repeater {
                 model: ScriptModel {
-                    values: [...Hyprland.workspaces.values]
-                        .filter(ws => ws.id > 0)
-                        .sort((a, b) => a.id - b.id)
+                    values: Compositor.workspaces
                 }
 
                 Text {
                     id: dot
-                    required property HyprlandWorkspace modelData
-                    property bool isActive: Hyprland.focusedWorkspace?.id === modelData.id
+                    required property var modelData
+                    property bool isActive: modelData.isFocused
 
-                    text: isActive ? "●" : "●"
+                    text: "●"
                     color: isActive ? Config.accentBlue : Config.textColor
                     font.pixelSize: isActive ? 12 : 8
                     font.family: Config.fontFamily
@@ -46,7 +44,7 @@ BarPill {
                     MouseArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: Hyprland.dispatch("workspace " + dot.modelData.id)
+                        onClicked: Compositor.focusWorkspace(dot.modelData.id)
                     }
                 }
             }

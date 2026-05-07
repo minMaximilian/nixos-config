@@ -14,7 +14,7 @@
   cfg = config.myOptions.quickshell;
   theme = config.myOptions.theme;
   themeLib = config.lib.theme;
-  wallpaper = config.myOptions.hyprland.wallpaper or null;
+  wallpaper = config.myOptions.wallpaper.path or null;
   hasQuickshell = inputs ? quickshell;
   hasStylix = themeLib.hasStylix or false;
 

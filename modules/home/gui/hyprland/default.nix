@@ -23,11 +23,6 @@
       ${pkgs.systemd}/bin/systemctl --user start gammastep
     fi
   '';
-
-  defaultWallpaper =
-    if self != null
-    then "${self}/assets/wallpaper.png"
-    else null;
 in {
   options.myOptions.hyprland = {
     enable = mkEnableOption "Hyprland Window Manager";
@@ -37,12 +32,6 @@ in {
       default = [", preferred, auto, 1"];
       description = "Monitor configuration strings for Hyprland";
       example = ["DP-1, 2560x1440@144, 0x0, 1" "HDMI-A-1, 1920x1080@60, 2560x0, 1"];
-    };
-
-    wallpaper = mkOption {
-      type = types.nullOr types.path;
-      default = defaultWallpaper;
-      description = "Path to wallpaper image for hyprpaper";
     };
   };
 
@@ -257,27 +246,6 @@ in {
       };
     };
 
-    services.hyprpaper = {
-      enable = cfg.wallpaper != null;
-
-      settings = lib.mkIf (cfg.wallpaper != null) {
-        splash = false;
-
-        wallpaper = [
-          {
-            monitor = "";
-            path = cfg.wallpaper;
-          }
-        ];
-      };
-    };
-
-    systemd.user.services.hyprpaper = {
-      Unit = {
-        After = lib.mkForce ["graphical-session.target"];
-        PartOf = ["graphical-session.target"];
-      };
-      Install.WantedBy = lib.mkForce ["graphical-session.target"];
-    };
+    # Wallpaper handled by myOptions.wallpaper (awww), not hyprpaper.
   };
 }

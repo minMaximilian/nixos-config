@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
-import Quickshell.Hyprland
 
 import qs
+import qs.services
 
 Item {
     id: root
@@ -11,12 +11,9 @@ Item {
     property bool active: false
 
     Connections {
-        target: Hyprland
-        function onRawEvent(event) {
-            if (!root.active) return;
-            var name = event.name;
-            if (name === "activewindow" || name === "workspace" || name === "focusedmon")
-                root.active = false;
+        target: Compositor
+        function onFocusChanged() {
+            if (root.active) root.active = false;
         }
     }
 

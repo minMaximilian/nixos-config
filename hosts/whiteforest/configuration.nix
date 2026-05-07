@@ -61,6 +61,39 @@
     "HDMI-A-1, 2560x1440@60, 0x0, 1"
   ];
 
+  # Niri trial — switches greetd to launch niri instead of hyprland.
+  # Set myOptions.login.compositor = "hyprland" to roll back without removing the niri config.
+  myOptions.niri = {
+    enable = true;
+    monitors = {
+      "DP-3" = {
+        mode = {
+          width = 3440;
+          height = 1440;
+          refresh = 144.0;
+        };
+        position = {
+          x = 2560;
+          y = 0;
+        };
+        scale = 1.0;
+      };
+      "HDMI-A-1" = {
+        mode = {
+          width = 2560;
+          height = 1440;
+          refresh = 60.0;
+        };
+        position = {
+          x = 0;
+          y = 0;
+        };
+        scale = 1.0;
+      };
+    };
+  };
+  myOptions.login.compositor = "niri";
+
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
   networking.hostName = "whiteforest";

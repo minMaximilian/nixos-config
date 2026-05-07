@@ -20,6 +20,7 @@
     ./krita
     ./lockscreen
     ./nautilus
+    ./niri
     ./obsidian
     ./opencode
     ./prism-launcher
@@ -33,6 +34,7 @@
     ./qbittorrent
     ./quickshell
     ./vlc
+    ./wallpaper
     ./zed
   ];
 
@@ -66,6 +68,7 @@
     qbittorrent.enable = lib.mkDefault true;
     quickshell.enable = lib.mkDefault true;
     vlc.enable = lib.mkDefault true;
+    wallpaper.enable = lib.mkDefault true;
     zed.enable = lib.mkDefault true;
   };
 }

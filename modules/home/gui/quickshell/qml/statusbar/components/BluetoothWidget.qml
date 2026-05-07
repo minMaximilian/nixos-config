@@ -3,9 +3,9 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
 
 import qs
+import qs.services
 
 Item {
     id: root
@@ -69,14 +69,11 @@ Item {
     }
 
     Connections {
-        target: Hyprland
-        function onRawEvent(event) {
+        target: Compositor
+        function onFocusChanged() {
             if (!root.panelOpen) return;
-            var name = event.name;
-            if (name === "activewindow" || name === "workspace" || name === "focusedmon") {
-                root.panelOpen = false;
-                root.contextMac = "";
-            }
+            root.panelOpen = false;
+            root.contextMac = "";
         }
     }
 

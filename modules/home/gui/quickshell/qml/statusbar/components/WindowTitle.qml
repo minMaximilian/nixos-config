@@ -1,12 +1,12 @@
 import QtQuick
-import Quickshell.Hyprland
 
 import qs
+import qs.services
 
 BarPill {
     id: root
     property string title: {
-        var t = Hyprland.activeToplevel?.title ?? "";
+        var t = Compositor.activeTitle;
         return t.length > 50 ? t.substring(0, 50) + "…" : t;
     }
     visible: title !== ""

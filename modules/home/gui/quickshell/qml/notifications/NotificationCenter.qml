@@ -6,8 +6,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 
-import Quickshell.Hyprland
-
 import qs
 import qs.services
 import qs.widgets
@@ -15,12 +13,9 @@ import qs.mediaplayer
 
 Scope {
     Connections {
-        target: Hyprland
-        function onRawEvent(event) {
-            if (!NotificationService.ncActive) return;
-            var name = event.name;
-            if (name === "activewindow" || name === "workspace" || name === "focusedmon")
-                NotificationService.ncActive = false;
+        target: Compositor
+        function onFocusChanged() {
+            if (NotificationService.ncActive) NotificationService.ncActive = false;
         }
     }
 
