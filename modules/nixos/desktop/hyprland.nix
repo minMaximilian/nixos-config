@@ -31,6 +31,15 @@ in {
       portalPackage = pkgs.xdg-desktop-portal-hyprland;
     };
 
+    xdg.portal = {
+      enable = true;
+      extraPortals = [pkgs.xdg-desktop-portal-gtk];
+      config = {
+        common.default = ["gtk"];
+        hyprland.default = ["hyprland" "gtk"];
+      };
+    };
+
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
       MOZ_ENABLE_WAYLAND = "1";

@@ -33,6 +33,30 @@ in {
       default = "8G";
       description = "Size limit for the tmpfs root filesystem";
     };
+
+    declarativeUsers = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {};
+      example = {
+        max = "/persist/etc/passwords/max";
+        root = "/persist/etc/passwords/root";
+      };
+      description = ''
+        Map of username → path to a file containing a single SHA-512 password
+        hash on persistent storage. When non-empty, forces
+        `users.mutableUsers = false` and wires each entry into
+        `users.users.<name>.hashedPasswordFile`.
+
+        This is the recommended way to handle passwords on a tmpfs root:
+        bind-mounting `/etc/shadow` breaks `update-users-groups.pl`'s atomic
+        rename (EBUSY), and symlinking `/etc/shadow` is silently destroyed by
+        the same rename. Declarative password files survive both, because
+        `/etc/shadow` is regenerated from them on every activation.
+
+        Use `scripts/migrate-shadow-to-passwords.sh` to seed these files from
+        an existing `/etc/shadow`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
@@ -72,12 +96,9 @@ in {
               file = "/etc/machine-id";
               inInitrd = true;
             }
-            {
-              file = "/etc/shadow";
-              inInitrd = true;
-              mode = "0640";
-              group = "shadow";
-            }
+            # /etc/shadow is intentionally NOT bind-mounted here.
+            # See myOptions.impermanence.declarativeUsers for the password
+            # persistence model used on this tmpfs root.
           ];
 
           users.${username} = {
@@ -101,6 +122,10 @@ in {
               # Comics
               ".local/share/komikku"
 
+              # Graphics editors (user prefs, palettes, recent files, plugins)
+              ".config/aseprite"
+              ".config/GIMP"
+
               # Gaming
               ".local/share/Steam"
               ".local/share/PrismLauncher"
@@ -108,6 +133,9 @@ in {
               ".local/share/Paradox Interactive"
               ".local/share/Tabletop Simulator"
               ".local/share/SlayTheSpire2"
+
+              # Switch emulator (firmware, prod.keys, saves, mods)
+              ".config/Ryujinx"
 
               # Chat
               ".config/Signal"
@@ -140,6 +168,27 @@ in {
               ".amp"
               ".config/amp"
               ".local/share/amp"
+
+              # Claude Code settings + credentials (manually configured for GLM Coding Plan)
+              ".claude"
+
+              # opencode CLI auth + sessions
+              ".config/opencode"
+              ".local/share/opencode"
+
+              # Codex CLI auth + history + config
+              ".codex"
+
+              # Agent skills (caveman, karpathy-guidelines, etc.) installed via `npx skills add`
+              ".agents"
+              ".config/agents"
+            ];
+
+            files = [
+              # Claude Code state file: hasCompletedOnboarding, theme, OAuth session,
+              # MCP user-scope config, per-project trust. Without this, claude prompts
+              # for theme/trust on every boot.
+              ".claude.json"
             ];
           };
         };
@@ -152,6 +201,18 @@ in {
 
       systemd.suppressedSystemUnits = ["systemd-machine-id-commit.service"];
     }
+
+    (lib.mkIf (cfg.declarativeUsers != {}) {
+      # Force declarative password files. /etc/shadow is regenerated from
+      # these on every activation, so it can safely live on the tmpfs.
+      # mkForce overrides shared/users.nix which defaults mutableUsers = true.
+      users.mutableUsers = lib.mkForce false;
+      users.users =
+        lib.mapAttrs (_user: passwordFile: {
+          hashedPasswordFile = passwordFile;
+        })
+        cfg.declarativeUsers;
+    })
 
     (lib.mkIf cfg.tmpfsRoot {
       fileSystems."/" = lib.mkForce {

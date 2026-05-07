@@ -7,6 +7,7 @@
   myOptions.memory.enable = true;
   myOptions.fish.enable = true;
   myOptions.neovim.enable = true;
+  myOptions.multimedia.enable = true;
 
   networking.hostName = "ravenholm";
 

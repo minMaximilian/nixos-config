@@ -1,0 +1,24 @@
+# Global default editor config — repo-local .editorconfig with `root = true`
+# overrides this entirely. Used by prettier, shfmt, taplo, and most editors
+# as a low-friction way to share formatting defaults across all projects.
+root = false
+
+[*]
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+
+[*.{md,markdown,mdx}]
+trim_trailing_whitespace = false
+
+[*.go]
+indent_style = tab
+
+[Makefile]
+indent_style = tab
+
+[*.{py,rs}]
+indent_size = 4

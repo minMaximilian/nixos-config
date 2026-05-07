@@ -13,5 +13,6 @@ in
     default = ./.;
     vars = ../shared/vars.nix;
     theme = ../shared/theme.nix;
+    formatters = ../shared/formatters.nix;
   }
   // getModules ./core

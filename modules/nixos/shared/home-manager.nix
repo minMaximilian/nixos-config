@@ -23,6 +23,7 @@
         ../../home
         ../../shared/vars.nix
         ../../shared/theme.nix
+        ../../shared/formatters.nix
       ];
       myOptions.vars = config.myOptions.vars;
 

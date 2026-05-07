@@ -2,6 +2,7 @@
   imports = [
     ./shared
     ./git
+    ./git-hooks
     ./fish
     ./neovim
     ./btop
@@ -19,6 +20,7 @@
 
   config.myOptions = {
     git.enable = lib.mkDefault true;
+    git.hooks.enable = lib.mkDefault true;
     fish.enable = lib.mkDefault true;
     neovim.enable = lib.mkDefault true;
     btop.enable = lib.mkDefault true;

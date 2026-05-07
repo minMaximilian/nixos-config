@@ -20,12 +20,17 @@
   myOptions.memory.enable = true;
   myOptions.fish.enable = true;
   myOptions.neovim.enable = true;
+  myOptions.multimedia.enable = true;
   myOptions.miniflux.enable = true;
 
   myOptions.impermanence = {
     enable = true;
     tmpfsRoot = true;
     rootUuid = "b41e5b4b-5020-4c15-bd40-0f78d2c8e237";
+    declarativeUsers = {
+      max = "/persist/etc/passwords/max";
+      root = "/persist/etc/passwords/root";
+    };
   };
 
   services.rss-archive-proxy = {

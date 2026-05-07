@@ -4,12 +4,20 @@
   config,
   ...
 }: let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkEnableOption mkIf mkOption types;
   cfg = config.myOptions.git;
   vars = config.myOptions.vars;
 in {
   options.myOptions.git = {
     enable = mkEnableOption "Git";
+
+    hooks = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable global git hooks";
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -27,5 +35,8 @@ in {
         };
       };
     };
+
+    # Enable git hooks module when hooks are enabled
+    myOptions.git-hooks.enable = lib.mkIf cfg.hooks.enable true;
   };
 }

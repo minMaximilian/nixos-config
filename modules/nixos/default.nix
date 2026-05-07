@@ -15,6 +15,7 @@ _: {
     ./logitech
     ./memory
     ./miniflux
+    ./multimedia
     ./protonvpn
     ./shell
     ./tablet
