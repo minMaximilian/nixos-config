@@ -12,9 +12,6 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
-    hyprcursor.url = "github:hyprwm/hyprcursor";
-    hyprcursor.inputs.nixpkgs.follows = "nixpkgs";
-
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
 

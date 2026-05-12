@@ -13,9 +13,13 @@
     ;
 
   cfg = config.myOptions.lockscreen;
+
+  lockCmd = "qs ipc call lockscreen lock";
+  dpmsOff = "${pkgs.wlopm}/bin/wlopm --off '*'";
+  dpmsOn = "${pkgs.wlopm}/bin/wlopm --on '*'";
 in {
   options.myOptions.lockscreen = {
-    enable = mkEnableOption "Lockscreen (hypridle for idle management)";
+    enable = mkEnableOption "Lockscreen (swayidle for idle management, quickshell for the lock surface)";
 
     idleTimeout = mkOption {
       type = types.int;
@@ -31,28 +35,31 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.hypridle = {
+    # swayidle is compositor-agnostic — works under any compositor that
+    # implements ext-idle-notify-v1 (hyprland, niri, sway, wayfire, ...).
+    # Display power management uses wlopm via zwlr-output-power-management-v1,
+    # also supported by both hyprland and niri.
+    services.swayidle = {
       enable = true;
-      settings = {
-        general = {
-          before_sleep_cmd = "${pkgs.systemd}/bin/loginctl lock-session";
-          lock_cmd = "qs ipc call lockscreen lock";
-        };
 
-        listener = [
-          {
-            timeout = cfg.idleTimeout;
-            on-timeout = "qs ipc call lockscreen lock";
-          }
-          {
-            timeout = cfg.dpmsTimeout;
-            on-timeout = "hyprctl dispatch dpms off";
-            on-resume = "hyprctl dispatch dpms on";
-          }
-        ];
+      events = {
+        before-sleep = "${pkgs.systemd}/bin/loginctl lock-session";
+        lock = lockCmd;
       };
+
+      timeouts = [
+        {
+          timeout = cfg.idleTimeout;
+          command = lockCmd;
+        }
+        {
+          timeout = cfg.dpmsTimeout;
+          command = dpmsOff;
+          resumeCommand = dpmsOn;
+        }
+      ];
     };
 
-    systemd.user.services.hypridle.Unit.After = lib.mkForce "graphical-session.target";
+    systemd.user.services.swayidle.Unit.After = lib.mkForce "graphical-session.target";
   };
 }

@@ -35,7 +35,10 @@ in {
 
     timezone = mkOption {
       type = types.str;
-      default = "Europe/Dublin";
+      # Europe/London shares identical offsets with Europe/Dublin (GMT/BST)
+      # but avoids the "IST" abbreviation collision with India Standard Time
+      # that some browsers/JS misinterpret as +0530.
+      default = "Europe/London";
     };
 
     withGui = mkOption {

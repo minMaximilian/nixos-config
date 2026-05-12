@@ -67,7 +67,7 @@ in {
           };
           "custom/lock" = {
             format = "<span color='#${config.lib.stylix.colors.base0C}'>  </span>";
-            on-click = "hyprlock";
+            on-click = "qs ipc call lockscreen lock";
             tooltip = true;
             tooltip-format = "Lock Screen";
           };

@@ -62,7 +62,19 @@ Singleton {
                 output: w.monitor?.name ?? ""
             }));
         root.workspaces = ws;
-        root.focusedWorkspaceId = Hyprland.focusedWorkspace?.id ?? -1;
+    }
+
+    // Bind focusedWorkspaceId reactively to Hyprland's own state. Updating
+    // it from inside `onRawEvent` is unreliable: by the time the `workspace`
+    // event fires, Quickshell.Hyprland has not necessarily processed the new
+    // focus yet, so a refresh reads the *previous* focused workspace and the
+    // bar lags one step behind every switch. The reactive binding only fires
+    // once Hyprland.focusedWorkspace has actually changed.
+    Binding {
+        target: root
+        property: "focusedWorkspaceId"
+        when: root.isHyprland
+        value: Hyprland.focusedWorkspace?.id ?? -1
     }
 
     Component.onCompleted: {

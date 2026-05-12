@@ -118,6 +118,60 @@ vim.lsp.enable('nixd')
 vim.lsp.config('zls', { capabilities = cmp_capabilities })
 vim.lsp.enable('zls')
 
+-- Godot / GDScript
+--
+-- Godot's editor itself ships the GDScript language server. When the editor
+-- is open with a project loaded, it listens on TCP 127.0.0.1:6005 (LSP) and
+-- 127.0.0.1:6006 (DAP). nvim-lspconfig ships a `gdscript` config that
+-- connects to that port; we just enable it. The server attaches when a `.gd`
+-- buffer is opened inside a project containing `project.godot`.
+if nixCats('godot') then
+  vim.filetype.add({
+    extension = {
+      gd = 'gdscript',
+      tscn = 'gdresource',
+      tres = 'gdresource',
+      gdshader = 'gdshader',
+    },
+  })
+
+  vim.lsp.config('gdscript', {
+    capabilities = cmp_capabilities,
+    on_attach = function(client)
+      -- Godot's LSP doesn't implement textDocument/didClose; suppress to
+      -- avoid spurious errors when buffers are closed.
+      local _notify = client.notify
+      client.notify = function(method, params)
+        if method == 'textDocument/didClose' then return true end
+        return _notify(method, params)
+      end
+    end,
+  })
+  vim.lsp.enable('gdscript')
+
+  -- Godot expects 4-space indentation in .gd files.
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'gdscript',
+    callback = function()
+      vim.bo.expandtab = true
+      vim.bo.tabstop = 4
+      vim.bo.shiftwidth = 4
+      vim.bo.softtabstop = 4
+    end,
+  })
+
+  -- Format .gd files with gdscript-formatter on save (overrides the generic
+  -- LSP format autocmd above, since Godot's LSP doesn't format).
+  vim.api.nvim_create_autocmd('BufWritePost', {
+    pattern = '*.gd',
+    callback = function(args)
+      local file = vim.fn.shellescape(vim.api.nvim_buf_get_name(args.buf))
+      vim.fn.system('gdscript-formatter --reorder-code ' .. file)
+      vim.cmd('silent! checktime')
+    end,
+  })
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local opts = { buffer = args.buf }
@@ -264,6 +318,25 @@ if nixCats('debug') then
 
   dap.configurations.c = dap.configurations.zig
   dap.configurations.cpp = dap.configurations.zig
+
+  -- Godot DAP adapter — Godot editor exposes a debug server on TCP 6006
+  -- when a project is open.
+  if nixCats('godot') then
+    dap.adapters.godot = {
+      type = 'server',
+      host = '127.0.0.1',
+      port = 6006,
+    }
+    dap.configurations.gdscript = {
+      {
+        type = 'godot',
+        request = 'launch',
+        name = 'Launch scene',
+        project = '${workspaceFolder}',
+        launch_scene = true,
+      },
+    }
+  end
 
   -- Auto open/close DAP UI
   dap.listeners.after.event_initialized['dapui_config'] = function() dapui.open() end

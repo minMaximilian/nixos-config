@@ -14,7 +14,6 @@
     ./ghostty
     ./gimp
     ./helium
-    ./hyprcursor
     ./hyprland
     ./komikku
     ./krita
@@ -64,7 +63,6 @@
     signal.enable = lib.mkDefault true;
     spotify.enable = lib.mkDefault false;
     tauon.enable = lib.mkDefault true;
-    hyprcursor.enable = lib.mkDefault true;
     qbittorrent.enable = lib.mkDefault true;
     quickshell.enable = lib.mkDefault true;
     vlc.enable = lib.mkDefault true;

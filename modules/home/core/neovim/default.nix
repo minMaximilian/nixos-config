@@ -50,6 +50,7 @@ in {
           categories = {
             general = true;
             debug = true;
+            godot = true;
           };
           extra = lib.optionalAttrs hasStylix {
             colors =
@@ -95,6 +96,10 @@ in {
           lldb
         ];
 
+        lspsAndRuntimeDeps.godot = with pkgs; [
+          gdscript-formatter
+        ];
+
         startupPlugins.debug = with pkgs.vimPlugins; [
           nvim-dap
           nvim-dap-ui
@@ -114,6 +119,9 @@ in {
             p.markdown
             p.yaml
             p.toml
+            p.gdscript
+            p.gdshader
+            p.godot_resource
           ]))
           nvim-tree-lua
           nvim-web-devicons

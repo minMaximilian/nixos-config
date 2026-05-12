@@ -191,7 +191,7 @@ in {
       spawn-at-startup =
         [
           {command = ["sh" "-c" "awww-daemon"];}
-          {command = ["sh" "-c" "sleep 1 && awww img ${toString cfg.wallpaper}"];}
+          {command = ["sh" "-c" "sleep 1 && awww img --transition-type none ${toString cfg.wallpaper}"];}
           {command = ["sh" "-c" "sleep 2 && qs ipc call lockscreen lock"];}
           {command = ["sh" "-c" "wl-paste --type text --watch cliphist store"];}
           {command = ["sh" "-c" "wl-paste --type image --watch cliphist store"];}

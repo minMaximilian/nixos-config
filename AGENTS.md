@@ -357,7 +357,7 @@ Other flakes can import this flake's modules like this:
 | zellij | none |
 | helium | none (auto-enabled when withGui=true) |
 | neovim | nixCats |
-| desktop | hyprland, hyprlock, hyprcursor |
+| desktop | hyprland |
 | theme | stylix |
 | login | hyprland |
 | shared | home-manager |

@@ -36,34 +36,31 @@ in {
     # awww-daemon as a user service. Compositor-agnostic — works on any
     # wlroots-style or wayland compositor that supports the wlr layer-shell
     # protocol (hyprland, niri, sway, wayfire, ...).
+    #
+    # The wallpaper image is applied via ExecStartPost rather than a
+    # separate one-shot service, because a separate service ordered both
+    # `After=awww-daemon` and `WantedBy=graphical-session.target` produces
+    # a systemd ordering cycle (graphical-session → awww-set → awww-daemon
+    # → graphical-session) which causes the set step to be silently
+    # dropped, leaving a black background.
     systemd.user.services.awww-daemon = {
       Unit = {
         Description = "awww wallpaper daemon";
         PartOf = ["graphical-session.target"];
         After = ["graphical-session.target"];
       };
-      Service = {
-        ExecStart = "${cfg.package}/bin/awww-daemon";
-        Restart = "on-failure";
-        RestartSec = 3;
-      };
-      Install.WantedBy = ["graphical-session.target"];
-    };
-
-    # One-shot to apply the configured wallpaper after the daemon is up.
-    systemd.user.services.awww-set = mkIf (cfg.path != null) {
-      Unit = {
-        Description = "Apply wallpaper via awww";
-        After = ["awww-daemon.service"];
-        Requires = ["awww-daemon.service"];
-        PartOf = ["graphical-session.target"];
-      };
-      Service = {
-        Type = "oneshot";
-        ExecStart = "${cfg.package}/bin/awww img ${toString cfg.path}";
-        # awww-daemon may need a moment to bind sockets after start
-        ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
-      };
+      Service =
+        {
+          ExecStart = "${cfg.package}/bin/awww-daemon";
+          Restart = "on-failure";
+          RestartSec = 3;
+        }
+        // lib.optionalAttrs (cfg.path != null) {
+          # awww-daemon needs a moment to bind its socket before `awww img`
+          # can talk to it. ExecStartPost runs after ExecStart has begun,
+          # so a short sleep is sufficient.
+          ExecStartPost = "${pkgs.bash}/bin/bash -c 'sleep 1 && ${cfg.package}/bin/awww img --transition-type none ${toString cfg.path}'";
+        };
       Install.WantedBy = ["graphical-session.target"];
     };
   };

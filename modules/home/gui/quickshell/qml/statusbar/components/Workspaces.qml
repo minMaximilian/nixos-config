@@ -26,7 +26,11 @@ BarPill {
                 Text {
                     id: dot
                     required property var modelData
-                    property bool isActive: modelData.isFocused
+                    // Compare against live Compositor.focusedWorkspaceId
+                    // (a reactive binding on Hyprland's own focus state)
+                    // rather than the snapshotted modelData.isFocused, which
+                    // can lag a step behind the actual focus change.
+                    property bool isActive: Compositor.focusedWorkspaceId === modelData.id
 
                     text: "●"
                     color: isActive ? Config.accentBlue : Config.textColor

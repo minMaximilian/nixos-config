@@ -1,8 +1,7 @@
 {
   imports = [
     ./hyprland.nix
-    ./hyprcursor.nix
-    ./hyprlock.nix
+    ./lockscreen.nix
     ./niri.nix
     ./quickshell-pam.nix
   ];
