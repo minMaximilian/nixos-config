@@ -13,5 +13,6 @@ in {
 
   config = mkIf cfg.enable {
     home-manager.users.${username}.myOptions.neovim.enable = true;
+    programs.nano.enable = false;
   };
 }

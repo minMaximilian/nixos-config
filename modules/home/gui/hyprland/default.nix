@@ -14,14 +14,10 @@
     ;
 
   cfg = config.myOptions.hyprland;
+  noctalia = "${config.home.profileDirectory}/bin/noctalia";
 
   fullscreenToggle = pkgs.writeShellScript "fullscreen-toggle" ''
     ${pkgs.hyprland}/bin/hyprctl dispatch fullscreen 0
-    if ${pkgs.hyprland}/bin/hyprctl activewindow -j | ${pkgs.jq}/bin/jq -e '.fullscreen != 0' > /dev/null; then
-      ${pkgs.systemd}/bin/systemctl --user stop gammastep
-    else
-      ${pkgs.systemd}/bin/systemctl --user start gammastep
-    fi
   '';
 in {
   options.myOptions.hyprland = {
@@ -40,6 +36,7 @@ in {
       enable = true;
       systemd.enable = false;
       package = pkgs.hyprland;
+      configType = "hyprlang";
       settings = {
         "$mod" = "SUPER";
 
@@ -50,9 +47,6 @@ in {
             "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "uwsm finalize"
-            "sh -c 'sleep 2 && qs ipc call lockscreen lock'"
-            "wl-paste --type text --watch cliphist store"
-            "wl-paste --type image --watch cliphist store"
             "steam"
             "vesktop"
             "helium"
@@ -81,7 +75,6 @@ in {
 
         dwindle = {
           force_split = 2;
-          pseudotile = true;
           preserve_split = true;
         };
 
@@ -122,8 +115,11 @@ in {
           disable_splash_rendering = true;
           disable_hyprland_logo = true;
           force_default_wallpaper = false;
-          vfr = true;
           vrr = 0;
+        };
+
+        debug = {
+          vfr = true;
         };
 
         ecosystem = {
@@ -154,9 +150,9 @@ in {
 
         bind = [
           "$mod, Q, exec, ${config.myOptions.vars.terminal}"
-          "$mod, Space, exec, ${pkgs.rofi}/bin/rofi -show drun"
-          "$mod SHIFT, Space, exec, ${pkgs.rofi}/bin/rofi -show run"
-          "$mod ALT, Space, exec, ${pkgs.rofi}/bin/rofi -show window"
+          "$mod, Space, exec, ${noctalia} msg panel-toggle launcher"
+          "$mod SHIFT, Space, exec, ${noctalia} msg panel-toggle launcher"
+          "$mod ALT, Space, exec, ${noctalia} msg panel-toggle session"
 
           "$mod, C, killactive"
           "$mod, F, exec, ${fullscreenToggle}"
@@ -224,28 +220,37 @@ in {
           "$mod SHIFT, 9, movetoworkspacesilent, 9"
           "$mod SHIFT, 0, movetoworkspacesilent, 0"
 
-          ", XF86AudioRaiseVolume, exec, pamixer -i 5"
-          ", XF86AudioLowerVolume, exec, pamixer -d 5"
-          ", XF86AudioMute, exec, pamixer -t"
+          ", XF86AudioRaiseVolume, exec, ${noctalia} msg volume-up 5"
+          ", XF86AudioLowerVolume, exec, ${noctalia} msg volume-down 5"
+          ", XF86AudioMute, exec, ${noctalia} msg volume-mute"
 
-          "$mod, equal, exec, pamixer -i 5"
-          "$mod, minus, exec, pamixer -d 5"
-          "$mod, m, exec, pamixer -t"
+          "$mod, equal, exec, ${noctalia} msg volume-up 5"
+          "$mod, minus, exec, ${noctalia} msg volume-down 5"
+          "$mod, m, exec, ${noctalia} msg volume-mute"
 
-          "$mod ALT, o, exec, audio-switcher output"
-          "$mod ALT, i, exec, audio-switcher input"
+          "$mod ALT, o, exec, ${noctalia} msg panel-toggle control-center audio"
+          "$mod ALT, i, exec, ${noctalia} msg panel-toggle control-center audio"
           "$mod ALT, p, exec, pavucontrol"
           "$mod ALT, q, exec, qpwgraph"
           "$mod ALT, h, exec, qpwgraph"
           "$mod ALT, e, exec, easyeffects"
-          "$mod ALT, v, exec, rofi-volume"
+          "$mod ALT, v, exec, ${noctalia} msg panel-toggle control-center audio"
 
-          "$mod, V, exec, cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy && wtype -M ctrl v -m ctrl"
-          "$mod SHIFT, V, exec, cliphist wipe"
+          "$mod, V, exec, ${noctalia} msg panel-toggle clipboard"
+          "$mod SHIFT, V, exec, ${noctalia} msg panel-toggle clipboard"
         ];
       };
     };
 
-    # Wallpaper handled by myOptions.wallpaper (awww), not hyprpaper.
+    # xdg-desktop-portal-hyprland: auto-tick "Allow restore token" so the
+    # share picker doesn't reappear 2-3 times per screenshare (Vesktop/Discord).
+    # https://wiki.hypr.land/Hypr-Ecosystem/xdg-desktop-portal-hyprland/#configuration
+    xdg.configFile."hypr/xdph.conf".text = ''
+      screencopy {
+        allow_token_by_default = true
+      }
+    '';
+
+    # Wallpaper is handled by Noctalia when myOptions.noctalia is enabled.
   };
 }

@@ -30,10 +30,6 @@ in {
         general = {
           renice = 10;
         };
-        custom = {
-          start = "${pkgs.procps}/bin/pkill -SIGUSR1 waybar; ${pkgs.systemd}/bin/systemctl --user stop gammastep";
-          end = "${pkgs.procps}/bin/pkill -SIGUSR1 waybar; ${pkgs.systemd}/bin/systemctl --user start gammastep";
-        };
       };
     };
     programs.gamescope.enable = true;

@@ -8,7 +8,7 @@
     then "sd-switch"
     else false;
 
-  # Hide unwanted system apps from rofi/launchers
+  # Hide unwanted system apps from launchers.
   xdg.desktopEntries = lib.mkIf config.myOptions.vars.withGui {
     xterm = {
       name = "XTerm";

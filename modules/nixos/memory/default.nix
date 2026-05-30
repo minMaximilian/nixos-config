@@ -68,7 +68,7 @@ in {
         "--prefer"
         "^(electron|vesktop|discord|chromium|steam)$"
         "--avoid"
-        "^(Hyprland|waybar|mako|pipewire|wireplumber)$"
+        "^(Hyprland|noctalia|pipewire|wireplumber)$"
       ];
       enableNotifications = true;
     };

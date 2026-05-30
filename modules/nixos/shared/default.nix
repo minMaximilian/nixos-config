@@ -18,6 +18,11 @@
       experimental-features = ["nix-command" "flakes"];
       auto-optimise-store = true;
       warn-dirty = false;
+
+      # Noctalia binary cache — skip compiling the shell locally.
+      # See https://docs.noctalia.dev/v5/getting-started/nixos/#binary-cache
+      extra-substituters = ["https://noctalia.cachix.org"];
+      extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
     };
 
     gc = {
@@ -62,6 +67,7 @@
   environment.systemPackages = with pkgs; [
     wget
     git
+    git-lfs
     home-manager
     python3
     unzip

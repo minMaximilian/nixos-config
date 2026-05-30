@@ -144,7 +144,6 @@ in {
     };
 
     home-manager.users.${config.myOptions.vars.username}.stylix.targets = {
-      rofi.enable = false;
       hyprpaper.enable = lib.mkForce false;
       vesktop.enable = false;
     };

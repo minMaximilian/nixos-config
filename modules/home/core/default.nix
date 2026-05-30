@@ -8,6 +8,7 @@
     ./btop
     ./devenv
     ./golang
+    ./odin
     ./zellij
     ./jj
 
@@ -26,6 +27,7 @@
     btop.enable = lib.mkDefault true;
     devenv.enable = lib.mkDefault true;
     golang.enable = lib.mkDefault true;
+    odin.enable = lib.mkDefault true;
     zellij.enable = lib.mkDefault true;
     jj.enable = lib.mkDefault true;
     zig.enable = lib.mkDefault true;

@@ -24,6 +24,7 @@ in {
     programs.git = {
       enable = true;
       package = pkgs.gitFull;
+      lfs.enable = true;
       signing.format = "openpgp";
       settings = {
         user = {
@@ -32,6 +33,9 @@ in {
         };
         core = {
           editor = "nvim";
+        };
+        push = {
+          autoSetupRemote = true;
         };
       };
     };

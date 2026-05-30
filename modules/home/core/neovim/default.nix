@@ -81,8 +81,10 @@ in {
       categoryDefinitions.replace = {pkgs, ...}: {
         lspsAndRuntimeDeps.general = with pkgs; [
           lua-language-server
+          glsl_analyzer
           nixd
           nixpkgs-fmt
+          ols
           (
             if hasZlsOverlay
             then inputs.zls-overlay.packages.${pkgs.stdenv.hostPlatform.system}.zls
@@ -98,6 +100,13 @@ in {
 
         lspsAndRuntimeDeps.godot = with pkgs; [
           gdscript-formatter
+          roslyn-ls
+          netcoredbg
+          csharpier
+        ];
+
+        startupPlugins.godot = with pkgs.vimPlugins; [
+          roslyn-nvim
         ];
 
         startupPlugins.debug = with pkgs.vimPlugins; [
@@ -114,6 +123,7 @@ in {
             p.lua
             p.nix
             p.zig
+            p.odin
             p.bash
             p.json
             p.markdown
@@ -121,7 +131,9 @@ in {
             p.toml
             p.gdscript
             p.gdshader
+            p.glsl
             p.godot_resource
+            p.c_sharp
           ]))
           nvim-tree-lua
           nvim-web-devicons
@@ -129,13 +141,10 @@ in {
           indent-blankline-nvim
           comment-nvim
           base16-nvim
-          nvim-cmp
-          cmp-nvim-lsp
+          blink-cmp
           luasnip
-          cmp_luasnip
           friendly-snippets
-          cmp-buffer
-          cmp-path
+          nvim-autopairs
           gitsigns-nvim
         ];
       };

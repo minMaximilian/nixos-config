@@ -58,6 +58,28 @@ vim.opt.listchars = {
 
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
+vim.diagnostic.config({
+  severity_sort = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '✘',
+      [vim.diagnostic.severity.WARN] = '▲',
+      [vim.diagnostic.severity.INFO] = '●',
+      [vim.diagnostic.severity.HINT] = '○',
+    },
+  },
+  underline = true,
+  virtual_text = {
+    spacing = 2,
+    source = 'if_many',
+    prefix = '●',
+  },
+  float = {
+    border = 'rounded',
+    source = true,
+  },
+})
+
 -- Auto-save when leaving insert mode or switching away
 vim.o.autowriteall = true
 vim.api.nvim_create_autocmd({ 'InsertLeave', 'TextChanged', 'FocusLost', 'BufLeave' }, {
@@ -86,6 +108,46 @@ vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'Buffers' })
 vim.keymap.set('n', '<leader>h', builtin.help_tags, { desc = 'Help tags' })
 
 -- Treesitter
+vim.filetype.add({
+  extension = {
+    comp = 'glsl',
+    frag = 'glsl',
+    geom = 'glsl',
+    glsl = 'glsl',
+    odin = 'odin',
+    tesc = 'glsl',
+    tese = 'glsl',
+    vert = 'glsl',
+  },
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {
+    'bash',
+    'c_sharp',
+    'cs',
+    'gdresource',
+    'gdscript',
+    'gdshader',
+    'glsl',
+    'json',
+    'lua',
+    'markdown',
+    'nix',
+    'odin',
+    'toml',
+    'yaml',
+    'zig',
+    'zsh',
+  },
+  callback = function()
+    vim.treesitter.start()
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
+
+vim.treesitter.language.register('c_sharp', 'cs')
+vim.treesitter.language.register('godot_resource', 'gdresource')
 vim.treesitter.language.register('bash', 'zsh')
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
@@ -107,7 +169,7 @@ vim.opt.foldenable = false
 -- In short: filetypes trigger attachment, root_markers determine the project root,
 -- and nvim-lspconfig supplies sensible defaults for both.
 
-local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+local cmp_capabilities = require('blink.cmp').get_lsp_capabilities()
 
 vim.lsp.config('lua_ls', { capabilities = cmp_capabilities })
 vim.lsp.enable('lua_ls')
@@ -117,6 +179,12 @@ vim.lsp.enable('nixd')
 
 vim.lsp.config('zls', { capabilities = cmp_capabilities })
 vim.lsp.enable('zls')
+
+vim.lsp.config('ols', { capabilities = cmp_capabilities })
+vim.lsp.enable('ols')
+
+vim.lsp.config('glsl_analyzer', { capabilities = cmp_capabilities })
+vim.lsp.enable('glsl_analyzer')
 
 -- Godot / GDScript
 --
@@ -170,6 +238,26 @@ if nixCats('godot') then
       vim.cmd('silent! checktime')
     end,
   })
+
+  -- C# via roslyn.nvim (Microsoft's official Roslyn LSP, same engine as
+  -- VSCode's C# Dev Kit). Auto-attaches when a .cs buffer is opened inside
+  -- a project containing a .sln/.slnx/.csproj. The plugin shells out to the
+  -- `Microsoft.CodeAnalysis.LanguageServer` binary provided by roslyn-ls.
+  require('roslyn').setup({
+    config = {
+      capabilities = cmp_capabilities,
+    },
+  })
+
+  -- Format .cs files with csharpier on save (Roslyn LSP doesn't format).
+  vim.api.nvim_create_autocmd('BufWritePost', {
+    pattern = '*.cs',
+    callback = function(args)
+      local file = vim.fn.shellescape(vim.api.nvim_buf_get_name(args.buf))
+      vim.fn.system('csharpier format ' .. file)
+      vim.cmd('silent! checktime')
+    end,
+  })
 end
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -186,55 +274,95 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
     vim.keymap.set('n', '<leader>dd', vim.diagnostic.open_float, opts)
+    vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, opts)
   end,
 })
 
--- nvim-cmp (completion)
-local cmp = require('cmp')
-local luasnip = require('luasnip')
-
+-- blink.cmp (completion)
 require('luasnip.loaders.from_vscode').lazy_load()
 
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
+local luasnip = require('luasnip')
+local snippet = luasnip.snippet
+local insert = luasnip.insert_node
+local fmt = require('luasnip.extras.fmt').fmt
+
+luasnip.add_snippets('odin', {
+  snippet('lit', fmt([[
+{} {{
+  {} = {},
+}}
+]], {
+    insert(1, 'Type'),
+    insert(2, 'field'),
+    insert(3, 'value'),
+  })),
+  snippet('plit', fmt([[
+&{} {{
+  {} = {},
+}}
+]], {
+    insert(1, 'Type'),
+    insert(2, 'field'),
+    insert(3, 'value'),
+  })),
+  snippet('sdlpipe', fmt([[
+{} := sdl.CreateGPUGraphicsPipeline(
+  {},
+  &sdl.GPUGraphicsPipelineCreateInfo {{
+    vertex_shader = {},
+    fragment_shader = {},
+    primitive_type = .TRIANGLELIST,
+    target_info = {{
+      num_color_targets = 1,
+      color_target_descriptions = &sdl.GPUColorTargetDescription {{
+        format = sdl.GetGPUSwapchainTextureFormat({}, {}),
+      }},
+    }},
+  }},
+)
+]], {
+    insert(1, 'pipeline'),
+    insert(2, 'gpu'),
+    insert(3, 'vertex_shader'),
+    insert(4, 'fragment_shader'),
+    insert(5, 'gpu'),
+    insert(6, 'window'),
+  })),
+})
+
+require('nvim-autopairs').setup({
+  check_ts = true,
+  disable_filetype = { 'TelescopePrompt' },
+})
+
+require('blink.cmp').setup({
+  keymap = {
+    preset = 'super-tab',
+    ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
+    ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
+    ['<CR>'] = { 'select_and_accept', 'fallback' },
   },
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip', keyword_length = 2 },
-  }, {
-    { name = 'buffer', keyword_length = 3 },
-    { name = 'path' },
-  }),
-  mapping = cmp.mapping.preset.insert({
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-  }),
+  snippets = { preset = 'luasnip' },
+  sources = {
+    default = { 'lsp', 'path', 'snippets', 'buffer' },
+  },
+  completion = {
+    documentation = { auto_show = true, auto_show_delay_ms = 200 },
+  },
+  signature = {
+    enabled = true,
+    trigger = {
+      show_on_accept = true,
+      show_on_keyword = true,
+    },
+    window = {
+      border = 'rounded',
+      show_documentation = true,
+    },
+  },
+  appearance = {
+    nerd_font_variant = 'mono',
+  },
 })
 
 -- nvim-tree
@@ -334,6 +462,23 @@ if nixCats('debug') then
         name = 'Launch scene',
         project = '${workspaceFolder}',
         launch_scene = true,
+      },
+    }
+
+    -- C# debugging via netcoredbg. Godot launches the C# runtime in-process,
+    -- so the typical workflow is: start Godot in debug mode, then attach
+    -- netcoredbg to the running godot PID.
+    dap.adapters.coreclr = {
+      type = 'executable',
+      command = 'netcoredbg',
+      args = { '--interpreter=vscode' },
+    }
+    dap.configurations.cs = {
+      {
+        type = 'coreclr',
+        name = 'Attach to Godot',
+        request = 'attach',
+        processId = require('dap.utils').pick_process,
       },
     }
   end

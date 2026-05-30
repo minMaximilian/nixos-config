@@ -19,6 +19,7 @@
   theme = config.myOptions.theme;
 
   terminal = config.myOptions.vars.terminal or "ghostty";
+  noctalia = "${config.home.profileDirectory}/bin/noctalia";
 
   # Helper: action attrset shorthand
   spawn = cmd: {action.spawn = cmd;};
@@ -126,13 +127,8 @@ in {
     ];
 
     home.packages = with pkgs; [
-      awww # successor to swww
       xwayland-satellite
-      wl-clipboard
-      cliphist
       grimblast
-      wtype
-      pamixer
     ];
 
     programs.niri.settings = {
@@ -190,11 +186,7 @@ in {
 
       spawn-at-startup =
         [
-          {command = ["sh" "-c" "awww-daemon"];}
-          {command = ["sh" "-c" "sleep 1 && awww img --transition-type none ${toString cfg.wallpaper}"];}
-          {command = ["sh" "-c" "sleep 2 && qs ipc call lockscreen lock"];}
-          {command = ["sh" "-c" "wl-paste --type text --watch cliphist store"];}
-          {command = ["sh" "-c" "wl-paste --type image --watch cliphist store"];}
+          {command = ["sh" "-c" "sleep 2 && ${noctalia} msg screen-lock"];}
           {command = ["xwayland-satellite"];}
           {command = ["steam"];}
           {command = ["vesktop"];}
@@ -238,9 +230,9 @@ in {
         {
           # Apps / launchers
           "Mod+Q" = spawn ["sh" "-c" terminal];
-          "Mod+Space" = spawn ["${pkgs.rofi}/bin/rofi" "-show" "drun"];
-          "Mod+Shift+Space" = spawn ["${pkgs.rofi}/bin/rofi" "-show" "run"];
-          "Mod+Alt+Space" = spawn ["${pkgs.rofi}/bin/rofi" "-show" "window"];
+          "Mod+Space" = spawn [noctalia "msg" "panel-toggle" "launcher"];
+          "Mod+Shift+Space" = spawn [noctalia "msg" "panel-toggle" "launcher"];
+          "Mod+Alt+Space" = spawn [noctalia "msg" "panel-toggle" "session"];
 
           # Window
           "Mod+C" = act "close-window";
@@ -286,24 +278,24 @@ in {
           "Mod+Alt+3" = act "focus-monitor-up";
 
           # Audio
-          "XF86AudioRaiseVolume" = spawn ["pamixer" "-i" "5"];
-          "XF86AudioLowerVolume" = spawn ["pamixer" "-d" "5"];
-          "XF86AudioMute" = spawn ["pamixer" "-t"];
-          "Mod+Equal" = spawn ["pamixer" "-i" "5"];
-          "Mod+Minus" = spawn ["pamixer" "-d" "5"];
-          "Mod+M" = spawn ["pamixer" "-t"];
+          "XF86AudioRaiseVolume" = spawn [noctalia "msg" "volume-up" "5"];
+          "XF86AudioLowerVolume" = spawn [noctalia "msg" "volume-down" "5"];
+          "XF86AudioMute" = spawn [noctalia "msg" "volume-mute"];
+          "Mod+Equal" = spawn [noctalia "msg" "volume-up" "5"];
+          "Mod+Minus" = spawn [noctalia "msg" "volume-down" "5"];
+          "Mod+M" = spawn [noctalia "msg" "volume-mute"];
 
           # Audio tooling
-          "Mod+Alt+O" = spawn ["audio-switcher" "output"];
-          "Mod+Alt+I" = spawn ["audio-switcher" "input"];
+          "Mod+Alt+O" = spawn [noctalia "msg" "panel-toggle" "control-center" "audio"];
+          "Mod+Alt+I" = spawn [noctalia "msg" "panel-toggle" "control-center" "audio"];
           "Mod+Alt+P" = spawn ["pavucontrol"];
           "Mod+Alt+Q" = spawn ["qpwgraph"];
           "Mod+Alt+E" = spawn ["easyeffects"];
-          "Mod+Alt+V" = spawn ["rofi-volume"];
+          "Mod+Alt+V" = spawn [noctalia "msg" "panel-toggle" "control-center" "audio"];
 
           # Clipboard
-          "Mod+V" = spawn ["sh" "-c" "cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy && wtype -M ctrl v -m ctrl"];
-          "Mod+Shift+V" = spawn ["sh" "-c" "cliphist wipe"];
+          "Mod+V" = spawn [noctalia "msg" "panel-toggle" "clipboard"];
+          "Mod+Shift+V" = spawn [noctalia "msg" "panel-toggle" "clipboard"];
 
           # Niri-specific extras (no hyprland equivalent)
           "Mod+Tab" = act "focus-workspace-down";

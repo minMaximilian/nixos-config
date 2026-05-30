@@ -20,6 +20,13 @@ in {
           email = vars.gitEmail;
           name = vars.gitName;
         };
+        ui = {
+          editor = "nvim";
+        };
+        git = {
+          push = "origin";
+        };
+        remotes.origin.auto-track-bookmarks = "*";
       };
     };
   };

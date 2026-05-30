@@ -10,6 +10,8 @@
 
   myOptions.vars.withGui = true;
   myOptions.amdgpu.enable = true;
+  myOptions.amdgpu.rocm.enable = true;
+  myOptions.ml.enable = true;
   myOptions.logitech.enable = true;
   myOptions.tablet.enable = true;
 
@@ -23,7 +25,7 @@
   myOptions.multimedia.enable = true;
   myOptions.miniflux.enable = true;
 
-  myOptions.impermanence = {
+  myOptions.preservation = {
     enable = true;
     tmpfsRoot = true;
     rootUuid = "b41e5b4b-5020-4c15-bd40-0f78d2c8e237";
@@ -49,6 +51,11 @@
     };
     Podcasts = {
       "Lemonade Stand" = {url = "https://www.youtube.com/feeds/videos.xml?channel_id=UCwVevVbti5Uuxj6Mkl5NHRA";};
+    };
+    YouTube = {
+      "Tom Scott" = {url = "https://www.youtube.com/feeds/videos.xml?channel_id=UCBa659QWEk1AI4Tg--mrJ2A";};
+      "BeamBuddy" = {url = "https://www.youtube.com/feeds/videos.xml?channel_id=UCTPQU7wiEr423xqD-2yJRBQ";};
+      "Super Eyepatch Wolf" = {url = "https://www.youtube.com/feeds/videos.xml?channel_id=UCtGoikgbxP4F3rgI9PldI9g";};
     };
     "Engineering Blogs" = {
       "Sean Goedecke" = {url = "https://www.seangoedecke.com/rss.xml";};

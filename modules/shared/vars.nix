@@ -23,13 +23,13 @@ in {
 
     gitName = mkOption {
       type = types.str;
-      default = "minMaximilian";
+      default = "minmaximilian";
       description = "Git user name for commits";
     };
 
     gitEmail = mkOption {
       type = types.str;
-      default = "53843385+minMaximilian@users.noreply.github.com";
+      default = "minmaximilian@noreply.codeberg.org";
       description = "Git email for commits";
     };
 

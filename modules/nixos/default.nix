@@ -15,11 +15,12 @@ _: {
     ./logitech
     ./memory
     ./miniflux
+    ./ml
     ./multimedia
     ./protonvpn
     ./shell
     ./tablet
     ./theme
-    ./impermanence
+    ./preservation
   ];
 }
