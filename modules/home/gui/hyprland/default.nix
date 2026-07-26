@@ -14,7 +14,13 @@
     ;
 
   cfg = config.myOptions.hyprland;
+  homeBin = "${config.home.profileDirectory}/bin";
+  systemBin = "/run/current-system/sw/bin";
   noctalia = "${config.home.profileDirectory}/bin/noctalia";
+  terminal =
+    if config.myOptions.zellij.enable or false
+    then "${homeBin}/ghostty -e ${homeBin}/zellij attach --index 0 --create"
+    else config.myOptions.vars.terminal;
 
   fullscreenToggle = pkgs.writeShellScript "fullscreen-toggle" ''
     ${pkgs.hyprland}/bin/hyprctl dispatch fullscreen 0
@@ -44,14 +50,10 @@ in {
 
         exec-once =
           [
-            "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-            "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-            "uwsm finalize"
-            "steam"
-            "vesktop"
-            "helium"
-
-            "solaar --window=hide"
+            "systemctl --user import-environment DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL PATH XDG_DATA_DIRS"
+            "dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL PATH XDG_DATA_DIRS"
+            "${pkgs.uwsm}/bin/uwsm finalize"
+            "${systemBin}/solaar --window=hide"
           ]
           ++ [
             "hyprctl dispatch workspace 1"
@@ -61,6 +63,9 @@ in {
           "workspace 1 silent, match:class ^steam$"
           "workspace 2 silent, match:class ^vesktop$"
           "workspace 3 silent, match:class ^helium$"
+          "workspace 4 silent, match:class ^tidal$"
+          "fullscreen on, match:class ^gamescope$"
+          "idle_inhibit focus, match:class ^gamescope$"
 
           "workspace special:solaar silent, match:class ^solaar$"
         ];
@@ -149,13 +154,14 @@ in {
         ];
 
         bind = [
-          "$mod, Q, exec, ${config.myOptions.vars.terminal}"
+          "$mod, Q, exec, ${terminal}"
           "$mod, Space, exec, ${noctalia} msg panel-toggle launcher"
           "$mod SHIFT, Space, exec, ${noctalia} msg panel-toggle launcher"
           "$mod ALT, Space, exec, ${noctalia} msg panel-toggle session"
 
           "$mod, C, killactive"
           "$mod, F, exec, ${fullscreenToggle}"
+          "$mod, Escape, exec, ${noctalia} msg session lock"
 
           ", Print, exec, grimblast --notify copy area"
           "$mod, S, exec, grimblast --notify save area ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png"
@@ -220,21 +226,18 @@ in {
           "$mod SHIFT, 9, movetoworkspacesilent, 9"
           "$mod SHIFT, 0, movetoworkspacesilent, 0"
 
-          ", XF86AudioRaiseVolume, exec, ${noctalia} msg volume-up 5"
-          ", XF86AudioLowerVolume, exec, ${noctalia} msg volume-down 5"
-          ", XF86AudioMute, exec, ${noctalia} msg volume-mute"
+          ", XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+          ", XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+          ", XF86AudioMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
-          "$mod, equal, exec, ${noctalia} msg volume-up 5"
-          "$mod, minus, exec, ${noctalia} msg volume-down 5"
-          "$mod, m, exec, ${noctalia} msg volume-mute"
+          "$mod, equal, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+          "$mod, minus, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+          "$mod, m, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
-          "$mod ALT, o, exec, ${noctalia} msg panel-toggle control-center audio"
-          "$mod ALT, i, exec, ${noctalia} msg panel-toggle control-center audio"
           "$mod ALT, p, exec, pavucontrol"
           "$mod ALT, q, exec, qpwgraph"
           "$mod ALT, h, exec, qpwgraph"
           "$mod ALT, e, exec, easyeffects"
-          "$mod ALT, v, exec, ${noctalia} msg panel-toggle control-center audio"
 
           "$mod, V, exec, ${noctalia} msg panel-toggle clipboard"
           "$mod SHIFT, V, exec, ${noctalia} msg panel-toggle clipboard"

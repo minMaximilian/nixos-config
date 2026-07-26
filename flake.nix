@@ -1,13 +1,9 @@
 {
   description = "NixOS configuration flake";
 
-  nixConfig = {
-    extra-substituters = ["https://noctalia.cachix.org"];
-    extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
-  };
-
   inputs = {
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    nixpkgs-unstable.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-graalvm21.url = "github:NixOS/nixpkgs/336eda0d07dc5e2be1f923990ad9fdb6bc8e28e3";
     nixpkgs.follows = "nixpkgs-unstable";
 
@@ -27,13 +23,14 @@
     nixcord.url = "github:FlameFlag/nixcord";
     nixcord.inputs.nixpkgs.follows = "nixpkgs";
 
-    noctalia.url = "github:noctalia-dev/noctalia-shell/v5";
+    noctalia.url = "github:noctalia-dev/noctalia";
 
-    niri.url = "github:sodiboo/niri-flake";
-    niri.inputs.nixpkgs.follows = "nixpkgs";
+    pi.url = "github:lukasl-dev/pi.nix";
 
-    helium.url = "github:AlvaroParker/helium-nix";
-    helium.inputs.nixpkgs.follows = "nixpkgs";
+    impeccable = {
+      url = "github:pbakaus/impeccable";
+      flake = false;
+    };
 
     rss-archive-proxy.url = "path:/home/max/workspace/repos/rss-archive-proxy";
     rss-archive-proxy.inputs.nixpkgs.follows = "nixpkgs";

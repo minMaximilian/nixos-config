@@ -3,6 +3,16 @@
   lib,
   ...
 }: {
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    settings.hermes = {
+      HostName = "127.0.0.1";
+      Port = 2222;
+      User = "max";
+    };
+  };
+
   systemd.user.startServices =
     if config.myOptions.vars.withGui
     then "sd-switch"

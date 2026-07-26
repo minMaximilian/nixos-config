@@ -263,6 +263,12 @@ end
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local opts = { buffer = args.buf }
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+    if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, args.buf) then
+      vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+    end
+
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
@@ -270,7 +276,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts)
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
     vim.keymap.set('n', '<leader>dd', vim.diagnostic.open_float, opts)
@@ -341,6 +346,7 @@ require('blink.cmp').setup({
     ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
     ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
     ['<CR>'] = { 'select_and_accept', 'fallback' },
+    ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
   },
   snippets = { preset = 'luasnip' },
   sources = {
@@ -352,8 +358,11 @@ require('blink.cmp').setup({
   signature = {
     enabled = true,
     trigger = {
+      enabled = true,
       show_on_accept = true,
+      show_on_insert = true,
       show_on_keyword = true,
+      show_on_trigger_character = true,
     },
     window = {
       border = 'rounded',

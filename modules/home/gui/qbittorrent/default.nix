@@ -7,28 +7,28 @@
   inherit (lib) mkEnableOption mkOption mkIf types;
   cfg = config.myOptions.qbittorrent;
 
-  # Best public trackers from ngosang/trackerslist (updated 2026-02-11)
+  # Best public trackers from ngosang/trackerslist (updated 2026-07-05)
   defaultTrackers = [
-    "http://tracker.opentrackr.org:1337/announce"
+    "udp://zer0day.ch:1337/announce"
+    "udp://tracker.publictracker.xyz:6969/announce"
+    "udp://tracker.opentrackr.org:1337/announce"
     "udp://open.demonii.com:1337/announce"
     "udp://open.stealth.si:80/announce"
     "udp://exodus.desync.com:6969/announce"
-    "udp://zer0day.ch:1337/announce"
-    "udp://wepzone.net:6969/announce"
+    "udp://tracker2.dler.org:80/announce"
     "udp://tracker.torrent.eu.org:451/announce"
-    "udp://tracker.srv00.com:6969/announce"
+    "udp://tracker.qu.ax:6969/announce"
+    "udp://tracker.filemail.com:6969/announce"
+    "udp://tracker.dler.org:6969/announce"
     "udp://tracker.bittor.pw:1337/announce"
-    "udp://tracker.alaskantf.com:6969/announce"
+    "udp://tracker.auctor.tv:6969/announce"
+    "udp://tracker.004430.xyz:1337/announce"
     "udp://tracker-udp.gbitt.info:80/announce"
+    "udp://torrents.tmtime.dev:6969/announce"
+    "udp://torrentclub.online:54123/announce"
     "udp://t.overflow.biz:6969/announce"
-    "udp://opentracker.io:6969/announce"
-    "udp://open.dstud.io:6969/announce"
-    "udp://leet-tracker.moe:1337/announce"
+    "udp://retracker01-msk-virt.corbina.net:80/announce"
     "udp://explodie.org:6969/announce"
-    "https://tracker.zhuqiy.com:443/announce"
-    "https://tracker.pmman.tech:443/announce"
-    "https://tracker.moeblog.cn:443/announce"
-    "https://tracker.iperson.xyz:443/announce"
   ];
 
   trackersString = lib.concatStringsSep "\\n" cfg.trackers;

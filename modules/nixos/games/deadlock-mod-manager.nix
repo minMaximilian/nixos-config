@@ -9,11 +9,11 @@
 
   deadlock-mod-manager = pkgs.stdenv.mkDerivation {
     pname = "deadlock-mod-manager";
-    version = "0.18.0";
+    version = "1.0.0";
 
     src = pkgs.fetchurl {
-      url = "https://github.com/deadlock-mod-manager/deadlock-mod-manager/releases/download/v0.18.0/Deadlock.Mod.Manager_0.18.0_amd64.deb";
-      hash = "sha256-zXkAQNk9eVCyXt3qtSfsUEjyi+h7n335EysW9YoLEJk=";
+      url = "https://github.com/deadlock-mod-manager/deadlock-mod-manager/releases/download/v1.0.0/Deadlock.Mod.Manager_1.0.0_amd64.deb";
+      hash = "sha256-CpOatJHe8LSMTaItv7Q6VvhoxG9Fdg5FMZiBML7P+Fs=";
     };
 
     nativeBuildInputs = with pkgs; [

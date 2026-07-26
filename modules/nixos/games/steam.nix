@@ -7,6 +7,15 @@
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.steam;
   username = config.myOptions.vars.username;
+  gamescopeNative = pkgs.writeShellScriptBin "gamescope-native" ''
+    exec ${pkgs.gamescope}/bin/gamescope \
+      -W 3440 -H 1440 \
+      -w 3440 -h 1440 \
+      -r 144 \
+      -f -b \
+      --force-grab-cursor \
+      -- "$@"
+  '';
 in {
   options.myOptions.steam = {
     enable = mkEnableOption "Steam and gaming essentials" // {default = config.myOptions.vars.withGui;};
@@ -33,6 +42,7 @@ in {
       };
     };
     programs.gamescope.enable = true;
+    programs.gamescope.capSysNice = true;
 
     hardware.steam-hardware.enable = true;
 
@@ -52,8 +62,8 @@ in {
       wineWow64Packages.stable
       lutris
       heroic
-      bottles
       gamemode
+      gamescopeNative
     ];
 
     users.users.${username}.extraGroups = ["gamemode"];

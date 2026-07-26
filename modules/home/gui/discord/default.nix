@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   inputs ? {},
   ...
 }: let
@@ -13,6 +14,17 @@
   cfg = config.myOptions.discord;
   hasStylix = config.lib.theme.hasStylix or false;
   hasNixcord = inputs ? nixcord;
+  vesktop = pkgs.vesktop.overrideAttrs (old: {
+    postFixup =
+      (old.postFixup or "")
+      + ''
+        wrapProgram $out/bin/vesktop \
+          --set-default NIXOS_OZONE_WL 1 \
+          --set-default ELECTRON_OZONE_PLATFORM_HINT auto \
+          --add-flags "--disable-features=WebRtcAllowInputVolumeAdjustment" \
+          --prefix PATH : ${lib.makeBinPath [pkgs.xdg-utils]}
+      '';
+  });
 in {
   imports = lib.optionals hasNixcord [
     inputs.nixcord.homeModules.nixcord
@@ -36,9 +48,10 @@ in {
         enable = true;
         discord.enable = false;
         vesktop.enable = true;
+        vesktop.package = vesktop;
         config.useQuickCss = true;
         config.plugins = {
-          ClearURLs.enable = true;
+          clearUrls.enable = true;
           anonymiseFileNames.enable = true;
           noBlockedMessages.enable = true;
           betterSessions.enable = true;

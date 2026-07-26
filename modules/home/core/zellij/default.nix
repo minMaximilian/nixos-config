@@ -4,6 +4,7 @@
   ...
 }: let
   cfg = config.myOptions.zellij;
+  nvim = "${config.home.profileDirectory}/bin/nvim";
 in {
   options.myOptions.zellij = {
     enable = lib.mkEnableOption "Zellij (headless session persistence)";
@@ -13,23 +14,34 @@ in {
     programs.zellij = {
       enable = true;
       settings = {
-        default_mode = "locked";
+        default_mode = "normal";
         default_layout = "compact";
         pane_frames = false;
         on_force_close = "detach";
         mouse_mode = false;
+        session_serialization = true;
+        show_startup_tips = false;
+        show_release_notes = false;
+        scrollback_editor = nvim;
         ui = {
           pane_frames = {
             hide_session_name = true;
           };
         };
         keybinds = {
-          _props = {
-            clear-defaults = true;
+          normal = {
+            "bind \"Alt e\"" = {
+              EditScrollback = {};
+            };
           };
-          locked = {
-            "bind \"Ctrl q\"" = {
-              Detach = {};
+          pane = {
+            "bind \"c\"" = {
+              CloseFocus = {};
+            };
+          };
+          tab = {
+            "bind \"c\"" = {
+              CloseTab = {};
             };
           };
         };

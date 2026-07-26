@@ -97,6 +97,7 @@ in {
     ];
     stylix = {
       enable = true;
+      enableReleaseChecks = false;
       image = cfg.wallpaper;
       polarity = config.myOptions.vars.polarity;
       base16Scheme = schemeFile;
@@ -143,9 +144,16 @@ in {
       autoEnable = true;
     };
 
-    home-manager.users.${config.myOptions.vars.username}.stylix.targets = {
-      hyprpaper.enable = lib.mkForce false;
-      vesktop.enable = false;
+    home-manager.users.${config.myOptions.vars.username} = {
+      home.pointerCursor.enable = true;
+
+      stylix = {
+        enableReleaseChecks = false;
+        targets = {
+          hyprpaper.enable = lib.mkForce false;
+          vesktop.enable = false;
+        };
+      };
     };
   };
 }

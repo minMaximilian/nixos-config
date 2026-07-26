@@ -18,11 +18,18 @@
       experimental-features = ["nix-command" "flakes"];
       auto-optimise-store = true;
       warn-dirty = false;
+      trusted-users = ["root" "@wheel"];
 
-      # Noctalia binary cache — skip compiling the shell locally.
-      # See https://docs.noctalia.dev/v5/getting-started/nixos/#binary-cache
-      extra-substituters = ["https://noctalia.cachix.org"];
-      extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
+      extra-substituters = [
+        "https://noctalia.cachix.org"
+        "https://pi.cachix.org"
+        "https://nix-community.cachix.org"
+      ];
+      extra-trusted-public-keys = [
+        "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+        "pi.cachix.org-1:lGeoGJaZ5ZDabuRzkcD5EBTNnDM4HJ1vqeOxlWk1Flk="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
     };
 
     gc = {

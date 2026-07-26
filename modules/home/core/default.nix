@@ -1,5 +1,12 @@
 {lib, ...}: {
   imports = [
+    ./agent-rules
+    ./amp
+    ./claude-code
+    ./codex
+    ./impeccable
+    ./opencode
+    ./pi
     ./shared
     ./git
     ./git-hooks
@@ -20,6 +27,13 @@
   ];
 
   config.myOptions = {
+    agentRules.enable = lib.mkDefault true;
+    amp.enable = lib.mkDefault true;
+    claude-code.enable = lib.mkDefault true;
+    codex.enable = lib.mkDefault true;
+    impeccable.enable = lib.mkDefault true;
+    opencode.enable = lib.mkDefault true;
+    pi.enable = lib.mkDefault true;
     git.enable = lib.mkDefault true;
     git.hooks.enable = lib.mkDefault true;
     fish.enable = lib.mkDefault true;

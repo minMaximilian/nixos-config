@@ -14,6 +14,41 @@
     then inputs.nix-jetbrains-plugins.plugins.${system}.idea-oss.${cfg.ideaVersion}
     else {};
   resolvedPlugins = map (id: ideaPlugins.${id}) cfg.plugins;
+
+  # The package with plugins applied (if available).
+  pluggedPackage =
+    if hasJetbrainsPlugins
+    then pkgs.jetbrains.plugins.addPlugins cfg.package resolvedPlugins
+    else cfg.package;
+
+  # Native libs the Minecraft client (LWJGL/GLFW) dlopens at runtime.
+  minecraftNativeLibs = with pkgs; [
+    libGL
+    glfw3-minecraft # wayland-capable glfw
+    libpulseaudio
+    openal
+    wayland
+    libxkbcommon
+  ];
+
+  # Wrap the IDEA launcher so it exports the native lib path and forces LWJGL
+  # to use the wayland-capable glfw. Every child process (the Gradle daemon and
+  # the Minecraft client JVM it spawns) inherits these, so running the game
+  # works regardless of how IDEA itself is launched (app launcher, etc.).
+  ideaPackage = pkgs.symlinkJoin {
+    name = "${pluggedPackage.name}-mc-wrapped";
+    paths = [pluggedPackage];
+    nativeBuildInputs = [pkgs.makeWrapper];
+    postBuild = ''
+      for b in idea-oss idea idea-community idea-ultimate; do
+        if [ -e "$out/bin/$b" ]; then
+          wrapProgram "$out/bin/$b" \
+            --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath minecraftNativeLibs}" \
+            --set-default JAVA_TOOL_OPTIONS "-Dorg.lwjgl.glfw.libname=libglfw.so"
+        fi
+      done
+    '';
+  };
 in {
   options.myOptions.intellij = {
     enable = mkEnableOption "IntelliJ IDEA for Minecraft development";
@@ -58,10 +93,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages =
-      if hasJetbrainsPlugins
-      then [(pkgs.jetbrains.plugins.addPlugins cfg.package resolvedPlugins)]
-      else [cfg.package];
+    home.packages = [ideaPackage];
 
     home.file = {
       ".local/share/java/temurin-17".source = pkgs.temurin-bin-17;

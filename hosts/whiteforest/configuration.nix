@@ -2,6 +2,7 @@
   pkgs,
   config,
   inputs,
+  lib,
   ...
 }: {
   imports = [
@@ -17,7 +18,6 @@
 
   myOptions.deadlockModManager.enable = true;
   myOptions.teamspeak.enable = true;
-  myOptions.android.enable = true;
   myOptions.protonvpn.enable = true;
   myOptions.memory.enable = true;
   myOptions.fish.enable = true;
@@ -38,6 +38,18 @@
   services.rss-archive-proxy = {
     enable = true;
     configFile = ./rss-archive-proxy.yaml;
+  };
+
+  systemd.services = {
+    caddy.unitConfig = {
+      After = lib.mkForce ["" "network.target"];
+      Requires = lib.mkForce [""];
+    };
+
+    rss-archive-proxy = {
+      after = lib.mkForce ["network.target"];
+      wants = lib.mkForce [];
+    };
   };
 
   myOptions.miniflux.feeds = {
@@ -67,38 +79,6 @@
     "DP-3, 3440x1440@144, 2560x0, 1"
     "HDMI-A-1, 2560x1440@60, 0x0, 1"
   ];
-
-  # Niri trial config (disabled)
-  myOptions.niri = {
-    enable = false;
-    monitors = {
-      "DP-3" = {
-        mode = {
-          width = 3440;
-          height = 1440;
-          refresh = 144.0;
-        };
-        position = {
-          x = 2560;
-          y = 0;
-        };
-        scale = 1.0;
-      };
-      "HDMI-A-1" = {
-        mode = {
-          width = 2560;
-          height = 1440;
-          refresh = 60.0;
-        };
-        position = {
-          x = 0;
-          y = 0;
-        };
-        scale = 1.0;
-      };
-    };
-  };
-  myOptions.login.compositor = "hyprland";
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
