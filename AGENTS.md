@@ -279,7 +279,33 @@ options.myFeature.enable = mkEnableOption "My feature";
 
 ---
 
-### 7. Test After Changes
+### 7. Temporary Overrides Must Expire
+
+Temporary package version bumps and workarounds must:
+- Be guarded by the current Nixpkgs package version (or another suitable condition) and return the unmodified `prev.<package>` once the workaround is no longer needed.
+- Link the upstream issue or pull request that explains when the override can be removed.
+
+This does not apply to intentional permanent customizations.
+
+```nix
+{ lib, ... }: {
+  nixpkgs.overlays = [
+    (_: prev: {
+      foo =
+        # Remove when fixed upstream: https://github.com/example/foo/issues/123
+        if lib.versionOlder prev.foo.version "1.2.3"
+        then prev.foo.overrideAttrs (old: {
+          patches = (old.patches or []) ++ [ ./fix.patch ];
+        })
+        else prev.foo;
+    })
+  ];
+}
+```
+
+---
+
+### 8. Test After Changes
 
 Always run after modifying modules:
 

@@ -12,21 +12,28 @@ SPEC.loader.exec_module(url_privacy)
 
 class UrlPrivacyTests(unittest.TestCase):
     def test_removes_tracking_parameters_and_preserves_content(self):
-        value = "https://example.com/page?id=42&utm_source=test&si=secret#part"
+        value = "https://example.com/page?id=42&utm_source=test&igsi=NTc4MTIwNjQ2YQ%3D%3D&si=secret#part"
         self.assertEqual(url_privacy.transform(value, False), "https://example.com/page?id=42#part")
 
     def test_redirects_x_after_cleaning(self):
         value = "https://x.com/example/status/1?utm_source=test"
         self.assertEqual(
             url_privacy.transform(value, True),
-            "https://nitter.net/example/status/1",
+            "https://twitterviewer.net/example/status/1",
         )
 
     def test_normalizes_old_nitter_instance(self):
         value = "https://nitter.privacydev.net/riotgames/status/2057879738350444726?lang=en#m"
         self.assertEqual(
             url_privacy.transform(value, True),
-            "https://nitter.net/riotgames/status/2057879738350444726?lang=en#m",
+            "https://twitterviewer.net/riotgames/status/2057879738350444726?lang=en#m",
+        )
+
+    def test_normalizes_nitter_net(self):
+        value = "https://nitter.net/example/status/1"
+        self.assertEqual(
+            url_privacy.transform(value, True),
+            "https://twitterviewer.net/example/status/1",
         )
 
     def test_leaves_other_frontends_to_browser_extension(self):

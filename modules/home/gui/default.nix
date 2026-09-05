@@ -14,6 +14,7 @@
     ./hyprland
     ./komikku
     ./krita
+    ./libreoffice
     ./lockscreen
     ./nautilus
     ./obs
@@ -44,6 +45,7 @@
     hyprland.enable = lib.mkDefault true;
     komikku.enable = lib.mkDefault true;
     krita.enable = lib.mkDefault true;
+    libreoffice.enable = lib.mkDefault true;
     lockscreen = {
       enable = lib.mkDefault true;
       lockOnStartup = lib.mkDefault true;

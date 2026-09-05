@@ -58,6 +58,7 @@ in {
       mangohud
       protonup-qt
       protontricks
+      r2modman
       winetricks
       wineWow64Packages.stable
       lutris

@@ -6,7 +6,7 @@
     ./codex
     ./impeccable
     ./opencode
-    ./pi
+    ./omp
     ./shared
     ./git
     ./git-hooks
@@ -32,8 +32,7 @@
     claude-code.enable = lib.mkDefault true;
     codex.enable = lib.mkDefault true;
     impeccable.enable = lib.mkDefault true;
-    opencode.enable = lib.mkDefault true;
-    pi.enable = lib.mkDefault true;
+    omp.enable = lib.mkDefault true;
     git.enable = lib.mkDefault true;
     git.hooks.enable = lib.mkDefault true;
     fish.enable = lib.mkDefault true;

@@ -25,7 +25,7 @@
 
     noctalia.url = "github:noctalia-dev/noctalia";
 
-    pi.url = "github:lukasl-dev/pi.nix";
+    omp.url = "github:can1357/oh-my-pi";
 
     impeccable = {
       url = "github:pbakaus/impeccable";

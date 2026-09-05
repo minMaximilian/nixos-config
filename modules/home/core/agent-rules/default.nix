@@ -49,7 +49,7 @@
     layout, motion, accessibility, or UI hardening work, use Impeccable when it is
     installed.
 
-    - Impeccable is installed declaratively by this flake for Codex, Amp, and Pi.
+    - Impeccable is installed declaratively by this flake for Codex and Amp.
     - Update it by bumping the `impeccable` flake input.
     - Start each project with `/impeccable init`.
     - Use `/impeccable audit`, `/impeccable critique`, and `/impeccable polish`

@@ -59,7 +59,7 @@ in {
       autostart-steam = mkAppService "steam" "${systemBin}/steam";
       autostart-vesktop = mkAppService "vesktop" "${homeBin}/vesktop";
       autostart-helium = mkAppService "helium" "${homeBin}/helium";
-      autostart-tidal = mkAppService "tidal" "${homeBin}/tidal";
+      autostart-tidal = mkAppService "tidal" "${pkgs.hyprland}/bin/hyprctl dispatch exec \"[workspace 4 silent] ${homeBin}/tidal\"";
     };
   };
 }

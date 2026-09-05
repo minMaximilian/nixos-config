@@ -19,6 +19,7 @@ TRACKING_KEYS = {
     "fb_source",
     "fbclid",
     "gclid",
+    "igsi",
     "igshid",
     "mc_cid",
     "mc_eid",
@@ -43,9 +44,10 @@ TRACKING_PREFIXES = (
 )
 
 FIXED_FRONTENDS = {
-    "nitter.privacydev.net": "https://nitter.net",
-    "twitter.com": "https://nitter.net",
-    "x.com": "https://nitter.net",
+    "nitter.net": "https://twitterviewer.net",
+    "nitter.privacydev.net": "https://twitterviewer.net",
+    "twitter.com": "https://twitterviewer.net",
+    "x.com": "https://twitterviewer.net",
 }
 
 

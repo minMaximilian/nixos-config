@@ -127,10 +127,14 @@ in {
               ".config/Blockbench"
               ".config/GIMP"
 
+              # Office suite preferences, templates, dictionaries, and extensions
+              ".config/libreoffice"
+
               # OBS Studio scenes, profiles, settings, and user-installed plugins
               ".config/obs-studio"
 
               # Gaming
+              ".config/r2modmanPlus-local"
               ".local/share/Steam"
               ".local/share/PrismLauncher"
               ".local/share/Paradox Interactive"
@@ -144,6 +148,7 @@ in {
               ".config/Signal"
               ".config/vesktop"
               ".config/TeamSpeak"
+              ".cache/TeamSpeak"
 
               # User data
               "Documents"
@@ -212,15 +217,11 @@ in {
               # Claude Code settings + credentials (manually configured for GLM Coding Plan)
               ".claude"
 
-              # opencode CLI auth + sessions
-              ".config/opencode"
-              ".local/share/opencode"
-
               # Codex CLI auth + history + config
               ".codex"
 
-              # Pi coding agent auth + sessions
-              ".pi"
+              # OMP coding agent auth, config, and sessions
+              ".omp"
 
               # ML model weights and dataset caches — large downloads
               # (HuggingFace hub, torch hub, torchvision pretrained
