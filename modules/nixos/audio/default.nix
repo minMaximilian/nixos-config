@@ -8,11 +8,7 @@
   cfg = config.myOptions.audio;
 in {
   options.myOptions.audio = {
-    enable =
-      mkEnableOption "Audio configuration"
-      // {
-        default = config.myOptions.vars.withGui;
-      };
+    enable = mkEnableOption "Audio configuration";
   };
 
   config = mkIf cfg.enable {

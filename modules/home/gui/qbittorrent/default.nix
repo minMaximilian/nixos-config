@@ -124,7 +124,7 @@ in {
     ];
 
     # Preconfigure qBittorrent to automatically add trackers to new downloads.
-    # Won't overwrite if user has already configured via GUI.
+    # Declarative settings replace the existing config; mutable resume data is separate.
     xdg.configFile."qBittorrent/qBittorrent.conf" = {
       force = true;
       text = ''
@@ -138,7 +138,7 @@ in {
         [Preferences]
         General\Locale=en
         Search\SearchEnabled=true
-        Downloads\SavePath=/home/${config.myOptions.vars.username}/Downloads
+        Downloads\SavePath=${config.home.homeDirectory}/Downloads
         Downloads\PreAllocation=true
         Connection\UPnP=true
         Bittorrent\DHT=true

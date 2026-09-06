@@ -1,403 +1,114 @@
-# NixOS Config - Agent Guidelines
+# NixOS Config — Agent Guidelines
 
-## ⛔ STOP - READ BEFORE ANY EDIT
+## Before editing
 
-Before modifying ANY file in this repo, you MUST:
-1. Run `web_search` or `read_web_page` for the relevant documentation
-2. State what you found and your plan in your response
-3. Only THEN make edits
+This repository uses pinned nixos-unstable. Before modifying any file:
 
-**NO EXCEPTIONS.** Do not rely on training data for syntax - it is outdated.
+1. Read relevant current upstream documentation with web search/page tools.
+   For package/input updates, check NixOS, Home Manager and affected upstream
+   release notes/changelogs. Do not infer current option syntax from memory.
+2. Inspect the affected files, imports and consumers with `rg` and file reads.
+3. State findings, intended changes, observable success criteria and meaningful
+   risks before editing. For complex decisions, obtain an independent review
+   when available; do not invent unavailable tool results.
+4. Delegate independent implementation work to subagents when available, with
+   disjoint file ownership. Each implementation agent runs flake evaluation.
+5. Use surgical edits, preserve unrelated changes, and verify the result.
 
----
+Sources: [NixOS options](https://search.nixos.org/options),
+[packages](https://search.nixos.org/packages),
+[Home Manager](https://nix-community.github.io/home-manager/options.xhtml),
+[Hyprland](https://wiki.hyprland.org/), [Stylix](https://danth.github.io/stylix/)
+and the affected locked upstream repositories.
 
-## ⚠️ CRITICAL: Pre-Update Requirements
+## Ownership
 
-**This is a bleeding-edge NixOS system using nixos-unstable.** Before making ANY changes:
+| Location | Responsibility |
+| --- | --- |
+| `flake.nix`, `parts/` | Inputs, outputs, dev shells, formatter and checks |
+| `hosts/default.nix` | Small native NixOS constructor |
+| `hosts/<host>/` | Hardware, storage layout, displays, host-only services and selections |
+| `users/max/` | Personal identity, HM integration, user persistence and password policy |
+| `profiles/nixos/` | Explicit base, workstation and gaming composition |
+| `profiles/home/` | Explicit personal base, development and desktop composition |
+| `modules/nixos/` | Focused system features; do not write Home Manager user settings |
+| `modules/home/` | Focused Home Manager features |
+| `modules/shared/theme.nix` | Only actually consumed, context-independent theme values |
+| `packages/` | Package construction; not user or host policy |
+| `lib/` | Small domain-specific pure helpers |
+| `tests/` | Regression checks and configuration snapshot expression |
 
-### Mandatory Pre-Update Checklist
+Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) before changing ownership.
 
-1. **Research First** — Use `web_search` and `read_web_page` to look up current documentation for:
-   - Any package, option, or module being modified
-   - NixOS/home-manager release notes for breaking changes
-   - Upstream project changelogs (Hyprland, Stylix, nixCats, etc.)
+There is **no auto-discovery**, global vars bridge, import-all root, public
+NixOS module collection or public profile API. Import a feature explicitly from
+its owning profile/host. Use native options first; group package-only selections
+in profiles instead of creating one-option wrappers.
 
-2. **Understand the Scope** — Use `finder` and `Read` to analyze:
-   - Which modules will be affected by the change
-   - Dependencies between modules (check `Required Inputs by Module` table)
-   - Whether the change affects external consumers of this flake
+## Portable module contract
 
-3. **Formulate a Thorough Plan** — Before implementation:
-   - Document what changes will be made and why
-   - Identify potential breaking changes or conflicts
-   - List rollback strategies if the update fails
-   - Consult the `oracle` for complex architectural decisions
+Only the six entries in `modules/home/exports.nix` are supported reusable modules:
+`neovim`, `ideavim`, `git`, `git-hooks`, `fish`, `zellij`.
 
-4. **Use Subagents for Implementation** — Use the `Task` tool to:
-   - Delegate independent module updates to parallel subagents
-   - Keep changes atomic and reviewable
-   - Ensure each subagent runs `nix flake check --no-build` after changes
+- Custom feature switches use `myOptions.*` and default to false.
+- No personal username, home path, Git identity, SSH hosts, Linux desktop,
+  `self`, or private `localPackages` dependency in these exports.
+- Git hooks are independently opt-in. Fish helpers require hooks and Fish.
+- Neovim requires `inputs.nixCats` when enabled. Optional nightly/ZLS/Styling
+  integration must remain optional. Debug/Godot default off; the personal
+  development profile enables them.
+- Preserve PC-style editor bindings on Darwin. Do not substitute Command keys.
+  Add OS-level keyboard policy only for a real host with explicit requirements.
+- Test every export alone and combined on Linux and aarch64-darwin.
+- An export addition/removal is a deliberate API change: update the manifest,
+  consumer tests and documentation together.
+- Personal profiles are not portable exports. Use the documented source-only
+  import to avoid the personal root flake's absolute RSS input.
 
-5. **Verify Extensively** — After changes:
-   - Run `nix flake check --no-build`
-   - Dry-run build: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel --dry-run`
-   - Format with `nix run nixpkgs#alejandra -- .`
+## State and behavior preservation
 
-6. **Update Preservation Persistence** — This system uses **tmpfs root with preservation** (`modules/nixos/preservation/default.nix`). After any change:
-   - **Adding a new application**: Check if it stores user state (configs, databases, auth tokens, etc.) that isn't managed by Nix/home-manager. If so, add the relevant directories/files to the persist list.
-   - **Removing an application**: Remove its entries from the persist list — don't leave stale persist paths.
-   - **Making something declarative**: If a previously manual config is now managed by home-manager/NixOS, **remove** it from the persist list — Nix will regenerate it on boot, so persisting it is redundant.
-   - **Key principle**: Only persist state that is user-created or not reproducible from the NixOS config. Anything Nix generates should NOT be persisted.
+Whiteforest has a tmpfs root. Storage is in `hosts/whiteforest/storage.nix`,
+the Preservation engine in `modules/nixos/preservation/`, and personal mutable
+state in `users/max/persistence.nix`.
 
-### Documentation Sources to Check
+- For added applications, identify state not reproducible from Nix and persist it.
+- Remove obsolete entries when removing applications or making a previously
+  mutable file fully declarative.
+- Do not remove a persisted parent merely because some children are generated:
+  mixed directories may contain authentication, databases or other mutable state.
+- Migrate existing data before activating new bind mounts; never conceal it under
+  an empty persisted directory. See the qBittorrent rollout warning.
+- Preserve input pins, package versions, stateVersions, filesystem UUIDs,
+  credentials, service exposure and shortcuts during architecture-only work.
+- Do not activate, reboot, migrate live passwords, delete state, or rotate
+  credentials without authorization.
 
-- [NixOS Options Search](https://search.nixos.org/options)
-- [NixOS Packages Search](https://search.nixos.org/packages)
-- [Home-Manager Options](https://nix-community.github.io/home-manager/options.xhtml)
-- [Hyprland Wiki](https://wiki.hyprland.org/)
-- [Stylix Documentation](https://danth.github.io/stylix/)
-- Flake input repos for breaking changes in their changelogs
+Temporary package workarounds must link the upstream issue and return the
+unmodified package after their version/condition expires. Intentional permanent
+customizations do not need expiry.
 
----
+## Verification
 
-## Commands
-
-```bash
-# Check flake evaluates correctly (run after any change)
-nix flake check --no-build
-
-# Format code
+```sh
 nix run nixpkgs#alejandra -- .
-
-# Build a specific host
+nix flake check --no-build --no-write-lock-file
+nix flake check --no-write-lock-file
 nix build .#nixosConfigurations.whiteforest.config.system.build.toplevel --dry-run
-
-# Enter dev shell
-nix develop
+nix build .#nixosConfigurations.ravenholm.config.system.build.toplevel --dry-run
+git diff --check
 ```
 
-## Project Structure
-
-```
-flake.nix              # Main flake - imports exports.nix for modules
-├── modules/
-│   ├── shared/        # Context-agnostic modules (work in both NixOS and home-manager)
-│   │   ├── vars.nix   # User variables (username, sshKeys, etc.)
-│   │   └── theme.nix  # Unified styling (border-radius, padding, fonts, opacity)
-│   ├── nixos/         # NixOS system modules (exported as nixosModules.*)
-│   │   ├── default.nix    # Imports all nixos modules
-│   │   ├── exports.nix    # Auto-discovers and exports all modules
-│   │   └── <feature>/     # Individual feature modules (auto-exported)
-│   └── home/          # Home-manager modules (exported as homeModules.*)
-│       ├── default.nix    # Imports all home modules
-│       ├── exports.nix    # Auto-discovers and exports core/* modules
-│       ├── core/          # Terminal/CLI modules (auto-exported individually)
-│       └── gui/           # GUI application modules
-├── hosts/             # Host-specific configurations (NOT exported)
-│   ├── whiteforest/   # Desktop workstation
-│   └── ravenholm/     # Secondary host
-├── lib/               # Helper functions (exported as lib.*)
-├── overlays/          # Package overlays (exported as overlays.*)
-├── parts/             # Flake-parts configuration
-└── assets/            # Static assets (wallpapers, etc.)
-```
-
-## Adding New Modules
-
-Modules are **auto-discovered** via `exports.nix` files using `builtins.readDir`.
-
-### Adding a new NixOS module
-
-1. Create `modules/nixos/<name>/default.nix`
-2. Run `nix flake check --no-build` — it's automatically exported as `nixosModules.<name>`
-
-### Adding a new home-manager module
-
-1. Create `modules/home/core/<name>/default.nix`
-2. Add import to `modules/home/core/default.nix`
-3. Run `nix flake check --no-build` — it's automatically exported as `homeModules.<name>`
-
-## Module Compatibility Rules
-
-### CRITICAL: This flake is designed to be imported by external flakes
-
-Follow these rules to ensure modules remain externally consumable:
-
----
-
-### 1. All Feature Modules Must Be Opt-In (`enable = false` by default)
-
-```nix
-# GOOD - Safe for external consumers
-options.myOptions.myFeature = {
-  enable = lib.mkEnableOption "My feature";
-};
-
-# BAD - Will affect all consumers unexpectedly
-options.myOptions.myFeature = {
-  enable = lib.mkEnableOption "My feature" // { default = true; };
-};
-```
-
----
-
-### 2. Use Shared vars.nix and theme.nix for Both Contexts
-
-The `modules/shared/` directory contains context-agnostic modules:
-- **vars.nix** - User variables (username, sshKeys, etc.)
-- **theme.nix** - Unified styling (border-radius, padding, fonts, opacity)
-
-```nix
-# In NixOS context
-imports = [ nixos-config.nixosModules.vars nixos-config.nixosModules.theme ];
-
-# In home-manager context  
-imports = [ nixos-config.homeModules.vars nixos-config.homeModules.theme ];
-
-# Bridge vars (theme uses same values, no bridging needed)
-myOptions.vars = config.myOptions.vars;
-```
-
-### Theme Module Usage
-
-Access theme values in GUI modules via `config.myOptions.theme` and helper functions via `config.lib.theme`:
-
-```nix
-# In a module
-theme = config.myOptions.theme;
-themeLib = config.lib.theme;
-
-# Use raw values
-border-radius = theme.borderRadius;        # 10 (int)
-padding = theme.padding.medium;            # 8 (int)
-opacity = theme.opacity.background;        # 0.9 (float)
-
-# Use CSS helpers
-border-radius = themeLib.css.borderRadius; # "10px" (string)
-padding = themeLib.css.paddingMedium;      # "8px" (string)
-
-# Convert opacity to hex for colors
-background-color = "#${colors.base01}${themeLib.opacityToHex theme.opacity.background}";
-```
-
-**Modules using theme.nix:**
-- `modules/home/gui/waybar/` - status bar
-- `modules/home/gui/rofi/` - launcher
-- `modules/home/gui/mako/` - notifications
-- `modules/home/gui/eww/` - widgets (partial)
-
----
-
-### 3. Internal Profiles vs Exported Modules
-
-- **`homeModules.core`** is an INTERNAL profile - it imports all core modules and enables them with `mkDefault true`
-- **External consumers should NOT use `homeModules.core`** - they should import individual modules instead
-- Individual modules (`homeModules.fish`, `homeModules.git`, etc.) are safe for external use
-
-```nix
-# GOOD - For external consumers (servers, other flakes)
-imports = [
-  maxs-config.homeModules.vars
-  maxs-config.homeModules.fish
-  maxs-config.homeModules.git
-];
-myOptions.fish.enable = true;
-myOptions.git.enable = true;
-
-# OK - For internal hosts only (desktops in this flake)
-imports = [ ../../home/core ];  # Enables everything with mkDefault
-```
-
----
-
-### 4. Guard Optional Input Dependencies
-
-Modules that require external flake inputs must guard them:
-
-```nix
-# GOOD - Works even if nixCats is not provided
-{
-  config,
-  lib,
-  inputs ? {},
-  ...
-}: let
-  hasNixCats = inputs ? nixCats;
-in {
-  imports = lib.optionals hasNixCats [
-    inputs.nixCats.homeModule
-  ];
-
-  config = lib.mkIf cfg.enable {
-    assertions = [{
-      assertion = hasNixCats;
-      message = "myOptions.neovim requires inputs.nixCats";
-    }];
-    # ... rest of config
-  };
-}
-
-# BAD - Breaks if nixCats is not in inputs
-{ inputs, ... }: {
-  imports = [ inputs.nixCats.homeModule ];  # Error if missing
-}
-```
-
----
-
-### 5. Handle Optional `self`
-
-Modules may be used without `self`. Always provide defaults:
-
-```nix
-# GOOD
-{ self ? null, ... }: {
-  nixpkgs.overlays = lib.mkIf (self != null && self ? overlays) [
-    self.overlays.default
-  ];
-}
-
-# BAD
-{ self, ... }: {
-  nixpkgs.overlays = [self.overlays.default];  # Breaks without self
-}
-```
-
----
-
-### 6. Use `myOptions` Namespace
-
-All custom options must be under `myOptions.*` to avoid conflicts:
-
-```nix
-# GOOD
-options.myOptions.myFeature.enable = mkEnableOption "My feature";
-
-# BAD
-options.myFeature.enable = mkEnableOption "My feature";
-```
-
----
-
-### 7. Temporary Overrides Must Expire
-
-Temporary package version bumps and workarounds must:
-- Be guarded by the current Nixpkgs package version (or another suitable condition) and return the unmodified `prev.<package>` once the workaround is no longer needed.
-- Link the upstream issue or pull request that explains when the override can be removed.
-
-This does not apply to intentional permanent customizations.
-
-```nix
-{ lib, ... }: {
-  nixpkgs.overlays = [
-    (_: prev: {
-      foo =
-        # Remove when fixed upstream: https://github.com/example/foo/issues/123
-        if lib.versionOlder prev.foo.version "1.2.3"
-        then prev.foo.overrideAttrs (old: {
-          patches = (old.patches or []) ++ [ ./fix.patch ];
-        })
-        else prev.foo;
-    })
-  ];
-}
-```
-
----
-
-### 8. Test After Changes
-
-Always run after modifying modules:
-
-```bash
-nix flake check --no-build
-```
-
----
-
-## External Consumer Usage
-
-Other flakes can import this flake's modules like this:
-
-```nix
-{
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixos-config.url = "github:minMaximilian/nixos-config";
-    home-manager.url = "github:nix-community/home-manager";
-  };
-
-  outputs = { self, nixpkgs, nixos-config, home-manager, ... }@inputs: {
-    nixosConfigurations.myserver = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        # Shared vars (username, sshKeys, etc.)
-        nixos-config.nixosModules.vars
-        
-        home-manager.nixosModules.home-manager
-        
-        ({ config, ... }: {
-          # User gets SSH keys from vars automatically
-          users.users.${config.myOptions.vars.username} = {
-            isNormalUser = true;
-            openssh.authorizedKeys.keys = config.myOptions.vars.sshKeys;
-          };
-          
-          home-manager.users.${config.myOptions.vars.username} = {
-            imports = [
-              nixos-config.homeModules.vars
-              nixos-config.homeModules.fish
-              nixos-config.homeModules.git
-              nixos-config.homeModules.btop
-            ];
-            
-            myOptions.vars = config.myOptions.vars;
-            myOptions.fish.enable = true;
-            myOptions.git.enable = true;
-            myOptions.btop.enable = true;
-            
-            home.stateVersion = "24.11";
-          };
-        })
-        
-        ./configuration.nix
-      ];
-    };
-  };
-}
-```
-
----
-
-## Required Inputs by Module
-
-| Module | Required Inputs |
-|--------|-----------------|
-| vars | none |
-| fish | none |
-| git | none |
-| btop | none |
-| devenv | none |
-| golang | none |
-| zellij | none |
-| helium | none (auto-enabled when withGui=true) |
-| neovim | nixCats |
-| desktop | hyprland |
-| theme | stylix |
-| login | hyprland |
-| shared | home-manager |
-
----
-
-## Flake Outputs
-
-- `nixosModules.default` - All NixOS modules combined
-- `nixosModules.vars` - Shared variables (username, sshKeys, etc.)
-- `nixosModules.<name>` - Individual NixOS modules
-- `homeModules.default` - All home-manager modules
-- `homeModules.vars` - Same as nixosModules.vars (works in HM context)
-- `homeModules.core` - INTERNAL profile (enables all with mkDefault)
-- `homeModules.<name>` - Individual home modules (fish, git, btop, etc.)
-- `overlays.default` - Package overlays
-- `lib` - Helper functions
+Use the pinned `nix fmt` or installed Alejandra if the registry is unavailable,
+and report that fallback. If new files cannot be staged, evaluate
+`nix flake check "path:$PWD" --no-build --no-write-lock-file`; do not confuse
+missing untracked inputs with module failures.
+
+The flake checks cover password migration, Miniflux XML/auth handling, Git-hook
+staging/failure safety, Linux/Darwin module evaluation, headless composition,
+Neovim startup/keymaps and URL privacy. `--no-build` only evaluates checks:
+report executed fixtures separately from successful evaluation and host builds.
+Use temporary state paths for editor tests; do not write `nvim.log` in the repo.
+
+Work on the user's requested branch. Read-only Git metadata is not a reason to
+abandon editable source work; report staging/commit limitations without trying
+to bypass permissions.

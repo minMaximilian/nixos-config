@@ -7,9 +7,6 @@
   inherit (lib) mkIf;
   cfg = config.myOptions.fish;
 in {
-  imports = [
-    ./hooks.nix
-  ];
   options.myOptions.fish = {
     enable = lib.mkEnableOption "Fish Shell";
   };

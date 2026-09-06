@@ -3,15 +3,13 @@
   pkgs,
   lib,
   inputs ? {},
-  self ? null,
   ...
 }: let
   inherit (lib) mkEnableOption mkIf;
 
   cfg = config.myOptions.noctalia;
   hasNoctalia = inputs ? noctalia;
-  hasSelf = self != null;
-  wallpaperDirectory = "${self}/assets";
+  wallpaperDirectory = "${../../../../assets}";
   theme = config.myOptions.theme;
   systemctl = "${pkgs.systemd}/bin/systemctl";
   noctalia = "${config.home.profileDirectory}/bin/noctalia";
@@ -58,13 +56,6 @@ in {
             background_opacity = theme.opacity.background;
             padding = 12;
             widget_spacing = 8;
-
-            monitor."DP-3" = {
-              match = "DP-3";
-              padding = 24;
-              widget_spacing = 12;
-              scale = 1.05;
-            };
           };
 
           shell.panel = {
@@ -113,7 +104,7 @@ in {
             }
           ];
         }
-        // lib.optionalAttrs hasSelf {
+        // {
           wallpaper = {
             enabled = true;
             fill_mode = "crop";

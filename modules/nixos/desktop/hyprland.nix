@@ -8,18 +8,7 @@
   cfg = config.myOptions.hyprland;
 in {
   options.myOptions.hyprland = {
-    enable =
-      mkEnableOption "Hyprland Window Manager"
-      // {
-        default = config.myOptions.vars.withGui;
-      };
-
-    monitors = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [", preferred, auto, 1"];
-      description = "Monitor configuration strings for Hyprland";
-      example = ["DP-1, 3440x1440@144, 0x0, 1" "HDMI-A-1, 2560x1440@60, 3440x0, 1"];
-    };
+    enable = mkEnableOption "Hyprland Window Manager";
   };
 
   config = mkIf cfg.enable {
@@ -51,11 +40,6 @@ in {
       GDK_SCALE = "1";
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       NIXOS_SCALE = "1.0";
-    };
-
-    home-manager.users.${config.myOptions.vars.username}.myOptions.hyprland = {
-      enable = true;
-      monitors = cfg.monitors;
     };
   };
 }

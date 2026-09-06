@@ -6,7 +6,6 @@
 }: let
   inherit (lib) mkEnableOption mkIf mkMerge;
   cfg = config.myOptions.amdgpu;
-  username = config.myOptions.vars.username;
 in {
   options.myOptions.amdgpu = {
     enable = mkEnableOption "AMD GPU Support";
@@ -59,7 +58,6 @@ in {
       in ["L+    /opt/rocm   -    -    -     -    ${rocmEnv}"];
 
       # /dev/kfd is owned by render group; needed for HSA / HIP / ROCm.
-      users.users.${username}.extraGroups = ["render"];
 
       environment.systemPackages = with pkgs; [
         rocmPackages.rocminfo

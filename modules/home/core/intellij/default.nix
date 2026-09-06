@@ -15,41 +15,13 @@
     else {};
   resolvedPlugins = map (id: ideaPlugins.${id}) cfg.plugins;
 
-  # The package with plugins applied (if available).
-  pluggedPackage =
-    if hasJetbrainsPlugins
-    then pkgs.jetbrains.plugins.addPlugins cfg.package resolvedPlugins
-    else cfg.package;
-
-  # Native libs the Minecraft client (LWJGL/GLFW) dlopens at runtime.
-  minecraftNativeLibs = with pkgs; [
-    libGL
-    glfw3-minecraft # wayland-capable glfw
-    libpulseaudio
-    openal
-    wayland
-    libxkbcommon
-  ];
-
-  # Wrap the IDEA launcher so it exports the native lib path and forces LWJGL
-  # to use the wayland-capable glfw. Every child process (the Gradle daemon and
-  # the Minecraft client JVM it spawns) inherits these, so running the game
-  # works regardless of how IDEA itself is launched (app launcher, etc.).
-  ideaPackage = pkgs.symlinkJoin {
-    name = "${pluggedPackage.name}-mc-wrapped";
-    paths = [pluggedPackage];
-    nativeBuildInputs = [pkgs.makeWrapper];
-    postBuild = ''
-      for b in idea-oss idea idea-community idea-ultimate; do
-        if [ -e "$out/bin/$b" ]; then
-          wrapProgram "$out/bin/$b" \
-            --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath minecraftNativeLibs}" \
-            --set-default JAVA_TOOL_OPTIONS "-Dorg.lwjgl.glfw.libname=libglfw.so"
-        fi
-      done
-    '';
+  ideaPackage = pkgs.callPackage ../../../../packages/intellij {
+    package = cfg.package;
+    plugins = lib.optionals hasJetbrainsPlugins resolvedPlugins;
   };
 in {
+  imports = [../ideavim];
+
   options.myOptions.intellij = {
     enable = mkEnableOption "IntelliJ IDEA for Minecraft development";
 
@@ -93,12 +65,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    myOptions.ideavim.enable = lib.mkDefault true;
     home.packages = [ideaPackage];
 
     home.file = {
-      ".local/share/java/temurin-17".source = pkgs.temurin-bin-17;
-      ".local/share/java/temurin-21".source = pkgs.temurin-bin-21;
-      ".ideavimrc".source = ./ideavimrc;
       ".config/JetBrains/${cfg.configDir}/codestyles/GoogleStyle.xml".source = ./codestyle.xml;
       ".config/JetBrains/${cfg.configDir}/options/code.style.schemes.xml".text = ''
         <application>

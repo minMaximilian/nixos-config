@@ -8,11 +8,7 @@
   cfg = config.myOptions.bluetooth;
 in {
   options.myOptions.bluetooth = {
-    enable =
-      mkEnableOption "Bluetooth support"
-      // {
-        default = config.myOptions.vars.withGui;
-      };
+    enable = mkEnableOption "Bluetooth support";
   };
 
   config = mkIf cfg.enable {

@@ -6,16 +6,10 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.prismLauncher;
-  username = config.myOptions.vars.username;
-  minecraftNativeLibs = with pkgs; [
-    libGL
-    glfw3-minecraft
-    libpulseaudio
-    openal
-    udev
-    wayland
-    libxkbcommon
-  ];
+  minecraftNativeLibs = import ../../../lib/minecraft-libraries.nix {
+    inherit pkgs;
+    withUdev = true;
+  };
   minecraftDev = pkgs.writeShellScriptBin "minecraft-dev" ''
     export LD_LIBRARY_PATH="${lib.makeLibraryPath minecraftNativeLibs}:''${LD_LIBRARY_PATH:-}"
     export JAVA_HOME="${pkgs.temurin-bin-21.home}"
@@ -29,12 +23,10 @@
   '';
 in {
   options.myOptions.prismLauncher = {
-    enable = mkEnableOption "Prism Launcher" // {default = config.myOptions.vars.withGui;};
+    enable = mkEnableOption "Prism Launcher";
   };
 
   config = mkIf cfg.enable {
-    users.users.${username}.extraGroups = ["video"];
-
     programs.java = {
       enable = true;
       package = pkgs.temurin-bin-21;
@@ -44,7 +36,5 @@ in {
       minecraftDev
       pkgs.zenity
     ];
-
-    home-manager.users.${username}.myOptions.prismLauncher.enable = true;
   };
 }

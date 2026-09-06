@@ -6,19 +6,9 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.steam;
-  username = config.myOptions.vars.username;
-  gamescopeNative = pkgs.writeShellScriptBin "gamescope-native" ''
-    exec ${pkgs.gamescope}/bin/gamescope \
-      -W 3440 -H 1440 \
-      -w 3440 -h 1440 \
-      -r 144 \
-      -f -b \
-      --force-grab-cursor \
-      -- "$@"
-  '';
 in {
   options.myOptions.steam = {
-    enable = mkEnableOption "Steam and gaming essentials" // {default = config.myOptions.vars.withGui;};
+    enable = mkEnableOption "Steam and gaming essentials";
   };
 
   config = mkIf cfg.enable {
@@ -64,10 +54,7 @@ in {
       lutris
       heroic
       gamemode
-      gamescopeNative
     ];
-
-    users.users.${username}.extraGroups = ["gamemode"];
 
     environment.sessionVariables = {
       STEAM_EXTRA_COMPAT_TOOLS_PATHS = "$HOME/.steam/root/compatibilitytools.d";

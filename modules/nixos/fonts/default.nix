@@ -8,11 +8,7 @@
   cfg = config.myOptions.fonts;
 in {
   options.myOptions.fonts = {
-    enable =
-      mkEnableOption "system fonts configuration"
-      // {
-        default = config.myOptions.vars.withGui;
-      };
+    enable = mkEnableOption "system fonts configuration";
   };
 
   config = mkIf cfg.enable {

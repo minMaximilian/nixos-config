@@ -6,14 +6,9 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.myOptions.login;
-  username = config.myOptions.vars.username;
 in {
   options.myOptions.login = {
-    enable =
-      mkEnableOption "Login display manager (auto-login compositor)"
-      // {
-        default = config.myOptions.vars.withGui;
-      };
+    enable = mkEnableOption "Login display manager (auto-login compositor)";
   };
 
   config = mkIf cfg.enable {
@@ -22,7 +17,6 @@ in {
       settings = {
         default_session = {
           command = "${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop";
-          user = username;
         };
       };
     };

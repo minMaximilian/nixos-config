@@ -4,7 +4,8 @@ _final: prev: {
   # timing assumptions ("Waiting N seconds for syncrepl..."). Disable the
   # whole check phase rather than chasing individual flaky tests.
   # https://github.com/NixOS/nixpkgs/issues/514113
-  openldap = prev.openldap.overrideAttrs (_old: {
-    doCheck = false;
-  });
+  openldap =
+    if prev.openldap.version == "2.6.13"
+    then prev.openldap.overrideAttrs (_old: {doCheck = false;})
+    else prev.openldap;
 }

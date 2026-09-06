@@ -2,17 +2,12 @@
   config,
   lib,
   pkgs,
+  localPackages,
   ...
 }: let
   cfg = config.myOptions.urlPrivacy;
 
-  urlPrivacy = pkgs.writeShellApplication {
-    name = "url-privacy";
-    runtimeInputs = [pkgs.python3];
-    text = ''
-      exec ${pkgs.python3}/bin/python3 ${./url_privacy.py} "$@"
-    '';
-  };
+  urlPrivacy = localPackages.url-privacy;
 
   clipboardSanitizer = pkgs.writeShellScript "sanitize-clipboard-url" ''
     cleaned="$(${urlPrivacy}/bin/url-privacy clipboard)"

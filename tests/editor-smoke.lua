@@ -1,0 +1,18 @@
+local ok, err = pcall(function()
+  vim.opt.runtimepath:prepend('modules/home/core/neovim')
+  dofile('modules/home/core/neovim/init.lua')
+  assert(vim.g.mapleader == ' ')
+  assert(vim.opt.shiftwidth:get() == 2)
+  assert(vim.fn.maparg('<leader>y', 'n') == '"+y')
+  assert(vim.fn.maparg('<leader>p', 'n') == '"+p')
+  assert(package.loaded['config.core'])
+  assert(package.loaded['config.languages'])
+  assert(package.loaded['config.completion'])
+  assert(package.loaded['config.ui'])
+  assert(package.loaded['config.debug'])
+end)
+if not ok then
+  io.stderr:write(tostring(err) .. '\n')
+  vim.cmd('cquit 1')
+end
+vim.cmd('qa!')

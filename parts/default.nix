@@ -1,8 +1,5 @@
-{
-  self,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
+  imports = [./checks.nix];
   systems = [
     "x86_64-linux"
     # "aarch64-linux"
@@ -36,15 +33,10 @@
       # Full (non-headless) JDK: the Minecraft client needs AWT.
       java = pkgs.jdk21;
       # Native libs LWJGL/GLFW dlopen at runtime; exposed via LD_LIBRARY_PATH.
-      libs = with pkgs; [
-        libGL
-        glfw3-minecraft # wayland-capable glfw (glfw-wayland-minecraft was merged into this)
-        libpulseaudio
-        openal
-        udev
-        wayland
-        libxkbcommon
-      ];
+      libs = import ../lib/minecraft-libraries.nix {
+        inherit pkgs;
+        withUdev = true;
+      };
     in
       pkgs.mkShell {
         nativeBuildInputs = [
@@ -64,13 +56,5 @@
           JAVA_TOOL_OPTIONS = "-Dorg.lwjgl.glfw.libname=libglfw.so";
         };
       };
-
-    checks = {
-      module-import-test = pkgs.runCommand "module-import-test" {} ''
-        # This test verifies that modules can be imported and evaluated
-        # If this runs, the modules are syntactically correct and exportable
-        echo "Module export test passed" > $out
-      '';
-    };
   };
 }

@@ -68,15 +68,11 @@ in {
 
   options = {
     myOptions.theme = {
-      enable =
-        mkEnableOption "Theme configuration"
-        // {
-          default = config.myOptions.vars.withGui;
-        };
+      enable = mkEnableOption "Theme configuration";
 
       colorScheme = mkOption {
         type = types.str;
-        default = config.myOptions.vars.colorScheme;
+        default = "oxocarbon-dark";
         description = "The color scheme to use";
       };
 
@@ -99,7 +95,7 @@ in {
       enable = true;
       enableReleaseChecks = false;
       image = cfg.wallpaper;
-      polarity = config.myOptions.vars.polarity;
+      polarity = "dark";
       base16Scheme = schemeFile;
 
       cursor = {
@@ -142,18 +138,6 @@ in {
       };
 
       autoEnable = true;
-    };
-
-    home-manager.users.${config.myOptions.vars.username} = {
-      home.pointerCursor.enable = true;
-
-      stylix = {
-        enableReleaseChecks = false;
-        targets = {
-          hyprpaper.enable = lib.mkForce false;
-          vesktop.enable = false;
-        };
-      };
     };
   };
 }

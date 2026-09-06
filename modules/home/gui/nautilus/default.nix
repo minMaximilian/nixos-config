@@ -7,7 +7,7 @@
   cfg = config.myOptions.nautilus;
 in {
   options.myOptions.nautilus = {
-    enable = lib.mkEnableOption "Nautilus file manager" // {default = config.myOptions.vars.withGui;};
+    enable = lib.mkEnableOption "Nautilus file manager";
   };
 
   config = lib.mkIf cfg.enable {

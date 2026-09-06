@@ -1,7 +1,7 @@
 {
   config,
   pkgs,
-  pkgs-graalvm21 ? null,
+  localPackages,
   lib,
   ...
 }: let
@@ -25,12 +25,10 @@ in {
     home.file =
       {
         ".local/share/java/temurin-8".source = pkgs.temurin-bin-8;
-        ".local/share/java/temurin-17".source = pkgs.temurin-bin-17;
-        ".local/share/java/temurin-21".source = pkgs.temurin-bin-21;
         ".local/share/java/graalvm-17".source = pkgs.graalvmPackages.graalvm-oracle_17;
       }
-      // lib.optionalAttrs (pkgs-graalvm21 != null) {
-        ".local/share/java/graalvm-21".source = pkgs-graalvm21.graalvm-ce;
+      // lib.optionalAttrs (localPackages.graalvm21 != null) {
+        ".local/share/java/graalvm-21".source = localPackages.graalvm21;
       };
 
     xdg.desktopEntries.prismlauncher = {

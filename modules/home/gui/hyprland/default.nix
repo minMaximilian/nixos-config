@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  self ? null,
   ...
 }: let
   inherit
@@ -20,7 +19,7 @@
   terminal =
     if config.myOptions.zellij.enable or false
     then "${homeBin}/ghostty -e ${homeBin}/zellij attach --index 0 --create"
-    else config.myOptions.vars.terminal;
+    else "ghostty";
 
   fullscreenToggle = pkgs.writeShellScript "fullscreen-toggle" ''
     ${pkgs.hyprland}/bin/hyprctl dispatch fullscreen 0
@@ -53,7 +52,6 @@ in {
             "systemctl --user import-environment DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL PATH XDG_DATA_DIRS"
             "dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL PATH XDG_DATA_DIRS"
             "${pkgs.uwsm}/bin/uwsm finalize"
-            "${systemBin}/solaar --window=hide"
           ]
           ++ [
             "hyprctl dispatch workspace 1"
@@ -140,17 +138,6 @@ in {
         workspace = [
           "w[tv1], gapsout:0, gapsin:0"
           "f[1], gapsout:0, gapsin:0"
-          "0, monitor:1, default:true"
-          "1, monitor:0"
-          "2, monitor:0"
-          "3, monitor:0"
-          "4, monitor:0"
-          "5, monitor:0"
-          "6, monitor:0"
-          "7, monitor:0"
-          "8, monitor:0"
-          "9, monitor:0"
-          "10, monitor:0"
         ];
 
         bind = [
@@ -236,7 +223,6 @@ in {
 
           "$mod ALT, p, exec, pavucontrol"
           "$mod ALT, q, exec, qpwgraph"
-          "$mod ALT, h, exec, qpwgraph"
           "$mod ALT, e, exec, easyeffects"
 
           "$mod, V, exec, ${noctalia} msg panel-toggle clipboard"

@@ -1,5 +1,0 @@
-{...}: {
-  imports = [
-    ../../shared/vars.nix
-  ];
-}

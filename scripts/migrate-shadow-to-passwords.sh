@@ -1,51 +1,68 @@
 #!/usr/bin/env bash
-# Seed /persist/etc/passwords/<user> from the live /etc/shadow before
-# switching myOptions.impermanence.declarativeUsers on for the first time.
-#
-# Required because:
-#   - bind-mounting /etc/shadow on a tmpfs root breaks update-users-groups.pl
-#     (the activation script renames a temp file over /etc/shadow → EBUSY),
-#   - so we move passwords to per-user files referenced via hashedPasswordFile,
-#   - which means /etc/shadow is regenerated on every activation from the
-#     declarative password files.
-#
-# Usage:
-#   sudo ./scripts/migrate-shadow-to-passwords.sh [user...]
-#
-# Defaults to extracting "max" and "root" if no users are passed.
+# Seed per-user hashedPasswordFile inputs before enabling users/max/passwords.nix.
+# /etc/shadow itself must remain replaceable during NixOS activation.
+# Usage: sudo ./scripts/migrate-shadow-to-passwords.sh [user...]
 set -euo pipefail
 
-if [[ $EUID -ne 0 ]]; then
-  echo "must run as root (uses /etc/shadow and writes to /persist)" >&2
-  exit 1
-fi
-
-PERSIST=/persist/etc/passwords
-USERS=("${@:-max root}")
-
-mkdir -p "$PERSIST"
-chmod 0700 "$PERSIST"
-chown root:root "$PERSIST"
-
-for user in "${USERS[@]}"; do
-  hash=$(awk -F: -v u="$user" '$1==u {print $2}' /etc/shadow)
-  if [[ -z "$hash" ]]; then
-    echo "skip $user: not in /etc/shadow" >&2
-    continue
+migrate_passwords() (
+  local shadow_file=$1 password_dir=$2 user hash out temporary=""
+  shift 2
+  local users=("$@")
+  if [[ ${#users[@]} -eq 0 ]]; then
+    users=(max root)
   fi
-  case "$hash" in
-    "" | "!" | "*" | "!!" | "x")
-      echo "skip $user: password is locked or empty ($hash)" >&2
-      continue
-      ;;
-  esac
-  out="$PERSIST/$user"
-  printf '%s\n' "$hash" > "$out"
-  chmod 0600 "$out"
-  chown root:root "$out"
-  echo "wrote $out"
-done
 
-echo
-echo "Now you can rebuild:"
-echo "  sudo nixos-rebuild switch --flake .#whiteforest"
+  # Preflight every destination before writing any password files.
+  for user in "${users[@]}"; do
+    if [[ ! $user =~ ^[a-zA-Z_][a-zA-Z0-9_.-]*[$]?$ ]]; then
+      echo "invalid username: $user" >&2
+      return 1
+    fi
+    if [[ -e "$password_dir/$user" || -L "$password_dir/$user" ]]; then
+      echo "refusing to overwrite $password_dir/$user" >&2
+      return 1
+    fi
+  done
+
+  umask 077
+  mkdir -p -- "$password_dir" || return
+  chmod 0700 -- "$password_dir" || return
+  if [[ $EUID -eq 0 ]]; then
+    chown root:root -- "$password_dir" || return
+  fi
+  trap 'if [[ -n "$temporary" ]]; then rm -f -- "$temporary"; fi' EXIT
+
+  for user in "${users[@]}"; do
+    hash=$(awk -F: -v u="$user" '$1 == u {print $2}' "$shadow_file") || return
+    case "$hash" in
+      "" | '!'* | '*'* | x)
+        echo "skip $user: password missing, locked or empty" >&2
+        continue
+        ;;
+    esac
+    if [[ $hash == *$'\n'* ]]; then
+      echo "duplicate shadow entries for $user" >&2
+      return 1
+    fi
+    out="$password_dir/$user"
+    temporary=$(mktemp "$password_dir/.${user}.XXXXXX") || return
+    printf '%s\n' "$hash" > "$temporary" || return
+    if [[ $EUID -eq 0 ]]; then
+      chown root:root -- "$temporary" || return
+    fi
+    # Hard-link publication is atomic and refuses even a concurrently created target.
+    ln -T -- "$temporary" "$out" || return
+    rm -f -- "$temporary" || return
+    temporary=""
+    echo "wrote $out"
+  done
+)
+
+if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
+  if [[ $EUID -ne 0 ]]; then
+    echo "must run as root (uses /etc/shadow and writes to /persist)" >&2
+    exit 1
+  fi
+  migrate_passwords /etc/shadow /persist/etc/passwords "$@"
+  echo "Password files prepared; review them before rebuilding whiteforest."
+fi
